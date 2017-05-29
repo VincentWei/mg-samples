@@ -1,0 +1,9 @@
+#!/bin/sh
+
+rm config.cache config.status -f
+
+CC=arm-linux-gcc \
+./configure \
+    --build=i386-linux \
+    --target=arm-unknown-linux \
+    --host=arm-unknown-linux \

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+rm config.cache config.status -f
+
+CC=arm-uclibc-gcc \
+CFLAGS="-O2 -g -D__linux__ -I/uclinux/uClinux-2.4.x/include -I/uclinux/uClibc-0.9.19/include -I/uclinux/minigui/include -fno-builtin -nostartfiles " \
+LDFLAGS="-Wall -elf2flt -static /uclinux/uClibc-0.9.19/lib/crt0.o -L/uclinux/uClibc-0.9.19/lib -L/uclinux/minigui/lib -lc " \
+./configure \
+    --build=i386-linux \
+    --host=arm-elf-linux \
+    --target=arm-elf-linux 

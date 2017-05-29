@@ -1,0 +1,12 @@
+#!/bin/sh
+
+rm config.cache config.status -f
+
+CC=m68k-elf-gcc \
+CFLAGS="-m68000 -Os -D__uClinux__ -I/opt/uClinux/uClinux-dist/lib/uClibc/include -I/opt/uClinux/uClinux-dist/linux-2.4.x/include -I/opt/uClinux/uClinux-dist/minigui/m68k-elf/include/ -fno-builtin -mid-shared-library -mshared-library-id=0 " \
+LDFLAGS="-Wl,-elf2flt -Wl,-move-rodata -Wl,-shared-lib-id,0 -Wl,-elf2flt -Wl,-move-rodata -Wl,-shared-lib-id,0 -nostartfiles /opt/uClinux/uClinux-dist/lib/uClibc/lib/crt0.o -L/opt/uClinux/uClinux-dist/lib/uClibc/lib -L/opt/uClinux/uClinux-dist/lib/uClibc/libpthread -L/opt/uClinux/uClinux-dist/minigui/m68k-elf/lib -Wl,-R,/opt/uClinux/uClinux-dist/lib/uClibc/libc.gdb -lc" \
+./configure --prefix=/opt/uClinux/uClinux-dist/minigui/m68k-elf/ \
+    --build=i386-linux \
+    --host=m68k-elf-linux \
+    --target=m68k-elf-linux 
+

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#
+# Please make sure that the following things are OK:
+#
+#   1. You have installed the arm-elf-tools already.
+#   2. Your uClinux distribution has been installed into the directory of '/opt/em85xx/'.
+#
+
+rm config.cache config.status -f
+
+CC=arm-uclibc-gcc \
+CFLAGS="-O2 -g -D__linux__ -I/home/ARM/arm-linux-uclibc/include -I/home/ARM/arm-linux-uclibc/minigui/include -fno-builtin -nostartfiles" \
+LDFLAGS="-Wall -static /home/ARM/arm-linux-uclibc/lib/crt0.o  -L/home/ARM/arm-linux-uclibc/lib -L/home/ARM/arm-linux-uclibc/minigui/lib -lc" \
+./configure \
+    --build=i686-linux \
+    --host=arm-linux \
+    --target=arm-linux \

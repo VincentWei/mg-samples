@@ -1,0 +1,19 @@
+#!/bin/sh
+
+#
+# Please make sure that the following things are OK:
+#
+#   1. You have installed the GNU arm-elf-tools already.
+#   2. Your eCos for iPAQ has been installed into the directory of '/tmp/ipaq_ecos/install'.
+#   3. You have set ECOS_RESPOSITORY and PATH correctly.
+#
+
+rm config.cache config.status -f
+
+CC=arm-elf-gcc \
+CFLAGS="-I/tmp/ipaq_ecos/install/include  -D__ECOS__ -D__NOLINUX__ -DUNIX=1 -mcpu=strongarm -Wall -ffunction-sections -fdata-sections -O2 -g" \
+LDFLAGS="-Wl,-static -Wl,-N -L/tmp/ipaq_ecos/install/lib -nostdlib -Ttarget.ld" \
+./configure --prefix=/tmp/ipaq_ecos/install/ \
+    --build=i386-linux \
+    --host=arm-elf-linux \
+    --target=arm-elf-linux
