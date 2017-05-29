@@ -1,4 +1,4 @@
-+ Samples for MiniGUI version 3.0.x
+# Samples for MiniGUI version 3.0.x
 
 For simplified Chinese UI, please use the following configuration command:
 
