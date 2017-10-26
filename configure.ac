@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.69)
+AC_PREREQ(2.60)
 AC_INIT(mg-samples,3.0.13)
 AC_CONFIG_SRCDIR(src/helloworld.c)
 
