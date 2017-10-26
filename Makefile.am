@@ -9,4 +9,3 @@ endif
 
 DIST_SUBDIRS = $(COMMON_SUBDIRS) mginit src
 SUBDIRS = $(COMMON_SUBDIRS) $(LITE_SUBDIRS) src
-

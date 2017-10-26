@@ -37,7 +37,6 @@
 #include <minigui/gdi.h>
 #include <minigui/window.h>
 #include <minigui/control.h>
-#include <mgplus/mgplus.h>
 
 #include "dlgdemo.h"
 #include "resouce.h"

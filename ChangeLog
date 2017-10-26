@@ -1,3 +1,10 @@
+*******************************************************************************
+What's new in this version (3.0.13, 2017/10/26):
+
+10/26-2017. TUNNING: Use configure.ac instead of configure.in.
+
+*******************************************************************************
+What's new in this version (3.0.12, 2010/02/09):
 
 02/09. BUGFIXING #4433: fix bug of the effect can't come out in running dbuff.
 	* dbuff/dbuff.c

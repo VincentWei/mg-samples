@@ -1,17 +1,20 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ(2.13)
-AC_INIT(src/helloworld.c)
+AC_PREREQ(2.69)
+AC_INIT(mg-samples,3.0.13)
+AC_CONFIG_SRCDIR(src/helloworld.c)
 
 dnl ========================================================================
-dnl needed for cross-compiling
+dnl Need for cross-compiling
 AC_CANONICAL_SYSTEM
+
+dnl ========================================================================
+dnl Init automake
+AM_INIT_AUTOMAKE
 
 dnl ========================================================================
 dnl Checks for programs.
 AC_PROG_MAKE_SET
 AC_PROG_CC
-
-AM_INIT_AUTOMAKE(mg-samples,3.0.11)
 
 dnl ========================================================================
 dnl Checks for typedefs, structures, and compiler characteristics.

@@ -1,7 +1,7 @@
 noinst_PROGRAMS=ctrl_dlg
 SUBDIRS = res
 
-CUSTOMMG_SRC=../src/custom_minigui.c
+CUSTOMMG_SRC=custom_minigui.c
 ctrl_dlg_SOURCES=\
 		ctrls.h  dlgdemo.h  dlgdemo_res_cn.h  dlgdemo_res_en.h  dlgdemo_res_tw.h  resouce.h \
 		dlgdemo.c dlgres.c psdemo.c subclass.c \
@@ -11,4 +11,3 @@ ctrl_dlg_SOURCES=\
 		timeedit.c newtoolbar.c $(CUSTOMMG_SRC)
 
 EXTRA_DIST=bkgnd.jpg grid.c
-
