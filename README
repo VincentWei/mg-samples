@@ -1,11 +1,1 @@
-Samples for MiniGUI version 3.0.x
-
-Building commands:
-
-	$ ./configure
-	$ make
-
-For simplified Chinese UI, please use the following configuration command:
-
-	$ ./configure --with-lang=zhcn
-
+Please refer to README.md.
