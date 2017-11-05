@@ -610,10 +610,9 @@ static BOOL SetCharset (HWND hWnd, PNOTEINFO pNoteInfo, WPARAM cmd_id)
 BOOL NBSaveAs (PNOTEINFO pNoteInfo, HWND hParent, HWND hMLEditWnd)
 {
     //NEWFILEDLGDATA myWinFileData;
-    char filepath[256];
-    memset(filepath, 0, 256);
-    int cwd_len=0;
-    //char* ppath = getcwd(filepath, cwd_len); 
+    char filepath[PATH_MAX + 1];
+    memset(filepath, 0, PATH_MAX + 1);
+    //char* ppath = getcwd(filepath, PATH_MAX); 
     FILE * file;
     //int choise=0;
     int reallength=0;
@@ -692,10 +691,9 @@ BOOL NBSave (PNOTEINFO pNoteInfo, HWND hParent, HWND hMLEditWnd)
 BOOL NBOpen(PNOTEINFO pNoteInfo, HWND hParent, HWND hMLEditWnd)
 {
     //FILEDLGDATA myWinFileData;
-    char filepath[256];
+    char filepath[PATH_MAX + 1];
     memset(filepath, 0, 256);
-    int cwd_len=0;
-    char* ppath = getcwd(filepath, &cwd_len); 
+    char* ppath = getcwd(filepath, PATH_MAX); 
     int choise=0,fd;
     long reallength=0;
     char buffer[102400];
