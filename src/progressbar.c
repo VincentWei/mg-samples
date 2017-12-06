@@ -6,9 +6,19 @@
 ** progressbar.c: Sample program for MiniGUI Programming Guide
 **      Usage of PORGRESSBAR control.
 **
-** Copyright (C) 2004 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
-** License: GPL
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 */
 
 #include <stdio.h>
@@ -42,7 +52,6 @@ static HWND createProgressWin (HWND hParentWnd, char * title, char * label,
     HWND hwnd;
     MAINWINCREATE CreateInfo;
     int ww, wh;
-    HWND hStatic, hProgBar;
 
     ww = ClientWidthToWindowWidth (WS_CAPTION | WS_BORDER, 400);
     wh = ClientHeightToWindowHeight (WS_CAPTION | WS_BORDER, 
@@ -67,7 +76,7 @@ static HWND createProgressWin (HWND hParentWnd, char * title, char * label,
     if (hwnd == HWND_INVALID)
         return hwnd;
 
-    hStatic = CreateWindowEx ("static", 
+    CreateWindowEx ("static", 
                   label, 
                   WS_VISIBLE | SS_SIMPLE, 
                   WS_EX_USEPARENTCURSOR,
@@ -75,7 +84,7 @@ static HWND createProgressWin (HWND hParentWnd, char * title, char * label,
                   10, 10, 380, 16, hwnd, 0);
     
     if (range > 0) {
-        hProgBar = CreateWindowEx ("progressbar", 
+        CreateWindowEx ("progressbar", 
                   NULL, 
                   WS_VISIBLE,
                   WS_EX_USEPARENTCURSOR,
@@ -83,8 +92,6 @@ static HWND createProgressWin (HWND hParentWnd, char * title, char * label,
                   10, 30, 380, 30, hwnd, 0);
         SendDlgItemMessage (hwnd, id, PBM_SETRANGE, 0, range);
     }
-    else
-        hProgBar = HWND_INVALID;
 
     UpdateWindow (hwnd, TRUE);
 

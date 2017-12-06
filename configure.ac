@@ -128,8 +128,6 @@ mginit/Makefile
 mginit/res/Makefile
 src/Makefile
 src/res/Makefile
-notebook/Makefile
-notebook/res/Makefile
 )
 
 if test "x$have_libminigui" != "xyes"; then

@@ -19,7 +19,7 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-#ifdef _MGLF_RDR_SKIN
+#if defined(_MGLF_RDR_SKIN) && defined(_MGCTRL_SPINBOX) && defined(_MGCTRL_PROPSHEET)
 
 #include "lf_skin.h"
 
@@ -835,7 +835,7 @@ int MiniGUIMain (int argc, const char *argv[])
 #else
 int MiniGUIMain (int argc, const char *argv[])
 {
-    fprintf (stderr, "Please open the support for skin LF in MiniGUI. \n");
+    fprintf (stderr, "Please enable the support for skin LFRDR, SPINBOX control and PROPSHEET controls in MiniGUI. \n");
     return 0;
 }
 #endif

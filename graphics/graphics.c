@@ -4,30 +4,21 @@
 ** The demo for GDI.
 **
 ** Copyright (C) 2001 ~ 2002 Wei Yongming.
-** Copyright (C) 2003 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 ** Create date: 2001/10/17
-*/
-
-/*
-**  This source is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU General Public
-**  License as published by the Free Software Foundation; either
-**  version 2 of the License, or (at your option) any later version.
-**
-**  This software is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-**  General Public License for more details.
-**
-**  You should have received a copy of the GNU General Public
-**  License along with this library; if not, write to the Free
-**  Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-**  MA 02111-1307, USA
-*/
-
-/*
-** TODO:
 */
 
 #include <stdio.h>
@@ -960,7 +951,6 @@ static int xspeed = 4, yspeed = 4;
 
 int GDIDemoWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
 {
-    unsigned int start_tick, end_tick;
     HDC hdc;
 
     switch (message) {
@@ -968,7 +958,6 @@ int GDIDemoWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
             if (!anim_inited || wParam != IDT_ANIMATION)
                 return 0;
 
-            start_tick = GetTickCount ();
             /* prepaer the text layer */
             if (count == 0) {
                 SetBrushColor (text_layer, 
@@ -1038,7 +1027,6 @@ int GDIDemoWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
             BitBlt (shadow, 0, 0, 0, 0, hdc, 0, 0, 0);
 #endif
             ReleaseDC (hdc);
-            end_tick = GetTickCount ();
 
             count++;
             if (count == 64)

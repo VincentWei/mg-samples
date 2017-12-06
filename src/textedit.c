@@ -4,11 +4,20 @@
 ** textedit.c: Sample program for MiniGUI Programming Guide
 **      Usage of TEXTEDIT control.
 **
-** Copyright (C) 2004 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
-** License: GPL
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,8 +43,8 @@
 "This version offers a lot of advanced features that will help you develop an embedded product with better user experience, like 3D UI."
                 
 #define newtext \
-"mStudio is a visual integrated development environment (IDE) for MiniGUI application development. \n" \
-"mStudio is based on Eclipse platform. It can provide WYSIWYG UI design for developers by generating code automatically and maintaining MiniGUI project framework."
+"miniStudio is a visual integrated development environment (IDE) for MiniGUI application development. \n" \
+"miniStudio is based on Eclipse platform. It can provide WYSIWYG UI design for developers by generating code automatically and maintaining MiniGUI project framework."
 
 #define shorttext \
 "Welcome to the world of MiniGUI!"
@@ -74,8 +83,7 @@ BookProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
                     case IDC_BT4:
                         {
                             char buffer[40001];
-                            int len;
-                            len = SendMessage (htextedit, EM_GETTITLETEXT, 100, (LPARAM)buffer);
+                            SendMessage (htextedit, EM_GETTITLETEXT, 100, (LPARAM)buffer);
                             break;
                         }
                 }

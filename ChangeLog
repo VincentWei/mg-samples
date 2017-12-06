@@ -1,5 +1,7 @@
 *******************************************************************************
-What's new in this version (3.0.13, 2017/10/26):
+What's new in this version (3.0.13, 2017/12/06):
+
+12/06-2017. TUNNING: Use Apache 2.0 instead of GPL.
 
 10/26-2017. TUNNING: Use configure.ac instead of configure.in.
 

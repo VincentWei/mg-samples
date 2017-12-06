@@ -4,9 +4,19 @@
 ** scrollwnd2.c: Sample program for MiniGUI Programming Guide
 **      Usage of SCROLLWND control.
 **
-** Copyright (C) 2004 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
-** License: GPL
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 */
 
 
@@ -18,6 +28,8 @@
 #include <minigui/gdi.h>
 #include <minigui/window.h>
 #include <minigui/control.h>
+
+#ifdef _MGCTRL_SCROLLVIEW
 
 #ifdef _LANG_ZHCN
 #include "scrollwnd2_res_cn.h"
@@ -102,7 +114,7 @@ ImageViewerProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
 static CTRLDATA CtrlViewer[] =
 {
     {
-        "scrollwnd",
+        CTRL_SCROLLWND,
         WS_BORDER | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL,
          10, 10, 300, 200,
         IDC_SCROLLWND,
@@ -132,6 +144,16 @@ int MiniGUIMain (int argc, const char* argv[])
 
     return 0;
 }
+
+#else /* _MGCTRL_SCROLLVIEW */
+
+int MiniGUIMain (int argc, const char *argv[])
+{
+    fprintf (stderr, "Please enable the support for SCROLLVIEW control in MiniGUI.\n");
+    return 0;
+}
+
+#endif /* _MGCTRL_SCROLLVIEW */
 
 #ifdef _MGRM_THREADS
 #include <minigui/dti.c>

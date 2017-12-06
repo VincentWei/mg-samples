@@ -4,11 +4,20 @@
 ** monthcal.c: Sample program for MiniGUI Programming Guide
 **      Usage of MONTHCALENDAR control.
 **
-** Copyright (C) 2004 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
-** License: GPL
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 */
-
 
 #include <stdlib.h>
 #include <time.h>
@@ -19,9 +28,10 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
+#ifdef _MGCTRL_MONTHCAL
+
 #define IDC_MC                100
 #define IDC_OK                200
-
 
 #ifdef _LANG_ZHCN
 #include "monthcal_res_cn.h"
@@ -121,6 +131,16 @@ int MiniGUIMain (int argc, const char* argv[])
 
     return 0;
 }
+
+#else /* _MGCTRL_MONTHCAL */
+
+int MiniGUIMain (int argc, const char *argv[])
+{
+    fprintf (stderr, "Please enable the support for MONTHCAL control in MiniGUI.\n");
+    return 0;
+}
+
+#endif /* _MGCTRL_MONTHCAL */
 
 #ifdef _MGRM_THREADS
 #include <minigui/dti.c>

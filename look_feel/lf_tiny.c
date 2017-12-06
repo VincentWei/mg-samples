@@ -3,10 +3,19 @@
 **
 ** lf_tiny.c: The tiny LF implementation file.
 **
-** Copyright (C) 2007 ~ 2008 Feynman Software.
+** Copyright (C) 2007 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
-** All rights reserved by Feynman Software.
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
 **
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 */
 
 #include <stdio.h>
@@ -704,7 +713,6 @@ static void draw_checkbox (HDC hdc, const RECT* pRect, DWORD color, int status)
     int i, j, w, h, side_len, boundary;
     int box_l, box_t, box_r, box_b;
     int cross_l, cross_t, cross_r, cross_b;
-    int border_cut;
     gal_pixel color_pixel, pen_color_old, bru_color_old;
 
     if (pRect == NULL)
@@ -719,7 +727,6 @@ static void draw_checkbox (HDC hdc, const RECT* pRect, DWORD color, int status)
 
     side_len = w>=h ? h : w;
     boundary = w>=h ? (w-h)>>1: (h-w)>>1;
-    border_cut = (side_len+1)>>3;
     
     color_pixel = RGBA2Pixel (hdc, GetRValue(color), GetGValue(color), 
                         GetBValue(color), GetAValue(color));
@@ -829,7 +836,6 @@ static void draw_checkmark (HDC hdc, const RECT* pRect, DWORD color, int status)
     int i, j, w, h, side_len, boundary;
     int box_l, box_t, box_r, box_b;
     int hook_l, hook_t, hook_r, hook_b;
-    int border_cut;
     gal_pixel color_pixel, pen_color_old, bru_color_old;
     
     if (pRect == NULL)
@@ -844,7 +850,6 @@ static void draw_checkmark (HDC hdc, const RECT* pRect, DWORD color, int status)
 
     side_len = w>=h ? h : w;
     boundary = w>=h ? (w-h)>>1: (h-w)>>1;
-    border_cut = (side_len+1)>>3;
 
     color_pixel = RGBA2Pixel (hdc, GetRValue(color), GetGValue(color), 
                         GetBValue(color), GetAValue(color));
@@ -3429,11 +3434,10 @@ static void draw_scrollbar (HWND hWnd, HDC hdc, int sb_pos)
     RECT rect = {0,0,0,0};
     int sb_status = 0;
     gal_pixel old_pen_clr, old_bru_clr, arrow_color;
-    DWORD color_3d, fgc_3d, fgc_dis;
+    DWORD fgc_3d, fgc_dis;
     BOOL isCtrl = FALSE;    /** if TRUE it is scrollbar control else not */
     const WINDOWINFO *info = GetWindowInfo(hWnd);
 
-    color_3d = GetWindowElementAttr(hWnd, WE_MAINC_THREED_BODY);
     fgc_3d = GetWindowElementAttr(hWnd, WE_FGC_THREED_BODY);
     fgc_dis = GetWindowElementAttr(hWnd, WE_FGC_DISABLED_ITEM);
 

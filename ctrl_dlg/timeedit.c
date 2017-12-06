@@ -1,28 +1,23 @@
 /*
 ** $Id: timeedit.c 492 2008-02-15 08:24:04Z zhounuohua $
 **
-** timeedit.c: A time editor, use SpinBox and Edit controls.
+** timeedit.c: A time editor, uses SpinBox and Edit controls.
 **
-** Copyright (C) 2003 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 ** Create date: 2001/11/01
-*/
-
-/*
-**  This source is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU General Public
-**  License as published by the Free Software Foundation; either
-**  version 2 of the License, or (at your option) any later version.
-**
-**  This software is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-**  General Public License for more details.
-**
-**  You should have received a copy of the GNU General Public
-**  License along with this library; if not, write to the Free
-**  Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-**  MA 02111-1307, USA
 */
 
 #include <stdio.h>
@@ -34,6 +29,8 @@
 #include <minigui/gdi.h>
 #include <minigui/window.h>
 #include <minigui/control.h>
+
+#ifdef _MGCTRL_SPINBOX
 
 #ifdef _LANG_ZHCN
 #include "dlgdemo_res_cn.h"
@@ -216,4 +213,13 @@ void timeeditor (HWND hwnd)
 
     hMainWnd = CreateMainWindow (&CreateInfo);
 }
+
+#else
+
+void timeeditor (HWND hwnd)
+{
+    MessageBox (hwnd, "WARNING", "Please enable SPINBOX control support in MiniGUI.", MB_OK);
+}
+
+#endif /* _MGCTRL_SPINBOX */
 

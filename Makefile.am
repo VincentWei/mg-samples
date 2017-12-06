@@ -1,5 +1,5 @@
 COMMON_SUBDIRS = same graphics housekeeper minesweeper ctrl_dlg \
-				lf_skin font_text look_feel dbuff notebook
+				lf_skin font_text look_feel dbuff
 
 if MGRM_PROCESSES
 LITE_SUBDIRS=mginit
@@ -9,3 +9,5 @@ endif
 
 DIST_SUBDIRS = $(COMMON_SUBDIRS) mginit src
 SUBDIRS = $(COMMON_SUBDIRS) $(LITE_SUBDIRS) src
+
+EXTRA_DIST = README.md LICENSE

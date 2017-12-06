@@ -1,3 +1,25 @@
+/*
+** $Id$
+**
+** part of housekeeper
+**
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+**
+** Original author: Song Lixin at 2001.3.6
+*/
+
 #include "map.h"
 #include "data.c"
 
@@ -456,13 +478,12 @@ int PlayKeyboard(HWND hwnd, int iDir)
 	int curbefore,curafter;
 	int nextbefore,nextafter;
 	int farbefore, farafter;
-	int iRow, iCol;	
+	int iCol;	
 	
 	ptagStep pAStep;
 
 	ptagLevel cur_level;
 	cur_level = theMap->currentLevel;
-	iRow = cur_level->row;
 	iCol = cur_level->col;
 
 	curx = cur_level->manx;
@@ -642,7 +663,7 @@ int PlayUndo(HWND hwnd)
 	ptagLevel cur_level;
 	int itype;
 	int x, y, value;
-	int iRow, iCol;
+	int iCol;
 	
 	pAStep = PopStep();
 	if (!pAStep)
@@ -653,7 +674,6 @@ int PlayUndo(HWND hwnd)
 
 	cur_level = theMap->currentLevel;
 	iCol = cur_level->col;
-	iRow = cur_level->row;
 
 	x = pAStep->pt1[0];
 	y = pAStep->pt1[1];

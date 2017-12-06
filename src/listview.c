@@ -4,11 +4,20 @@
 ** listview.c: Sample program for MiniGUI Programming Guide
 **      Usage of LISTVIEW control.
 **
-** Copyright (C) 2004 ~ 2007 Feynman Software.
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
-** License: GPL
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,10 +31,11 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
+#ifdef _MGCTRL_LISTVIEW
+
 #define IDC_LISTVIEW    10
 #define IDC_CTRL1       20
 #define IDC_CTRL2       30
-
 
 #define SUB_NUM      3
 
@@ -246,6 +256,16 @@ int MiniGUIMain (int argc, const char* argv[])
 
     return 0;
 }
+
+#else /* _MGCTRL_LISTVIEW */
+
+int MiniGUIMain (int argc, const char *argv[])
+{
+    fprintf (stderr, "Please enable the support for LISTVIEW control in MiniGUI.\n");
+    return 0;
+}
+
+#endif /* _MGCTRL_LISTVIEW */
 
 #ifdef _MGRM_THREADS
 #include <minigui/dti.c>

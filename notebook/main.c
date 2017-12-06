@@ -2,30 +2,25 @@
 ** $Id: main.c,v 1.26 2006/06/08 09:50:37 xwyan Exp $
 **
 ** NoteBook, the M$ Windows like notepad Editor on MiniGUI.
-** Copyright (c) 2000, Feng Da ke (minx@thtfchain.com).
-**
 ** Some idea and source come from VConGUI (Virture Console GUI) 
 **
+** Copyright (c) 2000, Feng Da ke (minx@thtfchain.com).
+** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 ** Create date: 2000/07/05
 ** BTW: today, my sweetheart lovly MinMin comes back from millitery training.
 */ 
-
-/*
-**  This source is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU General Public
-**  License as published by the Free Software Foundation; either
-**  version 2 of the License, or (at your option) any later version.
-**
-**  This software is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-**  General Public License for more details.
-**
-**  You should have received a copy of the GNU General Public
-**  License along with this library; if not, write to the Free
-**  Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-**  MA 02111-1307, USA
-*/
 
 /*
 ** Modify records:
@@ -34,8 +29,6 @@
 **-----------------------------------------------------------------------------
 ** FrankXM         2000.07.05   CIMS104     Create                  processing
 ** leon            2000.11.07   BJ.blpt     Fix bugs                Finished
-**
-** TODO:
 */
 
 #include <stdio.h>
