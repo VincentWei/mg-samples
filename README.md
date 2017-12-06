@@ -1,10 +1,10 @@
-# MG-Samples
+# MiniGUI-Samples
 
 This is the mainline release of basic MiniGUI samples for MiniGUI V3.0.x or later.
 
 ## Prerequisites
 
-    * MiniGUI: v3.0.10 or later
+  * MiniGUI: v3.0.10 or later
 
 ## Building
 
