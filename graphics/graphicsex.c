@@ -353,7 +353,7 @@ static void GDIDemo_PolyFillArcEx(HWND hwnd,HDC hdc)
     Information(hwnd);
 }
 
-static int TestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     switch (message) {

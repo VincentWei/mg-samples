@@ -50,7 +50,7 @@ static WINDOW_ELEMENT_ATTR we_attrs[] =
     {-1, 0}
 };
 
-static int AnimationWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT AnimationWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:

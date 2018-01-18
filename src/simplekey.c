@@ -34,7 +34,7 @@
 #include "simplekey_res_en.h"
 #endif
 
-static int SimplekeyWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT SimplekeyWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_KEYDOWN:
@@ -46,7 +46,7 @@ static int SimplekeyWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam
         break;
 
     case MSG_CHAR:
-        printf ("MGS_CHAR: char %d\n", wParam);
+        printf ("MGS_CHAR: char %d\n", (int)wParam);
         break;
 
     case MSG_CLOSE:

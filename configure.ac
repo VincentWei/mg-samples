@@ -52,6 +52,10 @@ AC_CHECK_DECLS(_MGRM_PROCESSES, procs_version="yes", foo=bar, [#include <minigui
 standalone_version="no"
 AC_CHECK_DECLS(_MGRM_STANDALONE, standalone_version="yes", foo=bar, [#include <minigui/common.h>])
 
+AC_ARG_ENABLE(develmode,
+[  --enable-develmode       developer mode <default=no>],
+devel_mode=$enableval)
+
 AC_ARG_WITH(lang,
         [  --with-lang=[en/zhcn/zhtw]])
 
@@ -102,6 +106,9 @@ AC_CHECK_DECLS(_MGFONT_TTF, LIBS="$LIBS -lttf", foo=bar, [#include <minigui/comm
 AC_CHECK_DECLS(_MGFONT_FT2, LIBS="$LIBS -lfreetype", foo=bar, [#include <minigui/common.h>])
 AC_CHECK_DECLS(_MGFONT_SEF, LIBS="$LIBS -lscripteasy", foo=bar, [#include <minigui/common.h>])
 
+if test "x$devel_mode" = "xyes"; then
+    CFLAGS="$CFLAGS -Werror"
+fi
 
 AC_OUTPUT(
 Makefile

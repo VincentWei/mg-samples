@@ -55,7 +55,7 @@ static void create_control(HWND hwnd)
                   10, 80, 200, 100, hwnd, 0);
 }
 
-static int ToolBarWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ToolBarWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:

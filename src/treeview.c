@@ -43,7 +43,7 @@
 #include "treeview_res_en.h"
 #endif
 
-static int BookProc(HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT BookProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
     switch (message) {

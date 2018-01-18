@@ -46,7 +46,7 @@
 
 static HWND hMainWnd = HWND_INVALID;
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HWND hChildWnd1, hChildWnd2, hChildWnd3, hChildWnd4, hChildWnd5;
     static int pos;

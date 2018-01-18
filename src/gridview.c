@@ -135,8 +135,7 @@ int averge(GRIDCELLS* target, GRIDCELLS* source, DWORD dwAddData)
     return 0;
 }
 
-static int
-ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {

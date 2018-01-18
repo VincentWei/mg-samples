@@ -31,7 +31,7 @@
 
 #define MY_CTRL_NAME "mycontrol"
 
-static int MyControlProc (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT MyControlProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
 
@@ -66,7 +66,7 @@ static void UnregisterMyControl (void)
     UnregisterWindowClass (MY_CTRL_NAME);
 }
 
-static int HelloWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT HelloWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_CREATE:

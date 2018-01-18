@@ -345,7 +345,7 @@ static void ue_3_term (HWND hwnd)
     SetSecondaryDC (hosting, sec_dc_hosting, ON_UPDSECDC_DEFAULT);
 }
 
-static int WatchWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT WatchWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     switch (message) {

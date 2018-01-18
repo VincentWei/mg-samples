@@ -91,7 +91,7 @@ void draw_shape (HWND hwnd, int curPos)
     InvalidateRect (hwnd, &_rect_invalid, TRUE);
 }
 
-static int ScrollbarProc(HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ScrollbarProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     /** IDC of SCROLLBAR control */
     static int _my_scroll_idc = 100;

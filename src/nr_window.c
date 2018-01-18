@@ -30,7 +30,7 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-static int NonRegularWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT NonRegularWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) 
     {

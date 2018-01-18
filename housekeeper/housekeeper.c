@@ -50,7 +50,7 @@
 #define  WIDTH_LARGEWIN   600
 #define  HEIGHT_LARGEWIN  400
 
-int TestMyWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam);
+LRESULT TestMyWinProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam);
 void InitMyWinCreateInfo(PMAINWINCREATE pCreateInfo);
 HMENU createmenu1(void);
 HMENU createpmenugame(void);
@@ -110,8 +110,7 @@ CTRLDATA CtrlInputLevel [] =
     }
 };
   
-static int 
-DialogInputLevelProc(HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogInputLevelProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	char strText[4];
 	int i;
@@ -315,7 +314,7 @@ HMENU createpmenucollection(void)
     return hmnu;
 }
 
-int TestMyWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT TestMyWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
 	int iRet;

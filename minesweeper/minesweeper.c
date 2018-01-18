@@ -72,8 +72,6 @@ void SearchGround(HWND hWnd,int x,int y);
 
 int Open(HWND hWnd,int x,int y);
 
-int TestMyWinProc(HWND hWnd,int message,WPARAM wParam,LPARAM lParam);
-
 void InitMyWinCreateInfo(PMAINWINCREATE pCreateInfo);
 void InitAbHostedCreateInfo(HWND hHosting, PMAINWINCREATE  pCreateInfo); 
 void InitHighScoreCreateInfo (HWND hHosting, PMAINWINCREATE pCreateInfo);
@@ -593,7 +591,7 @@ static char* get_record_file (void)
 		return record_file;
 }
 
-int TestMyWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT TestMyWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC             hdc;
     char            bomn[30], seconds[30];
@@ -644,9 +642,13 @@ int TestMyWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
             }
 
             if ((pHighscore = fopen(get_record_file(),"r"))){
-                for (i = 0; i < 3; i++)
-                    fscanf(pHighscore, "%d, %s",
-                            &score[i].highscore, score[i].name);
+                for (i = 0; i < 3; i++) {
+                    if (fscanf(pHighscore, "%d, %s",
+                            &score[i].highscore, score[i].name) < 2) {
+                        score[i].highscore = 999;
+                        strcpy(score[i].name, "unknown");
+                    }
+                }
                 fclose(pHighscore);
             }
             else
@@ -819,7 +821,7 @@ int TestMyWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
             adrx = (oldx-offsetx)/WIDTH_BOX;
             adry = (oldy-HEIGHT_FACE)/HEIGHT_BOX;
             
-            if (hCongratuate | hHighscore)
+            if (hCongratuate || hHighscore)
                 break;
                 
             if (!PtInRect (&bombregion, oldx, oldy)) {
@@ -1119,7 +1121,7 @@ int MiniGUIMain(int args, const char* arg[])
 #endif
 
 /**********   create a hosted about window****/
-int AbHostedWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT AbHostedWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     
     switch (message) {
@@ -1166,7 +1168,7 @@ void InitAbHostedCreateInfo (HWND hHosting, PMAINWINCREATE pCreateInfo)
 
 /*************************** High Scores Window ******************************/
 #define IDC_RESET  110
-int HighScoreWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT HighScoreWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HWND hRESET, hOK;
     
@@ -1264,7 +1266,7 @@ void InitHighScoreCreateInfo (HWND hHosting, PMAINWINCREATE pCreateInfo)
 
 #define IDC_CTRL_NAME       100
 
-int CongratulationWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT CongratulationWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HWND hPrompt, hName, hOK;
        

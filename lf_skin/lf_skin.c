@@ -96,7 +96,7 @@ static DLGTEMPLATE HelpInfo =
     0
 };
 
-static int HelpListPageProc (HWND hWnd, int nMessage, WPARAM wParam, LPARAM lParam)
+static LRESULT HelpListPageProc (HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
     switch (nMessage) 
     {
@@ -141,7 +141,7 @@ static int HelpListPageProc (HWND hWnd, int nMessage, WPARAM wParam, LPARAM lPar
     return DefaultPageProc (hWnd, nMessage, wParam, lParam);
 }
 
-static int HelpInfoPageProc (HWND hWnd, int nMessage, WPARAM wParam, LPARAM lParam)
+static LRESULT HelpInfoPageProc (HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
     switch (nMessage) 
     {
@@ -199,7 +199,7 @@ static int HelpInfoPageProc (HWND hWnd, int nMessage, WPARAM wParam, LPARAM lPar
     return DefaultPageProc (hWnd, nMessage, wParam, lParam);
 }
 
-static int HelpProc (HWND hWnd, int nMessage, WPARAM wParam, LPARAM lParam)
+static LRESULT HelpProc (HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
     static HWND s_hPropSheet;
 
@@ -367,7 +367,7 @@ static int CreateHelpWin (HWND hWnd)
     return 1;
 }
 
-static int DefButtonProc (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DefButtonProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == MSG_ERASEBKGND) {
         return 0;
@@ -387,7 +387,7 @@ static int DefButtonProc (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
     return (*old_btn_proc) (hwnd, message, wParam, lParam);
 }
 
-static int DefTrackBarProc (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DefTrackBarProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == MSG_ERASEBKGND) {
         return 0;
@@ -397,7 +397,7 @@ static int DefTrackBarProc (HWND hwnd, int message, WPARAM wParam, LPARAM lParam
 }
 
 #if 0
-static int OpenDlgProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT OpenDlgProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == MSG_NCCREATE)
     {
@@ -412,7 +412,7 @@ static int OpenDlgProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
 }
 #endif
 
-static int SkinDemoProc (HWND hWnd, int nMessage, WPARAM wParam, LPARAM lParam)
+static LRESULT SkinDemoProc (HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
     static BOOL s_bPlay;
     static BOOL s_bVolume;

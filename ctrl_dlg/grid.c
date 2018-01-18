@@ -181,8 +181,7 @@ lv_notify_process (HWND hwnd, int id, int code, DWORD addData)
 }
 #endif
 
-static int
-ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static BITMAP folder;
     

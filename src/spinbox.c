@@ -48,8 +48,7 @@
 #define IDC_CTRL4       50
 
 
-static int
-SpinProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT SpinProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hSpin;
     SPININFO spinfo;

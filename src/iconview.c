@@ -118,8 +118,7 @@ static void myDrawItem (HWND hWnd, GHANDLE hsvi, HDC hdc, RECT *rcDraw)
 }
 #endif
 
-static int
-BookProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT BookProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {

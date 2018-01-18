@@ -140,7 +140,7 @@ error:
     return 0;
 }
 
-static int HelloWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT HelloWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HICON myicon;
     HDC hdc;

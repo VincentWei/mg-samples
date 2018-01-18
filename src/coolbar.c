@@ -75,7 +75,7 @@ static void create_coolbar (HWND hWnd)
     }
 }
 
-static int CoolbarWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT CoolbarWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HWND ed;
 

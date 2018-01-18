@@ -81,8 +81,7 @@ static CTRLDATA controls [] =
     }
 };
 
-static int
-ImageViewerProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ImageViewerProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
     switch (message) {

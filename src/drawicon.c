@@ -35,7 +35,7 @@
 #include "drawicon_res_en.h"
 #endif
 
-static int DrawiconWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DrawiconWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HICON myicon_small, myicon_large;
     HDC hdc;

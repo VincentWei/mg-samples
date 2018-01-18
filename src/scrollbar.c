@@ -39,7 +39,7 @@
 
 static int step = 12;
 
-static int ScrollWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ScrollWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static int iStart = 0;
     static int iStartPos = 0; 

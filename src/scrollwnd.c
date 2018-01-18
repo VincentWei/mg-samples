@@ -46,7 +46,7 @@ static HWND hScrollWnd;
 static BITMAP bmp_bkgnd;
 static float current_scale = 1;
 
-static int pic_container_proc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT pic_container_proc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_PAINT:
@@ -62,8 +62,7 @@ static int pic_container_proc (HWND hWnd, int message, WPARAM wParam, LPARAM lPa
     return DefaultContainerProc (hWnd, message, wParam, lParam);
 }
 
-static int
-ImageViewerProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ImageViewerProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
     switch (message)

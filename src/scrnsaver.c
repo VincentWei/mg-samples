@@ -418,7 +418,7 @@ static void TermFlyingGUI (void)
    free_textures();
 }
 
-int FlyingGUIWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT FlyingGUIWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
 

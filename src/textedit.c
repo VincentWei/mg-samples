@@ -49,8 +49,7 @@
 #define shorttext \
 "Welcome to the world of MiniGUI!"
 
-static int
-BookProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT BookProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND htextedit;
 

@@ -95,7 +95,7 @@ static BYTE XORmaskIcon[] = {
     0xd8, 0xf8, 0xff, 0xbf, 0x41, 0x90, 0x04, 0x08
 };
 
-static int CreateiconWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT CreateiconWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HICON new_icon;
     HDC hdc;

@@ -35,7 +35,7 @@ extern HWND hwnd_my;
 static HICON icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10, icon11;
 
 static WNDPROC old_callback;
-static int notif_proc(HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT notif_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -90,7 +90,7 @@ static DLGTEMPLATE DlgYourTaste =
     0
 };
 
-static int DialogBoxProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {

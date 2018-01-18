@@ -47,7 +47,7 @@ static HWND hMainWnd = HWND_INVALID;
 #define IDC_CTRL6     150
 #define IDC_CTRL7     160
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_CREATE:

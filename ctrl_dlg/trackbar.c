@@ -67,7 +67,7 @@ static void TrackbarChanged(int code, HWND ctrl)
 	}
 }
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_CREATE:

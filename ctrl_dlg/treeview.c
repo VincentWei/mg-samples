@@ -49,7 +49,7 @@
 
 static HWND hMainWnd = HWND_INVALID;
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HWND hTreeview, hEdit1, hEdit2;
     TVITEMINFO tvItemInfo = {0};
@@ -58,7 +58,7 @@ static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lPar
         case MSG_CREATE:
         {
             int i = 0;
-            GHANDLE item;
+            LRESULT item;
             hTreeview = CreateWindow (CTRL_TREEVIEW, "", 
                     WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL
                     | WS_BORDER | TVS_SORT | TVS_WITHICON, 
@@ -107,7 +107,7 @@ static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lPar
             int id   = LOWORD(wParam);
             //int code = HIWORD(wParam);
             char buffer[255];
-            GHANDLE item;
+            LRESULT item;
 
             switch (id) {
             case IDC_CTRL4:

@@ -75,8 +75,7 @@ static int myCmpItem (HSVITEM hsvi1, HSVITEM hsvi2)
     return strcmp (name1, name2);
 }
 
-static int
-BookProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT BookProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
     switch (message)
@@ -112,9 +111,8 @@ BookProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
         case IDC_SCROLLVIEW:
             if (code == SVN_CLICKED) {
                 int sel;
-                const char *info;
                 sel = SendMessage (hScrollView, SVM_GETCURSEL, 0, 0);
-                info = (const char *)SendMessage (hScrollView, SVM_GETITEMADDDATA, sel, 0);
+                SendMessage (hScrollView, SVM_GETITEMADDDATA, sel, 0);
             }
             break;
 

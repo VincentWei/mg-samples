@@ -34,8 +34,7 @@
 #include "dlgdemo.h"
 #include "resouce.h"
 
-static int 
-PageProc1 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PageProc1 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
     switch (message) {
@@ -72,8 +71,7 @@ PageProc1 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
-static int 
-PageProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PageProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITPAGE:
@@ -95,8 +93,7 @@ PageProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
-static int 
-PageProc3 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PageProc3 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int i;
     char temp [20];
@@ -130,8 +127,7 @@ PageProc3 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
-static int 
-PageProc4 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PageProc4 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITPAGE:
@@ -150,7 +146,7 @@ PageProc4 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
-static int PropSheetProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PropSheetProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_INITDIALOG:

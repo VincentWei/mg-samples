@@ -107,7 +107,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 }       
 
 static BITMAP bmp_bkgnd;
-static int InputLenDialogBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT InputLenDialogBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:
@@ -174,8 +174,6 @@ static int InputLenDialogBox (HWND hWnd, double* length)
     
     return DialogBoxIndirectParam (&DlgBoxInputLen, hWnd, InputLenDialogBoxProc, (LPARAM)length);
 }
-
-
 
 int MiniGUIMain (int argc, const char* argv[])
 {

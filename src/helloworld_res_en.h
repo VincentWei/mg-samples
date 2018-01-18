@@ -13,7 +13,7 @@
 #define HL_ST_RBD       "The right button pressed."
 #define HL_ST_RBU       "The right button released."
 #define HL_ST_SYS       "sys"
-#define HL_ST_KEYD      "The %d %skey pressed %d times."
+#define HL_ST_KEYD      "The %d %s key pressed %d times."
 #define HL_ST_KEYLONG   "=======The %d key pressed over a long term"
 #define HL_ST_KEYALWAY  "=======The %d key pressed always"
 #define HL_ST_KEYU      "The %d key released"

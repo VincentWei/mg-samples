@@ -277,8 +277,7 @@ zoomout_proc(HWND hwnd, int id, int nc, DWORD add_data)
     ReleaseDC(hdc);
 }
 
-static int
-HelloWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT HelloWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC     hdc;
     HWND    button1, button2, button3, button4, button5, button6, button7;

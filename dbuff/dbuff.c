@@ -160,7 +160,7 @@ static void show_window_specially (HWND hwnd)
 }
 
 static int first_idle;
-static int DialogBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:

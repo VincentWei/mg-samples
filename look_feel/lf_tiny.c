@@ -528,7 +528,9 @@ static int init (PWERENDERER renderer)
     if (!InitRendererSystemIcon (renderer->name, 
                 renderer->we_icon[0], renderer->we_icon[1]))
         return -1;*/
-    getcwd(cur_dir,255);
+    if (getcwd(cur_dir,255) == NULL) {
+        printf("error when calling getcwd!\n");
+    }
     
     for(i =0;i <5;i++){
         sprintf(icon_load,"%s",cur_dir);
@@ -650,7 +652,7 @@ static void draw_3dbox (HDC hdc, const RECT* pRect, DWORD color, DWORD flag)
             pRect->right - 1, pRect->bottom - 1);
 
     if (flag & LFRDR_3DBOX_FILLED) {
-        SetBrushColor(hdc, DWORD2PIXEL (hdc, color)); 
+        SetBrushColor(hdc, DWORD2Pixel (hdc, color)); 
         FillBox(hdc,  pRect->left + 1, 
                 pRect->top + 1,
                 RECTW((*pRect)) - 2, 
@@ -677,7 +679,7 @@ static void draw_radio (HDC hdc, const RECT* pRect, DWORD color, int status)
     if (w < 6 || h < 6)
         return;
 
-    color_pixel = DWORD2PIXEL (hdc, color); 
+    color_pixel = DWORD2Pixel (hdc, color); 
 
     radius = w>h ? (h>>1)-1 : (w>>1)-1;
     center_x = pRect->left + (w>>1);
@@ -1193,7 +1195,7 @@ static void draw_normal_item
 
     if (bg_bmp == NULL)
     {
-        old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+        old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
         FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
         SetBrushColor (hdc, old_bc);
         return;
@@ -1219,7 +1221,7 @@ static void draw_hilite_item
 (HWND hWnd, HDC hdc, const RECT* pRect, DWORD color)
 {
     gal_pixel old_bc;
-    old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+    old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
     FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
     SetBrushColor (hdc, old_bc);
 }
@@ -1228,7 +1230,7 @@ static void draw_disabled_item
 (HWND hWnd, HDC hdc, const RECT* pRect, DWORD color)
 {
     gal_pixel old_bc;
-    old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+    old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
     FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
     SetBrushColor (hdc, old_bc);
 }
@@ -1237,7 +1239,7 @@ static void draw_significant_item
 (HWND hWnd, HDC hdc, const RECT* pRect, DWORD color)
 {
     gal_pixel old_bc;
-    old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+    old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
     FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
     SetBrushColor (hdc, old_bc);
 }
@@ -1246,7 +1248,7 @@ static void draw_normal_menu_item
 (HWND hWnd, HDC hdc, const RECT* pRect, DWORD color)
 {
     gal_pixel old_bc;
-    old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+    old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
     FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
     SetBrushColor (hdc, old_bc);
 }
@@ -1255,7 +1257,7 @@ static void draw_hilite_menu_item
 (HWND hWnd, HDC hdc, const RECT* pRect, DWORD color)
 {
     gal_pixel old_bc;
-    old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+    old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
     FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
     SetBrushColor (hdc, old_bc);
 }
@@ -1264,7 +1266,7 @@ static void draw_disabled_menu_item
 (HWND hWnd, HDC hdc, const RECT* pRect, DWORD color)
 {
     gal_pixel old_bc;
-    old_bc = SetBrushColor (hdc, DWORD2PIXEL (hdc, color));
+    old_bc = SetBrushColor (hdc, DWORD2Pixel (hdc, color));
     FillBox (hdc, pRect->left, pRect->top, RECTWP (pRect), RECTHP (pRect));
     SetBrushColor (hdc, old_bc);
 }
@@ -3987,7 +3989,7 @@ draw_tab (HWND hWnd, HDC hdc, RECT *rect, char *title, DWORD color, int flag, HI
 
     /* draw the title's edge */
     /* pc3d style & tiny & grap */
-    SetPenColor(hdc, DWORD2PIXEL (hdc, light_c)); 
+    SetPenColor(hdc, DWORD2Pixel (hdc, light_c)); 
     if (flag & LFRDR_TAB_BOTTOM) {
         MoveTo (hdc, rect->left, ty);
         LineTo (hdc, rect->left, by - 3 );
@@ -4006,26 +4008,26 @@ draw_tab (HWND hWnd, HDC hdc, RECT *rect, char *title, DWORD color, int flag, HI
     }
 
     if (flag & LFRDR_TAB_BOTTOM) {
-        SetPenColor(hdc, DWORD2PIXEL (hdc, darkest_c)); 
+        SetPenColor(hdc, DWORD2Pixel (hdc, darkest_c)); 
         MoveTo (hdc, rect->right - 2, by - 3);
         LineTo (hdc, rect->right - 2, ty);
 
         MoveTo (hdc, rect->right - 3, by - 2 );
         LineTo (hdc, rect->right - 3, by - 2);
  
-        SetPenColor(hdc, DWORD2PIXEL (hdc, darker_c)); 
+        SetPenColor(hdc, DWORD2Pixel (hdc, darker_c)); 
         MoveTo (hdc, rect->right - 3, by -3);
         LineTo (hdc, rect->right - 3, ty);
  
     }else {
-        SetPenColor(hdc, DWORD2PIXEL (hdc, darkest_c)); 
+        SetPenColor(hdc, DWORD2Pixel (hdc, darkest_c)); 
         MoveTo (hdc, rect->right - 2, ty + 2 );
         LineTo (hdc, rect->right - 2, by - 2);
 
         MoveTo (hdc, rect->right - 3, ty + 1 );
         LineTo (hdc, rect->right - 3, ty + 1);
  
-        SetPenColor(hdc, DWORD2PIXEL (hdc, darker_c)); 
+        SetPenColor(hdc, DWORD2Pixel (hdc, darker_c)); 
         MoveTo (hdc, rect->right - 3, ty + 2 );
         LineTo (hdc, rect->right - 3, by - 2);
 
@@ -4046,7 +4048,7 @@ draw_tab (HWND hWnd, HDC hdc, RECT *rect, char *title, DWORD color, int flag, HI
     }
         
     /* draw the TEXT */
-    SetBkColor (hdc, DWORD2PIXEL (hdc, color)); 
+    SetBkColor (hdc, DWORD2Pixel (hdc, color)); 
     text_extent -= 4;
     eff_len = GetTextExtentPoint (hdc, title, strlen(title), 
                   text_extent, &eff_chars, NULL, NULL, &size);

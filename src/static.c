@@ -43,7 +43,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
         SetWindowText (hwnd, PROMPTB);
 }
 
-static int StaticDemoWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT StaticDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hwnd;
 

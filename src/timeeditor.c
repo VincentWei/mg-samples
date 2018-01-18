@@ -86,7 +86,7 @@ static void on_down_up (HWND hwnd, int offset)
     SendMessage (hwnd, EM_SETCARETPOS, 0, caretpos);
 }
 
-static int TimeEditBox (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TimeEditBox (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == MSG_KEYDOWN) {
         switch (wParam) {
@@ -118,17 +118,16 @@ static int TimeEditBox (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
 }
 
 
-static int TimeEditorWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TimeEditorWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
     {
-        HWND hwnd;
         HDC hdc;
         HWND timeedit, spin;
         SIZE size;
 
-        hwnd = CreateWindow (CTRL_STATIC, PROMPT, 
+        CreateWindow (CTRL_STATIC, PROMPT, 
                         WS_CHILD | WS_VISIBLE | SS_LEFT, 
                         IDC_STATIC, 
                         10, 10, 210, 200, hWnd, 0);
@@ -157,7 +156,7 @@ static int TimeEditorWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lPar
                         WS_CHILD | WS_VISIBLE, 
                         IDC_SPINBOX, 
                         40 + size.cx + 6, 220 + (size.cy - 14) / 2, 20, 20, hWnd, 0);
-        SendMessage (spin, SPM_SETTARGET, 0, timeedit);
+        SendMessage (spin, SPM_SETTARGET, 0, (LPARAM)timeedit);
         break;
     }
 

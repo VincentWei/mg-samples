@@ -524,7 +524,7 @@ static HMENU createmenu (void)
     return hmnu;
 }
 
-int SameGameProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT SameGameProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:

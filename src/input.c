@@ -107,7 +107,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }       
 
-static int InputLenDialogBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT InputLenDialogBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:

@@ -52,7 +52,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }
 
-static int TrackBarWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TrackBarWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hwnd;
     switch (message) {

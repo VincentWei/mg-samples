@@ -155,7 +155,7 @@ static void prompt (HWND hDlg)
     MessageBox (hDlg, date, meeting_plan_, MB_OK | MB_ICONINFORMATION);
 }
 
-static int MyDateBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT MyDateBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int i;
     switch (message) {

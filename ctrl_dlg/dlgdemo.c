@@ -279,8 +279,7 @@ static HMENU createmenu (void)
     return hmnu;
 }
 
-static int 
-DialogBoxProc1 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc1 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:
@@ -302,8 +301,7 @@ DialogBoxProc1 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
-static int 
-DialogBoxProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int i;
     char temp [20];
@@ -335,8 +333,7 @@ DialogBoxProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
-static int 
-DialogBoxProc3 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc3 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:
@@ -356,8 +353,7 @@ DialogBoxProc3 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
-static int 
-DialogBoxProc4 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc4 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:
@@ -405,7 +401,7 @@ static void testDialogBox4 (HWND hWnd)
     DialogBoxIndirectParam (&DlgStructParams, hWnd, DialogBoxProc4, 0L);
 }
 
-int DialogTestMainWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT DialogTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_CREATE:

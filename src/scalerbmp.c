@@ -41,7 +41,7 @@ static BITMAP bmp2;
 static HICON icon1;
 static BOOL biliner_scaler = TRUE; 
 
-static int LoadBmpWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT LoadBmpWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     switch (message) {

@@ -45,7 +45,7 @@ static void InitMyPalette(GAL_Color *colors)
     }
 }
 
-static int PaletteWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PaletteWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     int x, y;

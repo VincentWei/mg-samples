@@ -35,7 +35,7 @@
 #include "stretchblt_res_en.h"
 #endif
 
-static int StretchbltWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT StretchbltWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
 

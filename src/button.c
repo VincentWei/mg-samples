@@ -171,7 +171,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }
 
-static int DialogBoxProc2 (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:

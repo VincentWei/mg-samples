@@ -38,7 +38,7 @@
 
 static BITMAP bmp;
 
-static int LoadBmpWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT LoadBmpWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     switch (message) {

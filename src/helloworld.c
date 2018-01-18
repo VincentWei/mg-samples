@@ -75,7 +75,7 @@ static void make_welcome_text (void)
     strcpy (msg_text, HL_ST_NOMES);
 }
 
-static int HelloWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT HelloWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
 
@@ -131,22 +131,22 @@ static int HelloWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
                 last_key_count = 1;
             }
             sprintf (msg_text, HL_ST_KEYD, 
-                            wParam, syskey, last_key_count);
+                            (int)wParam, syskey, last_key_count);
             InvalidateRect (hWnd, &msg_rc, TRUE);
             return 0;
 
         case MSG_KEYLONGPRESS:
-            sprintf (msg_text, HL_ST_KEYLONG, wParam);
+            sprintf (msg_text, HL_ST_KEYLONG, (int)wParam);
             InvalidateRect (hWnd, &msg_rc, TRUE);
             break;
 
         case MSG_KEYALWAYSPRESS:
-            sprintf (msg_text, HL_ST_KEYALWAY, wParam);
+            sprintf (msg_text, HL_ST_KEYALWAY, (int)wParam);
             InvalidateRect (hWnd, &msg_rc, TRUE);
             break;
 
         case MSG_KEYUP:
-            sprintf (msg_text, HL_ST_KEYU, wParam);
+            sprintf (msg_text, HL_ST_KEYU, (int)wParam);
             InvalidateRect (hWnd, &msg_rc, TRUE);
             return 0;
 

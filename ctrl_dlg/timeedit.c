@@ -89,7 +89,7 @@ static void on_down_up (HWND hwnd, int offset)
     SendMessage (hwnd, EM_SETCARETPOS, 0, caretpos);
 }
 
-static int TimeEditBox (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TimeEditBox (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == MSG_KEYDOWN) {
         switch (wParam) {
@@ -121,7 +121,7 @@ static int TimeEditBox (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
 }
 
 
-static int ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
@@ -162,7 +162,7 @@ static int ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lPa
                         IDC_SPINBOX, 
                         120 + size.cx + 6, 220, 
                         size.cy + 4, size.cy + 4, hWnd, 0);
-        SendMessage (spin, SPM_SETTARGET, 0, timeedit);
+        SendMessage (spin, SPM_SETTARGET, 0, (LPARAM)timeedit);
         break;
     }
 

@@ -112,8 +112,8 @@ static int compare_time (HLVITEM nItem1, HLVITEM nItem2, PLVSORTDATA sortData)
         DWORD data1, data2;
         struct stat stat1, stat2;
 
-        data1 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, nItem1);
-        data2 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, nItem2);
+        data1 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, (LPARAM)nItem1);
+        data2 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, (LPARAM)nItem2);
 
         stat ( (char*)data1, &stat1 );
         stat ( (char*)data2, &stat2 );
@@ -127,8 +127,8 @@ static int compare_size (HLVITEM nItem1, HLVITEM nItem2, PLVSORTDATA sortData)
         struct stat stat1, stat2;
         int size1, size2;
 
-        data1 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, nItem1);
-        data2 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, nItem2);
+        data1 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, (LPARAM)nItem1);
+        data2 = SendMessage (hChildWnd1, LVM_GETITEMADDDATA, 0, (LPARAM)nItem2);
 
         stat ( (char*)data1, &stat1 );
         stat ( (char*)data2, &stat2 );
@@ -191,12 +191,12 @@ lv_notify_process (HWND hwnd, int id, int code, DWORD addData)
 
         if (key == SCANCODE_REMOVE) {
             HLVITEM hlvi;
-            hlvi = SendMessage (hwnd, LVM_GETSELECTEDITEM, 0, 0);
+            hlvi = (HLVITEM)SendMessage (hwnd, LVM_GETSELECTEDITEM, 0, 0);
             if (hlvi) {
                 if( MessageBox (hMainWnd, are_you_really_want_to_delete_this_file, 
                             warning, MB_YESNO) == IDYES) {
                     // not really delete yet.
-                    SendMessage (hwnd, LVM_DELITEM, 0, hlvi);
+                    SendMessage (hwnd, LVM_DELITEM, 0, (LPARAM)hlvi);
                 }
             }
         }
@@ -217,7 +217,7 @@ lv_notify_process (HWND hwnd, int id, int code, DWORD addData)
             x, y, hMainWnd);
     }
     if (code == LVN_ITEMDBCLK) {
-        HLVITEM hlvi = SendMessage (hwnd, LVM_GETSELECTEDITEM, 0, 0);
+        HLVITEM hlvi = (HLVITEM)SendMessage (hwnd, LVM_GETSELECTEDITEM, 0, 0);
         if (hlvi > 0) {
                 if( MessageBox (hMainWnd, Are_you_really_want_to_open_this_file, 
                             Question, MB_YESNO) == IDYES) {
@@ -229,8 +229,7 @@ lv_notify_process (HWND hwnd, int id, int code, DWORD addData)
 
 extern BITMAP bmp_bkgnd;
 
-static int
-ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static BITMAP folder;
 
@@ -265,28 +264,28 @@ ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
         s1.width = 100;
         s1.pfnCompare = NULL;
         s1.colFlags = 0;
-        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) & s1);
+        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) &s1);
 
         s1.nCols = 1;
         s1.pszHeadText = File_size;
         s1.width = 100;
         s1.pfnCompare = compare_size;
         s1.colFlags = LVCF_RIGHTALIGN | LVHF_CENTERALIGN;
-        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) & s1);
+        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) &s1);
 
         s1.nCols = 2;
         s1.pszHeadText = Category;
         s1.width = 80;
         s1.pfnCompare = NULL;
         s1.colFlags = 0;
-        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) & s1);
+        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) &s1);
 
         s1.nCols = 3;
         s1.pszHeadText = Last_modified_time;
         s1.width = 180;
         s1.pfnCompare = compare_time;
         s1.colFlags = LVCF_CENTERALIGN;
-        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) & s1);
+        SendMessage (hChildWnd1, LVM_ADDCOLUMN, 0, (LPARAM) &s1);
 
         dir = opendir ("./");
 
@@ -375,8 +374,8 @@ ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
         case IDC_CTRL1:
         {
             HLVITEM hlvi;
-            hlvi = SendMessage (hChildWnd1, LVM_GETSELECTEDITEM, 0, 0);
-            SendMessage (hChildWnd1, LVM_DELITEM, 0, (LPARAM)hlvi );
+            hlvi = (HLVITEM)SendMessage (hChildWnd1, LVM_GETSELECTEDITEM, 0, 0);
+            SendMessage (hChildWnd1, LVM_DELITEM, 0, (LPARAM)hlvi);
             break;
         }
         case IDC_CTRL2:
@@ -419,8 +418,8 @@ ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
             find_info.flags = LVFF_TEXT;
             find_info.nCols = 0;
             find_info.pszInfo = text;
-            hlvi = SendMessage (hChildWnd1, LVM_FINDITEM, 0, (LPARAM)&find_info);
-            SendMessage (hChildWnd1, LVM_CHOOSEITEM, 0, hlvi);
+            hlvi = (HLVITEM)SendMessage (hChildWnd1, LVM_FINDITEM, 0, (LPARAM)&find_info);
+            SendMessage (hChildWnd1, LVM_CHOOSEITEM, 0, (LPARAM)hlvi);
             break;
         }
         case IDM_FILE:

@@ -1864,7 +1864,7 @@ static void OnModeRotation (HWND hWnd, HDC hdc)
 
 
 
-int FontTestMainWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT FontTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int i = 0;
     DEVFONT* devfont[68];

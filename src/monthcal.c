@@ -78,7 +78,7 @@ DLGTEMPLATE DlgTime =
 
 /*******************************************************************************/
 
-static int TimeWinProc(HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TimeWinProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_INITDIALOG:

@@ -242,7 +242,7 @@ static void prompt (HWND hDlg)
 
 }
 
-static int DelFilesBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT DelFilesBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITDIALOG:

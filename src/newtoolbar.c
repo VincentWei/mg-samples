@@ -146,7 +146,7 @@ static void create_new_toolbar (HWND hWnd)
     SendMessage (ntb, NTBM_ADDITEM, 0, (LPARAM)&ntbii);
 }
 
-static int ToolBarWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ToolBarWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:

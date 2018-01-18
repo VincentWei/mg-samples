@@ -38,7 +38,7 @@
 #define IDC_MYBUTTON    100
 
 /* a simple button control */
-static int MybuttonWindowProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT MybuttonWindowProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     static int status = 0;
@@ -89,7 +89,7 @@ BOOL RegisterMybutton (void)
 }
 
 /* main windoww proc */
-static int CaptureWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT CaptureWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:

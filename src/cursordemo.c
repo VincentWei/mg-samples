@@ -40,7 +40,7 @@
 static HWND hTrapWin, hMainWnd;
 static RECT rc;
 
-static int TrapwindowProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TrapwindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static BOOL bTrapped = FALSE;
 
@@ -80,7 +80,7 @@ BOOL RegisterTrapwindow (void)
     return RegisterWindowClass (&WndClass);
 }
 
-static int CursordemoWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT CursordemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static int count = 0;
     switch (message) {

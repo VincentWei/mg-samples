@@ -72,7 +72,7 @@ static const char *iconlabels[12] =
 };
 
 static WNDPROC old_callback;
-static int notif_proc(HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT notif_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -97,8 +97,7 @@ static int notif_proc(HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
     return old_callback(hwnd, message, wParam, lParam);
 }
 
-static int
-BookProc (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT BookProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hIconView = GetDlgItem (hwnd, IDC_ICONVIEW);
     switch (message)

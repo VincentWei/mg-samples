@@ -88,8 +88,7 @@ void add_button(const char* text, int id)
     button_x += size.cx + 20;
 }
 
-static int
-ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {

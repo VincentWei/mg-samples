@@ -113,11 +113,11 @@ static void create_image_listbox (HWND parent)
         lbii.cmFlag = 0;
         lbii.string = dir_ent->d_name;
         if (S_ISDIR (my_stat.st_mode)) {
-            lbii.hIcon = (DWORD)GetSmallSystemIcon (IDI_APPLICATION);
+            lbii.hIcon = GetSmallSystemIcon (IDI_APPLICATION);
             SendMessage (hwnd, LB_ADDSTRING, 0, (LPARAM)&lbii);
         }
         else {
-            lbii.hIcon = (DWORD)GetSmallSystemIcon (IDI_STOP);
+            lbii.hIcon = GetSmallSystemIcon (IDI_STOP);
             SendMessage (hwnd, LB_ADDSTRING, 0, (LPARAM)&lbii);
         }
     }
@@ -158,11 +158,11 @@ static void create_multisel_listbox (HWND parent)
         lbii.cmFlag = 0;
         lbii.string = dir_ent->d_name;
         if (S_ISDIR (my_stat.st_mode)) {
-            lbii.hIcon = (DWORD)GetSmallSystemIcon (IDI_APPLICATION);
+            lbii.hIcon = GetSmallSystemIcon (IDI_APPLICATION);
             SendMessage (hwnd, LB_ADDSTRING, 0, (LPARAM)&lbii);
         }
         else {
-            lbii.hIcon = (DWORD)GetSmallSystemIcon (IDI_STOP);
+            lbii.hIcon = GetSmallSystemIcon (IDI_STOP);
             SendMessage (hwnd, LB_ADDSTRING, 0, (LPARAM)&lbii);
         }
     }
@@ -312,7 +312,7 @@ static void create_checkbox_listbox (HWND parent)
 #endif
 }
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_CREATE:

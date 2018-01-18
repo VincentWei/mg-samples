@@ -103,7 +103,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }       
 
-static int InputCharDialogBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT InputCharDialogBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hwnd;
 

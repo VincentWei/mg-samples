@@ -123,8 +123,7 @@ static void my_draw_hdr_item (HWND hWnd, int idx, HDC hdc, RECT *rcDraw)
 }
 #endif
 
-static int
-ScoreProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ScoreProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hListView;
     hListView = GetDlgItem (hDlg, IDC_LISTVIEW);

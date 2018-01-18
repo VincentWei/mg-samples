@@ -198,7 +198,7 @@ WINDOW_ELEMENT_ATTR myattrs[] =
 };
 #endif
 
-static int LookFeelWinProc(HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT LookFeelWinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {

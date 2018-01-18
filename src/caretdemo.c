@@ -43,7 +43,7 @@
 #define IDC_MYEDIT    100
 
 /* a simple edit window */
-static int MyeditWindowProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT MyeditWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int w = 0;
     SIZE Size;
@@ -176,7 +176,7 @@ BOOL RegisterMyedit(void)
 }
 
 /* main windoww proc */
-static int CaretdemoWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT CaretdemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hMyedit;
 

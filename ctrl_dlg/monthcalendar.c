@@ -60,11 +60,9 @@
 
 static HWND hMainWnd = HWND_INVALID;
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    static HWND hChildWnd1, hMeditWnd1, hBtnWnd1, hBtnWnd2, hBtnWnd3, hBtnWnd4, 
-			hBtnWnd5, hBtnWnd6, hBtnWnd7, hBtnWnd8, hBtnWnd9, hBtnWnd10,
-			hBtnWnd11, hBtnWnd12, hMeditWnd2, hBtnWnd13, hBtnWnd14;
+    static HWND hChildWnd1, hMeditWnd1, hMeditWnd2;
 
     switch (message) {
         case MSG_CREATE:
@@ -76,7 +74,7 @@ static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lPar
 										MCS_NOTIFY, 
                                         IDC_CTRL1, 
                                         50, 20, 250, 180, hWnd, 0);
-			hBtnWnd1 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_current_day,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
@@ -90,77 +88,77 @@ static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lPar
 									  IDC_CTRL3,
 									  350, 20, 230, 100, hWnd, 0);
 		
-			hBtnWnd2 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_current_month,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL4,
 									 140, 260, 160, 24, hWnd, 0);
-			hBtnWnd3 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_current_year,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL5,
 									 140, 300, 160, 24, hWnd, 0);
-			hBtnWnd4 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 set_current_day,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL6,
 									 140, 340, 160, 24, hWnd, 0);
-			hBtnWnd5 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 set_current_month,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL7,
 									 140, 380, 160, 24, hWnd, 0);
-			hBtnWnd6 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 set_current_year,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL8,
 									 140, 420, 160, 24, hWnd, 0);
-			hBtnWnd7 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 set_current_date_as_today,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL9,
 									 140, 460, 160, 24, hWnd, 0);
-			hBtnWnd8 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_first_day_of_week,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL10,
 									 140, 500, 160, 24, hWnd, 0);
-			hBtnWnd9 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_current_date,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL11,
 									 350, 220, 160, 24, hWnd, 0);
-			hBtnWnd10 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_today,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL12,
 									 350, 260, 160, 24, hWnd, 0);
-			hBtnWnd11 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_minreqrectsize,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL13,
 									 350, 300, 160, 24, hWnd, 0);
-			hBtnWnd12 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 set_current_date,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
@@ -173,14 +171,14 @@ static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lPar
 									  WS_VISIBLE,
 									  IDC_CTRL15,
 									  350, 150, 230, 50, hWnd, 0);
-			hBtnWnd13 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 set_color,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 
 									 | WS_VISIBLE, 
 									 IDC_CTRL16,
 									 350, 380, 160, 24, hWnd, 0);
-			hBtnWnd14 = CreateWindow ("button", 
+			CreateWindow ("button", 
 									 get_color,
 									 WS_CHILD 
 									 | BS_PUSHBUTTON 

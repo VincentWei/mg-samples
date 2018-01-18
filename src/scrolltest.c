@@ -520,7 +520,7 @@ void ShowBitmap(HDC hdc)
 		pbmp);
 }
 
-static int ScrollTestProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ScrollTestProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
 

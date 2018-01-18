@@ -34,7 +34,7 @@
 #include "bitblt_res_en.h"
 #endif
 
-static int BitbltWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT BitbltWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     int x, y;

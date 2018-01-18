@@ -138,7 +138,7 @@ static void get_systeminfo (HWND hDlg)
     }
 }
 
-static int SysInfoPageProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT SysInfoPageProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_INITPAGE:
@@ -157,7 +157,7 @@ static int SysInfoPageProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
-static int PropSheetProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PropSheetProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_INITDIALOG:

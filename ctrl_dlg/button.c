@@ -54,7 +54,7 @@ static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
 
 #endif
 
-static int ControlTestWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HWND hwnd;
     switch (message) {

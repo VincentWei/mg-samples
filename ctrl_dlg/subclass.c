@@ -50,7 +50,7 @@ static HWND hMainWnd = HWND_INVALID;
 
 static WNDPROC old_edit_proc;
 
-static int RestrictedEditBox (HWND hwnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT RestrictedEditBox (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == MSG_CHAR) {
         DWORD my_style = GetWindowAdditionalData (hwnd);
@@ -64,7 +64,7 @@ static int RestrictedEditBox (HWND hwnd, int message, WPARAM wParam, LPARAM lPar
     return (*old_edit_proc) (hwnd, message, wParam, lParam);
 }
 
-static int ControlTestWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:

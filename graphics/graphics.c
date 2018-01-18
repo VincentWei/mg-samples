@@ -949,7 +949,7 @@ static RECT text_rc;
 static int x, y = 20, oldx = -100, oldy, xdir = 1, ydir = 1, count;
 static int xspeed = 4, yspeed = 4;
 
-int GDIDemoWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT GDIDemoWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
 

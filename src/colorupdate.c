@@ -113,7 +113,7 @@ static void getRandomPixel (Uint32 *p)
     *p = RGB2Pixel (HDC_SCREEN, r, g, b);
 }
 
-static int InitDialogBoxProc (HWND hDlg, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT InitDialogBoxProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     Uint32 pixel;
     int i;

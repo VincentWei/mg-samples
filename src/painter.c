@@ -35,7 +35,7 @@
 #include "painter_res_en.h"
 #endif
 
-static int PainterWinProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT PainterWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     static BOOL bdraw = FALSE;
