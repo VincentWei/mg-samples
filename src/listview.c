@@ -58,7 +58,7 @@
 static GHANDLE add_class_item (HWND hlist, PLVITEM lvItem, GHANDLE classent)
 {
     LVSUBITEM subdata;
-    GHANDLE item = SendMessage (hlist, LVM_ADDITEM, classent, (LPARAM)lvItem);
+    GHANDLE item = (GHANDLE)SendMessage (hlist, LVM_ADDITEM, (WPARAM)classent, (LPARAM)lvItem);
 
     subdata.nItem = lvItem->nItem;
     subdata.subItem = 0;
@@ -66,7 +66,7 @@ static GHANDLE add_class_item (HWND hlist, PLVITEM lvItem, GHANDLE classent)
     subdata.nTextColor = PIXEL_black;
     subdata.flags = 0;
     subdata.image = 0;
-    SendMessage (hlist, LVM_SETSUBITEM, item, (LPARAM) & subdata);
+    SendMessage (hlist, LVM_SETSUBITEM, (WPARAM)item, (LPARAM)&subdata);
 
     return item;
 }
@@ -75,7 +75,7 @@ static GHANDLE add_score_item (HWND hlist, PLVITEM lvItem, GHANDLE classent)
 {
     char buff[20];
     LVSUBITEM subdata;
-    GHANDLE item = SendMessage (hlist, LVM_ADDITEM, classent, (LPARAM)lvItem);
+    GHANDLE item = (GHANDLE)SendMessage (hlist, LVM_ADDITEM, (WPARAM)classent, (LPARAM)lvItem);
     int i = lvItem->nItem;
     int j;
 
@@ -85,21 +85,20 @@ static GHANDLE add_score_item (HWND hlist, PLVITEM lvItem, GHANDLE classent)
 
     for (j = 0; j < 4; j ++) {
 
-    subdata.subItem = j;
-    if (j == 0) {
-        subdata.pszText = scores[i].name;
-        subdata.nTextColor = PIXEL_black;
-    }
-    else {
-        sprintf (buff, "%d", scores[i].scr[j-1]);
-        subdata.pszText = buff;
-        if (scores[i].scr[j-1] > 90)
-            subdata.nTextColor = PIXEL_red;
-        else
+        subdata.subItem = j;
+        if (j == 0) {
+            subdata.pszText = scores[i].name;
             subdata.nTextColor = PIXEL_black;
-    }
-    SendMessage (hlist, LVM_SETSUBITEM, item, (LPARAM) & subdata);
-
+        }
+        else {
+            sprintf (buff, "%d", scores[i].scr[j-1]);
+            subdata.pszText = buff;
+            if (scores[i].scr[j-1] > 90)
+                subdata.nTextColor = PIXEL_red;
+            else
+                subdata.nTextColor = PIXEL_black;
+        }
+        SendMessage (hlist, LVM_SETSUBITEM, (WPARAM)item, (LPARAM)&subdata);
     }
 
     return item;
@@ -140,7 +139,7 @@ static LRESULT ScoreProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 #ifdef CUSTOM_DRAW
         LVCUSTOMDRAWFUNCS myfuncs = {my_draw_hdr_bk, my_draw_hdr_item};
 
-        SendMessage (hListView, LVM_SETCUSTOMDRAW, 0, (LPARAM) &myfuncs);
+        SendMessage (hListView, LVM_SETCUSTOMDRAW, 0, (LPARAM)&myfuncs);
 #endif
 
         for (i = 0; i < COL_NR; i++) {
@@ -149,7 +148,7 @@ static LRESULT ScoreProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             lvcol.width = 75;
             lvcol.pfnCompare = NULL;
             lvcol.colFlags = 0;
-            SendMessage (hListView, LVM_ADDCOLUMN, 0, (LPARAM) &lvcol);
+            SendMessage (hListView, LVM_ADDCOLUMN, 0, (LPARAM)&lvcol);
         }
 
         item.nItemHeight = 25;
@@ -187,7 +186,7 @@ static LRESULT ScoreProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
             sprintf (buff, "%4.1f", average);
             SendDlgItemMessage (hDlg, IDC_CTRL1, MSG_SETTEXT, 0, (LPARAM)buff);
-			printf("selected column%d\n", SendDlgItemMessage(hDlg, IDC_LISTVIEW,  LVM_GETSELECTEDCOLUMN, 0,0));
+			printf ("selected column: %ld\n", SendDlgItemMessage (hDlg, IDC_LISTVIEW,  LVM_GETSELECTEDCOLUMN, 0,0));
         }
         break;
     }
