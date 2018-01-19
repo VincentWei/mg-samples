@@ -46,6 +46,4 @@ typedef struct _ICON_INFO
 #define DEF_WIDTH 64
 #define DEF_HEIGHT 64
 
-static ICON_INFO icon_info;
-
 extern DESKTOPOPS mg_dsk_ops;

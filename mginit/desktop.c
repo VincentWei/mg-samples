@@ -42,6 +42,8 @@
 #include "desktop_res_en.h"
 #endif
 
+static ICON_INFO icon_info;
+
 static void free_dsp_app (void)
 {
     int i;
@@ -332,9 +334,10 @@ static void this_mouse_handler(void* context, int message,
                 {
                     if (PtInRect(&item->hot_spot_rc, x, y)) 
                     {
-                        if(item->cdpath)
-                        {
-                            chdir(item->path);
+                        if(item->cdpath) {
+                            if (chdir(item->path)) {
+                                fprintf (stderr, "erorr on chdir.\n");
+                            }
                         }
                         strcpy (buff, item->path);
                         strcat (buff, item->name);
@@ -454,7 +457,10 @@ static void this_desktop_menucmd_handler (void* context, int id)
             {
                 if(item->cdpath)
                 {
-                    chdir(item->path);
+                    if (chdir(item->path)) {
+                        fprintf (stderr, "erorr on chdir.\n");
+                        return;
+                    }
                 }
                 strcpy (buff, item->path);
                 strcat (buff, item->name);

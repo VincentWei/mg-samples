@@ -180,7 +180,7 @@ static void under_construction (HWND hwnd)
             MB_OK | MB_ICONEXCLAMATION);
 }
 
-static BOOL ask_for_quit (HWND hwnd)
+static void ask_for_quit (HWND hwnd)
 {
     if (MessageBox (hwnd, 
             "You are asking for quit. \n\nDo you want to quit really?",
@@ -190,9 +190,8 @@ static BOOL ask_for_quit (HWND hwnd)
     }
 }
 
-static HWND hIMEWnd = 0;
 static BITMAP * plogo = NULL;
-static int TaskBarWinProc (HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+static LRESULT TaskBarWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     char buff [20];
 
@@ -307,7 +306,10 @@ pid_t exec_app (int app)
     }
     else if (pid == 0) {
         if (app_info.app_items [app].cdpath) {
-            chdir (app_info.app_items [app].path);
+            if (chdir (app_info.app_items [app].path)) {
+                fprintf (stderr, "error on chdir.\n");
+                return 0;
+            }
         }
         strcpy (buff, app_info.app_items [app].path);
         strcat (buff, app_info.app_items [app].name);
