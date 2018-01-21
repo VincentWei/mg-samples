@@ -27,31 +27,6 @@ AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_CHECK_HEADERS(sys/time.h unistd.h)
 
-dnl ========================================================================
-dnl check for libminigui
-have_libminigui="no"
-AC_CHECK_HEADERS(minigui/common.h, have_libminigui=yes, foo=bar)
-
-dnl ========================================================================
-dnl check for non-UNIX system
-unix="yes"
-AC_CHECK_DECLS(__NOUNIX__, unix="no", foo=bar)
-
-dnl ========================================================================
-dnl check for run-time mode of MiniGUI
-dnl ========================================================================
-threads_version="no"
-AC_CHECK_DECLS(_MGRM_THREADS, threads_version="yes", foo=bar, [#include <minigui/common.h>])
-
-custom_version="no"
-AC_CHECK_DECLS(_MGIAL_CUSTOM, custom_version="yes", foo=bar, [#include <minigui/common.h>])
-
-procs_version="no"
-AC_CHECK_DECLS(_MGRM_PROCESSES, procs_version="yes", foo=bar, [#include <minigui/common.h>])
-
-standalone_version="no"
-AC_CHECK_DECLS(_MGRM_STANDALONE, standalone_version="yes", foo=bar, [#include <minigui/common.h>])
-
 AC_ARG_ENABLE(develmode,
 [  --enable-develmode       developer mode <default=no>],
 devel_mode=$enableval)
@@ -74,41 +49,26 @@ case "$with_lang" in
     ;;
 esac
 
+if test "x$devel_mode" = "xyes"; then
+    if test "$ac_cv_prog_gcc" = "yes"; then
+        CPPFLAGS="$CPPFLAGS -Wall -Werror"
+    fi
+fi
+
+if test "$ac_cv_prog_gcc" = "yes"; then
+    CFLAGS="$CFLAGS -Wstrict-prototypes -pipe"
+fi
+
+dnl ========================================================================
+dnl check for installation of MiniGUI
+dnl ========================================================================
+PKG_CHECK_MODULES([MINIGUI], [minigui >= 3.2.0])
+LIBS="$LIBS $MINIGUI_LIBS"
+
 dnl ========================================================================
 dnl Write Output
 
-if test "$ac_cv_prog_gcc" = "yes"; then
-    CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -pipe"
-fi
-
-if test "x$threads_version" = "xyes"; then
-    LIBS="$LIBS -lminigui_ths -lpthread"
-else
-    if test "x$standalone_version" = "xyes"; then
-        CFLAGS="$CFLAGS -D_REENTRANT"
-        LIBS="$LIBS -lminigui_sa"
-    else
-        LIBS="$LIBS -lminigui_procs"
-    fi
-    lib_pthread="yes"
-    AC_CHECK_DECLS(_MGGAL_SHADOW, LIBS="$LIBS -lpthread", lib_pthread="no", [#include <minigui/common.h>])
-    if test "x$lib_pthread" = "xno"; then
-        AC_CHECK_DECLS(_MGGAL_MLSHADOW, LIBS="$LIBS -lpthread", no_pthread="no", [#include <minigui/common.h>])
-    fi
-fi
-
-AM_CONDITIONAL(MGRM_PROCESSES, test "x$procs_version" = "xyes")
-AC_CHECK_DECLS(_HAVE_MATH_LIB, LIBS="$LIBS -lm", foo=bar, [#include <minigui/common.h>])
-AC_CHECK_DECLS(_MGIAL_DLCUSTOM, LIBS="$LIBS -ldl", foo=bar, [#include <minigui/common.h>])
-AC_CHECK_DECLS(_MGIMAGE_PNG, LIBS="$LIBS -lpng", foo=bar, [#include <minigui/common.h>])
-AC_CHECK_DECLS(_MGIMAGE_JPG, LIBS="$LIBS -ljpeg", foo=bar, [#include <minigui/common.h>])
-AC_CHECK_DECLS(_MGFONT_TTF, LIBS="$LIBS -lttf", foo=bar, [#include <minigui/common.h>])
-AC_CHECK_DECLS(_MGFONT_FT2, LIBS="$LIBS -lfreetype", foo=bar, [#include <minigui/common.h>])
-AC_CHECK_DECLS(_MGFONT_SEF, LIBS="$LIBS -lscripteasy", foo=bar, [#include <minigui/common.h>])
-
-if test "x$devel_mode" = "xyes"; then
-    CFLAGS="$CFLAGS -Werror"
-fi
+AM_CONDITIONAL(MGRM_PROCESSES, test "x$MINIGUI_RUNMODE" = "xprocs")
 
 AC_OUTPUT(
 Makefile
@@ -136,12 +96,3 @@ mginit/res/Makefile
 src/Makefile
 src/res/Makefile
 )
-
-if test "x$have_libminigui" != "xyes"; then
-    AC_MSG_WARN([
-        MiniGUI is not properly installed on the system. You need 
-        MiniGUI Ver 3.0.6 or later for building this package. 
-        Please configure and install MiniGUI Ver 3.0.6 first.
-    ])
-fi
-
