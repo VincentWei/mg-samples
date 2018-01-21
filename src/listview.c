@@ -186,7 +186,9 @@ static LRESULT ScoreProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
             sprintf (buff, "%4.1f", average);
             SendDlgItemMessage (hDlg, IDC_CTRL1, MSG_SETTEXT, 0, (LPARAM)buff);
-			printf ("selected column: %ld\n", SendDlgItemMessage (hDlg, IDC_LISTVIEW,  LVM_GETSELECTEDCOLUMN, 0,0));
+            printf ("selected column: %d\n", 
+                (int)SendDlgItemMessage (hDlg, IDC_LISTVIEW, 
+                    LVM_GETSELECTEDCOLUMN, 0,0));
         }
         break;
     }
