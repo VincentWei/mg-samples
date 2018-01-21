@@ -88,8 +88,7 @@ static LRESULT HelloWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
             break;
 
         case MSG_TIMER:
-            sprintf (msg_text, HL_ST_TIMER, 
-                            GetTickCount ());
+            sprintf (msg_text, HL_ST_TIMER, (PVOID)GetTickCount ());
             InvalidateRect (hWnd, &msg_rc, TRUE);
             break;
             

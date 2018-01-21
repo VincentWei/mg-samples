@@ -7,7 +7,7 @@
 
 #define HL_ST_CAP       "美麗新世界!"
 #define HL_ST_NOMES     "沒有接受到鼠標鍵盤消息."
-#define HL_ST_TIMER     "計時器超時，次數統計： %ul."
+#define HL_ST_TIMER     "計時器超時，次數統計： %p."
 #define HL_ST_LBD       "鼠標左鍵按下。"
 #define HL_ST_LBU       "鼠標左鍵釋放。"
 #define HL_ST_RBD       "鼠標右鍵按下。"
