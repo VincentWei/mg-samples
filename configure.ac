@@ -68,7 +68,8 @@ LIBS="$LIBS $MINIGUI_LIBS"
 dnl ========================================================================
 dnl Write Output
 
-AM_CONDITIONAL(MGRM_PROCESSES, test "x$MINIGUI_RUNMODE" = "xprocs")
+AC_CHECK_DECLS(_MGRM_PROCESSES, minigui_runmode="procs", foo=bar, [#include <minigui/common.h>])
+AM_CONDITIONAL(MGRM_PROCESSES, test "x$minigui_runmode" = "xprocs")
 
 AC_OUTPUT(
 Makefile
