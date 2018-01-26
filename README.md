@@ -1,10 +1,10 @@
 # MiniGUI-Samples
 
-This is the mainline release of basic MiniGUI samples for MiniGUI V3.0.x or later.
+This is the mainline release of basic MiniGUI samples for MiniGUI V3.2.x or later.
 
 ## Prerequisites
 
-  * MiniGUI: v3.0.10 or later
+  * MiniGUI: v3.2.10 or later
 
 ## Building
 
@@ -23,5 +23,5 @@ For simplified Chinese UI, please use the following configuration command:
 
 ## Copying
 
-Copyright (C) 2008 ~ 2017, Beijing FMSoft Technologies Co., Ltd.
+Copyright (C) 2008 ~ 2018, Beijing FMSoft Technologies Co., Ltd.
 
