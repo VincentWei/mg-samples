@@ -50,6 +50,7 @@ case "$with_lang" in
 esac
 
 if test "x$devel_mode" = "xyes"; then
+    CPPFLAGS="$CPPFLAGS -DDEBUG -D_DEBUG"
     if test "$ac_cv_prog_gcc" = "yes"; then
         CPPFLAGS="$CPPFLAGS -Wall -Werror"
     fi
