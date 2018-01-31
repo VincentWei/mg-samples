@@ -164,7 +164,7 @@ static CTRLDATA CtrlYourTaste[] =
 };
 
 
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == BN_CLICKED) {
         SetWindowText (GetDlgItem (GetParent (hwnd), IDC_PROMPT), prompts [id - IDC_LAMIAN]);

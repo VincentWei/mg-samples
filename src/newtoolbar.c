@@ -52,7 +52,7 @@ static RECT rcCircle = {0, 40, 300, 300};
 static BITMAP ntb_bmp;
 static BITMAP ntb_newbmp;
 
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     NTBINFO ntb_newinfo;
     static int nFlag=0;

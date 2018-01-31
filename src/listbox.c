@@ -177,7 +177,7 @@ static void fill_boxes (HWND hDlg, const char* path)
 #endif
 }
 
-static void dir_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void dir_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == LBN_DBLCLK || nc == LBN_ENTER) {
         int cur_sel = SendMessage (hwnd, LB_GETCURSEL, 0, 0L);
@@ -215,7 +215,7 @@ static void dir_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }
 
-static void file_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void file_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     /* Do nothing */
 }

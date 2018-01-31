@@ -37,7 +37,7 @@
 #include "static_res_en.h"
 #endif
 
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == STN_DBLCLK)
         SetWindowText (hwnd, PROMPTB);

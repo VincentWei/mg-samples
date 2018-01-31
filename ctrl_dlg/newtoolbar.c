@@ -70,7 +70,7 @@ static void my_hotspot_proc (HWND hwnd, int id, const RECT* cell, int x, int y)
         hdc = GetClientDC (GetParent (hwnd));
         InvalidateRect(hwnd,&rect,TRUE);
         memset(buff,0,sizeof(buff));
-        sprintf (buff, "Hotpot of button %d of NewToolBar %d clicked.", id, GetDlgCtrlID (hwnd));
+        sprintf (buff, "Hotpot of button %d of NewToolBar %ld clicked.", id, GetDlgCtrlID (hwnd));
         TextOut (hdc, 0, 330, buff);
         ReleaseDC (hdc);
 }

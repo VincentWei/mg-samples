@@ -178,7 +178,7 @@ static HICON icon1, icon2;
 #define IDC_FIND        340
 
 #if _MINIGUI_VERSION_CODE >= _VERSION_CODE (1, 2, 6)
-static void add_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void add_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == BN_CLICKED) {
         LISTBOXITEMINFO lbii;
@@ -199,7 +199,7 @@ static void add_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }
 
-static void del_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void del_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == BN_CLICKED) {
         int cur_sel;
@@ -215,7 +215,7 @@ static void del_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }
 
-static void find_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void find_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == BN_CLICKED) {
         char buffer [100];
@@ -238,7 +238,7 @@ static void find_proc (HWND hwnd, int id, int nc, DWORD add_data)
     }
 }
 
-static void listbox_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void listbox_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     //printf ("From listbox_notif_proc: ID: %d, Code %d\n", id, nc);
 }

@@ -47,7 +47,7 @@
 static HWND hMainWnd = HWND_INVALID;
 
 #if _MINIGUI_VERSION_CODE >= _VERSION_CODE (1, 2, 6)
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     //printf ("From my_notif_proc: ID: %d, Code %d\n", id, nc);
 }

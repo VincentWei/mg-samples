@@ -109,7 +109,7 @@ static CTRLDATA CtrlSelectApp[] =
 extern int app_watch (HWND hosting, int ue_type);
 extern void my_usleep (int usecs);
 
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     HWND parent = GetParent (hwnd);
 

@@ -135,7 +135,7 @@ static DLGTEMPLATE DlgMyDate =
     0
 };
 
-static void daxia_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void daxia_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == CBN_SELCHANGE) {
         int cur_sel = SendMessage (hwnd, CB_GETCURSEL, 0, 0);

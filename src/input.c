@@ -91,7 +91,7 @@ static DLGTEMPLATE DlgBoxInputLen =
 };
 
 
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (id == IDC_SIZE_MM && nc == EN_CHANGE) {
         char buff [60];

@@ -180,7 +180,7 @@ static HMENU create_rightbutton_menu (void)
 }
 
 static void
-lv_notify_process (HWND hwnd, int id, int code, DWORD addData)
+lv_notify_process (HWND hwnd, LINT id, int code, DWORD addData)
 {
     if (code == LVN_KEYDOWN) {
         PLVNM_KEYDOWN down;

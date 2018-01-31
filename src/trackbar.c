@@ -44,7 +44,7 @@
 
 static int radius = 0;
 static RECT rcCircle = {0, 60, 240, 300};
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     if (nc == TBN_CHANGE) {
         radius = SendMessage (hwnd, TBM_GETPOS, 0, 0);

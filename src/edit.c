@@ -89,7 +89,7 @@ static CTRLDATA CtrlInputChar [] =
     }
 };
 
-static void my_notif_proc (HWND hwnd, int id, int nc, DWORD add_data)
+static void my_notif_proc (HWND hwnd, LINT id, int nc, DWORD add_data)
 {
     char buff [256] = {0};
     if (id == IDC_CHAR && nc == EN_CHANGE) {
