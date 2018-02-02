@@ -6,7 +6,7 @@
  ** button.c: Sample program for MiniGUI Programming Guide
  **     Usage of BUTTON control.
  **
- ** Copyright (C) 2004 ~ 2007 Feynman Software.
+ ** Copyright (C) 2004 ~ 2007 FMSoft.
  **
  ** License: GPL
  */

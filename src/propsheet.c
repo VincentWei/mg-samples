@@ -124,7 +124,7 @@ static void get_systeminfo (HWND hDlg)
     case PAGE_MINIGUI:
 	    size = snprintf (buff, BUF_LEN,
 		"MiniGUI version %d.%d.%d.\n"
-		"Copyright (C) 1998-2008 Feynman Software.\n\n"
+		"Copyright (C) 1998-2018 FMSoft.\n\n"
 		"MiniGUI is a mature, rich-featured, embedded "
         "GUI support system.\n\n"
 		"For more information, please visit\n\n"

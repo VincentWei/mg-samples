@@ -4,7 +4,7 @@
 ** iconview.c: Sample program for MiniGUI Programming Guide
 **      Usage of ICONVIEW control.
 **
-** Copyright (C) 2004 ~ 2008 Feynman Software.
+** Copyright (C) 2004 ~ 2008 FMSoft.
 **
 ** License: GPL
 */
