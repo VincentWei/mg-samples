@@ -15,6 +15,10 @@ dnl ========================================================================
 dnl Checks for programs.
 AC_PROG_MAKE_SET
 AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_LD
+AC_PROG_RANLIB
+AC_PROG_LIBTOOL
 
 dnl ========================================================================
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -74,14 +78,15 @@ AM_CONDITIONAL(MGRM_PROCESSES, test "x$minigui_runmode" = "xprocs")
 
 AC_OUTPUT(
 Makefile
-same/Makefile
-same/res/Makefile
+m4/Makefile
+mginit/Makefile
+mginit/res/Makefile
+src/Makefile
+src/res/Makefile
 graphics/Makefile
 graphics/res/Makefile
-housekeeper/Makefile
-housekeeper/res/Makefile
-minesweeper/Makefile
-minesweeper/res/Makefile
+dbuff/Makefile
+dbuff/res/Makefile
 ctrl_dlg/Makefile
 ctrl_dlg/res/Makefile
 lf_skin/Makefile
@@ -91,10 +96,47 @@ lf_skin/res/systemres/Makefile
 look_feel/Makefile
 look_feel/res/Makefile
 font_text/Makefile
-dbuff/Makefile
-dbuff/res/Makefile
-mginit/Makefile
-mginit/res/Makefile
-src/Makefile
-src/res/Makefile
+same/Makefile
+same/res/Makefile
+housekeeper/Makefile
+housekeeper/res/Makefile
+minesweeper/Makefile
+minesweeper/res/Makefile
+mgutils/Makefile
+mgutils/templates/Makefile
+mgutils/mywins/Makefile
+mgutils/skin/Makefile
+mgutils/notebook/Makefile
+mgutils/notebook/res/Makefile
+mgutils/painter/Makefile
+mgutils/picview/Makefile
+mgutils/picview/res/Makefile
+mgutils/vcongui/Makefile
+mgplus/Makefile
+mgplus/animate/Makefile
+mgplus/animate/common_animates/Makefile
+mgplus/src/Makefile
+mgplus/src/res/Makefile
+mgplus/pen/Makefile 
+mgplus/path/Makefile 
+mgplus/brush/Makefile 
+mgplus/colorcomposite/Makefile 
+mgplus/glyphoutline/Makefile 
+mgplus/worldtransform/Makefile 
+mgeff/Makefile
+mgeff/animation/Makefile
+mgeff/ball/Makefile
+mgeff/banner/Makefile
+mgeff/btnshow/Makefile
+mgeff/curve/Makefile
+mgeff/curve/res/Makefile
+mgeff/custom-effector/Makefile
+mgeff/custom-effector/res/Makefile
+mgeff/effector/Makefile
+mgeff/effector/res/Makefile
+mgeff/image-box/Makefile
+mgeff/image-box/res/Makefile
+mgeff/particle-sys/Makefile
+mgncs/Makefile
+mgncs/res/Makefile
 )
