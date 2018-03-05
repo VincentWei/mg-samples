@@ -4,7 +4,7 @@
 ** custom_minigui.c: The reference implementation file for custom input
 **         engine, and configuration file for in-core MiniGUI.
 ** 
-** Copyright (C) 2007 Feynman Software.
+** Copyright (C) 2007 FMSoft.
 **
 ** Created by Wei Yongming, 2007/06/06.
 */

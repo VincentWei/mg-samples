@@ -4,7 +4,7 @@
 ** skindemo.c: Sample program for MiniGUI Programming Guide
 **      Usage of SKIN.
 **
-** Copyright (C) 2004 ~ 2008 Feynman Software.
+** Copyright (C) 2004 ~ 2008 FMSoft.
 **
 ** License: GPL
 */

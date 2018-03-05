@@ -52,7 +52,7 @@
                             "\nType 'Q' to quit." 
 
 #define GP_ST_TEXT1         "MiniGUI Version 3.0.x."
-#define GP_ST_TEXT2         "Copyright (C) 1998 ~ 2009 Feynman Software (http://www.minigui.com)."
+#define GP_ST_TEXT2         "Copyright (C) 1998 ~ 2009 FMSoft (http://www.minigui.com)."
 #define GP_ST_TEXT3         "MiniGUI is a mature window system and GUI support system for embedded devices."
 #define GP_ST_TEXT4         "MiniGUI is used widely in e-home devices, mobile phones, and networking TVs. "
 #define GP_ST_TEXT5         "Please visit\nhttp://www.minigui.org and http://www.minigui.com\nto know the details."
