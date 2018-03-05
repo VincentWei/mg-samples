@@ -1,1 +1,1 @@
-templates notebook painter picview vcongui skin mywins
+SUBDIRS = templates notebook painter picview vcongui skin mywins
