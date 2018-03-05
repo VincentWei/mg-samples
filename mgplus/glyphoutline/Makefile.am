@@ -1,8 +1,6 @@
-COMMON_PROGS= glyphoutline
+LDADD = ../animate/libanimate.la -lmgplus
 
-noinst_PROGRAMS=$(COMMON_PROGS)
-
-glyphoutline_SOURCES= glyphoutlinetest.c 
-LDADD = ../animate/libanimate.la ../../src/libmgplus.la @APP_LIBS@
+noinst_PROGRAMS=glyphoutline
+glyphoutline_SOURCES=glyphoutlinetest.c 
 
 EXTRA_DIST=res

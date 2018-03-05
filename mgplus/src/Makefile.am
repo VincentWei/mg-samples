@@ -1,10 +1,11 @@
 AM_CPPFLAGS = -I../animate -I../animate/common_animates
 
+LDADD = ../animate/libanimate.la -lmgplus
+
 COMMON_PROGS = mgplustest gradientdemo mgglyph_outline coverflow \
 	       mgcompositedemo blinds centersplit cubicrotate lion_test mgplus_efficiency
 
 noinst_PROGRAMS = $(COMMON_PROGS)
-LDADD = ../animate/libanimate.la @APP_LIBS@
 
 mgplus_efficiency_SOURCES = mgplus_efficiency.c
 lion_test_SOURCES = lion_test.c

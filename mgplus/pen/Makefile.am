@@ -1,9 +1,6 @@
-COMMON_PROGS=pentest 
+LDADD = -lmgutils -lmgplus
 
-noinst_PROGRAMS=$(COMMON_PROGS)
-
-CUSTOMMG_SRC= pen_test.c 
+noinst_PROGRAMS=pentest
 pentest_SOURCES= pen_test.c 
 
-pentest_LDADD = -lmgutils -lmgplus @APP_LIBS@
 

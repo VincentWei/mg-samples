@@ -1,4 +1,4 @@
-LDADD=-lmgeff @APP_LIBS@
+LDADD=-lmgeff
 
 noinst_PROGRAMS= \
 animation_async     animation_curve        animation_sync    effector_custom \

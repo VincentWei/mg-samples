@@ -1,7 +1,4 @@
-AM_CPPFLAGS=-I..
+ball_LDADD=-lmgeff
 
 noinst_PROGRAMS=ball
-
 ball_SOURCES=ball.c
-
-ball_LDADD=../../src/libmgeff.la @APP_LIBS@

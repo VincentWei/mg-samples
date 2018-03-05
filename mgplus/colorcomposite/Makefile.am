@@ -1,9 +1,6 @@
-COMMON_PROGS=colorcompositetest 
+LDADD=-lmgplus
 
-noinst_PROGRAMS=$(COMMON_PROGS)
-
-colorcompositetest_SOURCES= colorcomposite_test.c 
-
-colorcompositetest_LDADD =-lmgplus @APP_LIBS@
+noinst_PROGRAMS=colorcompositetest
+colorcompositetest_SOURCES=colorcomposite_test.c 
 
 EXTRA_DIST=res
