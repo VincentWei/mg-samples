@@ -1,1 +1,1 @@
-SUBDIRS = animate src path brush pen glyphoutline colorcomposite
+SUBDIRS = animate src path brush pen glyphoutline colorcomposite worldtransform

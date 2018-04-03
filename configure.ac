@@ -128,6 +128,7 @@ mgplus/path/Makefile
 mgplus/brush/Makefile 
 mgplus/colorcomposite/Makefile 
 mgplus/glyphoutline/Makefile 
+mgplus/worldtransform/Makefile 
 mgeff/Makefile
 mgeff/animation/Makefile
 mgeff/ball/Makefile
