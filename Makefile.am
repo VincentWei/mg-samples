@@ -1,6 +1,6 @@
 COMMON_SUBDIRS = src graphics ctrl_dlg \
 				lf_skin font_text look_feel dbuff \
-                same housekeeper minesweeper \
+                same housekeeper minesweeper commlcd \
                 mgutils mgplus mgeff mgncs
 
 if MGRM_PROCESSES
