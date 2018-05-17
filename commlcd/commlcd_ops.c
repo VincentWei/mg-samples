@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/time.h>
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>
@@ -66,7 +67,6 @@ int __commlcd_drv_getinfo (struct commlcd_info *li)
 /* this method will be called async; do not call. */
 int __commlcd_drv_update (const RECT* rc_dirty)
 {
-    RECT rcScreen = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     char filename [PATH_MAX + 1];
     struct timeval tv;
 

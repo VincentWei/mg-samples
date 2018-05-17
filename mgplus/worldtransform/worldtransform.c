@@ -23,7 +23,7 @@
 #define ID_MP_COMP_OP_DST_ATOP            112
 #define ID_MP_COMP_OP_XOR                 113
 
-int worldTransformProc(HWND hWnd, int message, WPARAM wParam, LPARAM lParam)
+LRESULT worldTransformProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     HDC hdc;
     static HGRAPHICS graphics;

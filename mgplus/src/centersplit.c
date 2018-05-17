@@ -36,7 +36,6 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-#include <mgplus/mgplus.h>
 #include "./../animate/common_animates/common_animates.h"
 #include "stdio.h"
 #include "string.h"
