@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.60)
-AC_INIT(mg-samples,3.2.0)
+AC_INIT(mg-samples,3.4.0)
 AC_CONFIG_SRCDIR(src/helloworld.c)
 
 dnl ========================================================================
@@ -40,15 +40,15 @@ AC_ARG_WITH(lang,
 
 case "$with_lang" in
   zhcn)
-    AC_DEFINE(_LANG_ZHCN, 1, 
+    AC_DEFINE(_LANG_ZHCN, 1,
             [Use text strings for locale zh_CN in GB2312])
     ;;
   zhtw)
-    AC_DEFINE(_LANG_ZHTW, 1, 
+    AC_DEFINE(_LANG_ZHTW, 1,
             [Use text strings for locale zh_TW in BIG5])
     ;;
   *)
-    AC_DEFINE(_LANG_EN, 1, 
+    AC_DEFINE(_LANG_EN, 1,
             [Use text strings for locale en_US in ISO8859-1])
     ;;
 esac
@@ -82,67 +82,68 @@ AC_CHECK_DECLS(_MGRM_PROCESSES, minigui_runmode="procs", foo=bar, [#include <min
 AM_CONDITIONAL(MGRM_PROCESSES, test "x$minigui_runmode" = "xprocs")
 
 AC_OUTPUT(
-Makefile
-m4/Makefile
-mginit/Makefile
-mginit/res/Makefile
-src/Makefile
-src/res/Makefile
-graphics/Makefile
-graphics/res/Makefile
-dbuff/Makefile
-dbuff/res/Makefile
-ctrl_dlg/Makefile
-ctrl_dlg/res/Makefile
-lf_skin/Makefile
-lf_skin/res/Makefile
-lf_skin/res/skin_res/Makefile
-lf_skin/res/systemres/Makefile
-look_feel/Makefile
-look_feel/res/Makefile
-font_text/Makefile
-same/Makefile
-same/res/Makefile
-housekeeper/Makefile
-housekeeper/res/Makefile
-minesweeper/Makefile
-minesweeper/res/Makefile
-commlcd/Makefile
-mgutils/Makefile
-mgutils/templates/Makefile
-mgutils/mywins/Makefile
-mgutils/skin/Makefile
-mgutils/notebook/Makefile
-mgutils/notebook/res/Makefile
-mgutils/painter/Makefile
-mgutils/picview/Makefile
-mgutils/picview/res/Makefile
-mgutils/vcongui/Makefile
-mgplus/Makefile
-mgplus/animate/Makefile
-mgplus/animate/common_animates/Makefile
-mgplus/src/Makefile
-mgplus/src/res/Makefile
-mgplus/pen/Makefile 
-mgplus/path/Makefile 
-mgplus/brush/Makefile 
-mgplus/colorcomposite/Makefile 
-mgplus/glyphoutline/Makefile 
-mgplus/worldtransform/Makefile 
-mgeff/Makefile
-mgeff/animation/Makefile
-mgeff/ball/Makefile
-mgeff/banner/Makefile
-mgeff/btnshow/Makefile
-mgeff/curve/Makefile
-mgeff/curve/res/Makefile
-mgeff/custom-effector/Makefile
-mgeff/custom-effector/res/Makefile
-mgeff/effector/Makefile
-mgeff/effector/res/Makefile
-mgeff/image-box/Makefile
-mgeff/image-box/res/Makefile
-mgeff/particle-sys/Makefile
-mgncs/Makefile
-mgncs/res/Makefile
+    Makefile
+    m4/Makefile
+    tests/Makefile
+    mginit/Makefile
+    mginit/res/Makefile
+    src/Makefile
+    src/res/Makefile
+    graphics/Makefile
+    graphics/res/Makefile
+    dbuff/Makefile
+    dbuff/res/Makefile
+    ctrl_dlg/Makefile
+    ctrl_dlg/res/Makefile
+    lf_skin/Makefile
+    lf_skin/res/Makefile
+    lf_skin/res/skin_res/Makefile
+    lf_skin/res/systemres/Makefile
+    look_feel/Makefile
+    look_feel/res/Makefile
+    font_text/Makefile
+    same/Makefile
+    same/res/Makefile
+    housekeeper/Makefile
+    housekeeper/res/Makefile
+    minesweeper/Makefile
+    minesweeper/res/Makefile
+    commlcd/Makefile
+    mgutils/Makefile
+    mgutils/templates/Makefile
+    mgutils/mywins/Makefile
+    mgutils/skin/Makefile
+    mgutils/notebook/Makefile
+    mgutils/notebook/res/Makefile
+    mgutils/painter/Makefile
+    mgutils/picview/Makefile
+    mgutils/picview/res/Makefile
+    mgutils/vcongui/Makefile
+    mgplus/Makefile
+    mgplus/animate/Makefile
+    mgplus/animate/common_animates/Makefile
+    mgplus/src/Makefile
+    mgplus/src/res/Makefile
+    mgplus/pen/Makefile
+    mgplus/path/Makefile
+    mgplus/brush/Makefile
+    mgplus/colorcomposite/Makefile
+    mgplus/glyphoutline/Makefile
+    mgplus/worldtransform/Makefile
+    mgeff/Makefile
+    mgeff/animation/Makefile
+    mgeff/ball/Makefile
+    mgeff/banner/Makefile
+    mgeff/btnshow/Makefile
+    mgeff/curve/Makefile
+    mgeff/curve/res/Makefile
+    mgeff/custom-effector/Makefile
+    mgeff/custom-effector/res/Makefile
+    mgeff/effector/Makefile
+    mgeff/effector/res/Makefile
+    mgeff/image-box/Makefile
+    mgeff/image-box/res/Makefile
+    mgeff/particle-sys/Makefile
+    mgncs/Makefile
+    mgncs/res/Makefile
 )

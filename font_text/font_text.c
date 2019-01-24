@@ -136,16 +136,16 @@ static PLOGFONT  logfont_qpf_Courier14, logfont_qpf_Courier18, logfont_qpf_Couri
 		 logfont_qpf_fmsong18; 
 
 //unicode -> GB2312
-static UChar32 src2[] = {
+static Uchar32 src2[] = {
     0x6B22, 0x8FCE, 0x6D4B, 0x8BD5, 0x4F7F, 0x7528, 0x004D, 0x0069, 0x006E, 0x0069, 0x0047, 0x0055, 0x0049
 };
 
 //unicode -> BIG5
-static UChar32 src3[] = {
+static Uchar32 src3[] = {
     0x6B61, 0x8FCE, 0x6E2C, 0x8A66, 0x4F7F, 0x7528, 0x004D, 0x0069, 0x006E, 0x0069, 0x0047, 0x0055, 0x0049
 };
 //unicode -> UTF-8
-static UChar32 src4[] = {
+static Uchar32 src4[] = {
     0x6B22, 0x8FCE, 0x6D4B, 0x8BD5, 0x4F7F, 0x7528, 0x6B61, 0x8FCE, 0x6E2C, 0x8A66, 0x4F7F, 0x7528
 };
 
@@ -1699,7 +1699,7 @@ void OnModeTabbedTextOut (HDC hdc)
             logfont_rbf_gb16_song->type, logfont_rbf_gb16_song->family, logfont_rbf_gb16_song->charset,
             logfont_rbf_gb16_song->size);
 
-    UChar32 src_gb[] = {
+    Uchar32 src_gb[] = {
         0x8FD9, 0x662F, 0x5229, 0x7528, 
         0x0054, 0x0065, 0x0078, 0x0074, 0x004F, 0x0075, 0x0074,
         0x7ED8, 0x5236, 0x7684, 0x6587, 0x672C
@@ -1716,7 +1716,7 @@ void OnModeTabbedTextOut (HDC hdc)
             "The quick fox jumps over the lazy dog.\n%s-%s-%s-size%d: ",
             logfont_rbf_big5_16->type, logfont_rbf_big5_16->family, logfont_rbf_big5_16->charset,
             logfont_rbf_big5_16->size);
-    UChar32 src_big5[] = {
+    Uchar32 src_big5[] = {
         0x9019, 0x662F, 0x5229, 0x7528, 
         0x0054, 0x0065, 0x0078, 0x0074, 0x004F, 0x0075, 0x0074,
         0x7E6A, 0x5236, 0x7684, 0x6587, 0x672C
