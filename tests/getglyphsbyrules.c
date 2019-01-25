@@ -30,6 +30,52 @@
 #if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
         && defined(_MGCHARSET_UNICODE)
 
+static const char* _bt_names[] = {
+    "UCHAR_BREAK_MANDATORY",
+    "UCHAR_BREAK_CARRIAGE_RETURN",
+    "UCHAR_BREAK_LINE_FEED",
+    "UCHAR_BREAK_COMBINING_MARK",
+    "UCHAR_BREAK_SURROGATE",
+    "UCHAR_BREAK_ZERO_WIDTH_SPACE",
+    "UCHAR_BREAK_INSEPARABLE",
+    "UCHAR_BREAK_NON_BREAKING_GLUE",
+    "UCHAR_BREAK_CONTINGENT",
+    "UCHAR_BREAK_SPACE",
+    "UCHAR_BREAK_AFTER",
+    "UCHAR_BREAK_BEFORE",
+    "UCHAR_BREAK_BEFORE_AND_AFTER",
+    "UCHAR_BREAK_HYPHEN",
+    "UCHAR_BREAK_NON_STARTER",
+    "UCHAR_BREAK_OPEN_PUNCTUATION",
+    "UCHAR_BREAK_CLOSE_PUNCTUATION",
+    "UCHAR_BREAK_QUOTATION",
+    "UCHAR_BREAK_EXCLAMATION",
+    "UCHAR_BREAK_IDEOGRAPHIC",
+    "UCHAR_BREAK_NUMERIC",
+    "UCHAR_BREAK_INFIX_SEPARATOR",
+    "UCHAR_BREAK_SYMBOL",
+    "UCHAR_BREAK_ALPHABETIC",
+    "UCHAR_BREAK_PREFIX",
+    "UCHAR_BREAK_POSTFIX",
+    "UCHAR_BREAK_COMPLEX_CONTEXT",
+    "UCHAR_BREAK_AMBIGUOUS",
+    "UCHAR_BREAK_UNKNOWN",
+    "UCHAR_BREAK_NEXT_LINE",
+    "UCHAR_BREAK_WORD_JOINER",
+    "UCHAR_BREAK_HANGUL_L_JAMO",
+    "UCHAR_BREAK_HANGUL_V_JAMO",
+    "UCHAR_BREAK_HANGUL_T_JAMO",
+    "UCHAR_BREAK_HANGUL_LV_SYLLABLE",
+    "UCHAR_BREAK_HANGUL_LVT_SYLLABLE",
+    "UCHAR_BREAK_CLOSE_PARANTHESIS",
+    "UCHAR_BREAK_CONDITIONAL_JAPANESE_STARTER",
+    "UCHAR_BREAK_HEBREW_LETTER",
+    "UCHAR_BREAK_REGIONAL_INDICATOR",
+    "UCHAR_BREAK_EMOJI_BASE",
+    "UCHAR_BREAK_EMOJI_MODIFIER",
+    "UCHAR_BREAK_ZERO_WIDTH_JOINER"
+};
+
 #define MAX_LINE_LEN        1023
 #define MAX_UCHARS          64
 
@@ -58,7 +104,7 @@ static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
 
             current += strlen(TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_BEFORE_NOTALLOWED;
+            bt[nr_bts] = BOV_NOTALLOWED;
             nr_bts++;
         }
         else if (strncmp(current, TOKEN_HAVE_BREAK_OPPORTUNITY,
@@ -66,11 +112,11 @@ static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
 
             current += strlen(TOKEN_HAVE_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_BEFORE_ALLOWED;
+            bt[nr_bts] = BOV_ALLOWED;
             nr_bts++;
         }
         else if (isxdigit(*current)) {
-            int tmp = sscanf(current, "%x", uc + nr_ucs);
+            int tmp = sscanf(current, "%X", uc + nr_ucs);
             if (tmp == 1) {
                 nr_ucs ++;
                 while (isxdigit(*current))
@@ -128,14 +174,12 @@ static int uc32_to_utf8(Uchar32 c, char* outbuf)
     return len;
 }
 
-static void do_check(const char* buff, Uchar32* ucs, Uint8* bts, int n,
+static void do_check(Uchar32* ucs, Uint8* bts, int n,
         Glyph32* my_gvs, Uint8* my_bts, int my_n)
 {
-    printf("CASE: \n%s", buff);
-
     printf("PARSED: \n");
 
-    if (bts[0] & BOV_BEFORE_BREAK_FLAG) {
+    if (bts[0] & BOV_BREAK_FLAG) {
         printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
     }
     else {
@@ -143,9 +187,9 @@ static void do_check(const char* buff, Uchar32* ucs, Uint8* bts, int n,
     }
 
     for (int i = 0; i < n; i++) {
-        printf (" %04x ", REAL_GLYPH(my_gvs[i]));
+        printf (" %04X ", ucs[i]);
 
-        if (bts[i + 1] & BOV_BEFORE_BREAK_FLAG) {
+        if (bts[i + 1] & BOV_BREAK_FLAG) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
         }
         else {
@@ -155,17 +199,17 @@ static void do_check(const char* buff, Uchar32* ucs, Uint8* bts, int n,
     printf("\n");
 
     printf("MINIGUI: \n");
+    if (my_bts[0] & BOV_BREAK_FLAG) {
+        printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
+    }
+    else {
+        printf (TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
+    }
+
     for (int i = 0; i < my_n; i++) {
-        if (my_bts[i] & BOV_BEFORE_BREAK_FLAG) {
-            printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
-        }
-        else {
-            printf (TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
-        }
+        printf (" %04X ", REAL_GLYPH(my_gvs[i]));
 
-        printf (" %04x ", REAL_GLYPH(my_gvs[i]));
-
-        if (my_bts[i] & BOV_AFTER_BREAK_FLAG) {
+        if (my_bts[i + 1] & BOV_BREAK_FLAG) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
         }
         else {
@@ -174,6 +218,23 @@ static void do_check(const char* buff, Uchar32* ucs, Uint8* bts, int n,
     }
     printf("\n\n");
 
+    BOOL ok = TRUE;
+    if (n != my_n) {
+        ok = FALSE;
+    }
+    else {
+        for (int i = 0; i < n; i++) {
+            if ((bts[i] & BOV_BREAK_FLAG) != (my_bts[i] & BOV_BREAK_FLAG)) {
+                ok = FALSE;
+                break;
+            }
+        }
+    }
+
+    if (!ok) {
+        _ERR_PRINTF("Bad implmentation!\n");
+        exit(1);
+    }
 }
 
 static void do_test(PLOGFONT lf, FILE* fp)
@@ -194,16 +255,24 @@ static void do_test(PLOGFONT lf, FILE* fp)
             return;
         }
 
-        n = parse_one_test (buff, ucs, bts);
+        line++;
+        printf("==== LINE %d ====\n", line);
+        printf("CASE: \n%s", buff);
+
+        n = parse_one_test(buff, ucs, bts);
         if (n == 0) {
             continue;
         }
 
         char utf8[MAX_UCHARS*6 + 1];
         int len_utf8 = 0;
+
+        printf("CHARS: ");
         for (int i = 0; i < n; i++) {
+            printf("%04X(%s) ", ucs[i], _bt_names[UCharGetBreak(ucs[i])]);
             len_utf8 += uc32_to_utf8(ucs[i], utf8 + len_utf8);
         }
+        printf("\n");
 
         if (len_utf8 < MAX_UCHARS*6) {
             utf8[len_utf8] = '\0';
@@ -220,10 +289,7 @@ static void do_test(PLOGFONT lf, FILE* fp)
                 WSR_PRE_WRAP, CTR_CAPITALIZE,
                 &my_gvs, &my_bts, &my_n);
         if (cosumed > 0) {
-            printf("LINE: %d\n", line);
-            line++;
-
-            do_check(buff, ucs, bts, n, my_gvs, my_bts, my_n);
+            do_check(ucs, bts, n, my_gvs, my_bts, my_n);
 
             if (my_gvs) free (my_gvs);
             if (my_bts) free (my_bts);
