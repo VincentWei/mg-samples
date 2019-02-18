@@ -237,7 +237,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     }
 }
 
-static void do_test(PLOGFONT lf, FILE* fp)
+static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
 {
     char buff[MAX_LINE_LEN + 1];
     Uchar32 ucs[MAX_UCHARS];
@@ -286,7 +286,7 @@ static void do_test(PLOGFONT lf, FILE* fp)
         my_bts = NULL;
         cosumed = GetGlyphsByRules(lf, utf8, len_utf8,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
-                WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, LBP_STRICT,
+                WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
                 &my_gvs, &my_bts, &my_n);
         if (cosumed > 0) {
             do_check(ucs, bts, n, my_gvs, my_bts, my_n);
@@ -301,15 +301,15 @@ static void do_test(PLOGFONT lf, FILE* fp)
     }
 }
 
-int MiniGUIMain (int argc, const char* argv[])
+static int test_file(const char* filename, Uint8 lbp)
 {
     PLOGFONT lf = NULL;
     FILE* fp = NULL;
 
-    fp = fopen("res/LineBreakTest.txt", "r");
+    fp = fopen(filename, "r");
     if (fp == NULL) {
-        _DBG_PRINTF ("%s: Failed to open LineBreakTest.txt file\n",
-                __FUNCTION__);
+        _DBG_PRINTF ("%s: Failed to open %s file\n",
+                __FUNCTION__, filename);
         goto error;
     }
 
@@ -326,13 +326,33 @@ int MiniGUIMain (int argc, const char* argv[])
         goto error;
     }
 
-    do_test (lf, fp);
+    do_test (lf, fp, lbp);
+    DestroyLogFont (lf);
+    fclose (fp);
+    return 0;
 
 error:
     if (lf) DestroyLogFont (lf);
     if (fp) fclose (fp);
 
-    exit(1);
+    return 1;
+}
+
+int MiniGUIMain (int argc, const char* argv[])
+{
+    _MG_PRINTF ("========= TEST FOR LBP_STRICT\n");
+    if (test_file ("res/LineBreakTest-strict.txt", LBP_STRICT))
+        exit (1);
+    _MG_PRINTF ("========= END OF TEST OF LBP_STRICT\n");
+
+    _MG_PRINTF ("PRESS ANY KEY TO CONTINUE\n");
+    getchar();
+
+    _MG_PRINTF ("========= TEST FOR LBP_NORMAL\n");
+    if (test_file ("res/LineBreakTest-normal.txt", LBP_NORMAL))
+        exit (1);
+    _MG_PRINTF ("========= END OF TEST OF LBP_NORMAL\n");
+
     return 0;
 }
 
