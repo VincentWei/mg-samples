@@ -104,7 +104,7 @@ static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
 
             current += strlen(TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_NOTALLOWED;
+            bt[nr_bts] = BOV_NOTALLOWED_UNCERTAINLY;
             nr_bts++;
         }
         else if (strncmp(current, TOKEN_HAVE_BREAK_OPPORTUNITY,
