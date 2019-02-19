@@ -287,7 +287,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         cosumed = GetGlyphsByRules(lf, utf8, len_utf8,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
                 WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
-                &my_gvs, &my_bts, &my_n);
+                &my_gvs, &my_bts, NULL, &my_n);
         if (cosumed > 0) {
             do_check(ucs, bts, n, my_gvs, my_bts, my_n);
 
