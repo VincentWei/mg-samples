@@ -1,0 +1,509 @@
+/*
+** getglyphsextentpointex.c:
+**  test code for GetGlyphsExtentPointEx of MiniGUI 3.4.0
+**
+** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+#include <minigui/common.h>
+#include <minigui/minigui.h>
+#include <minigui/gdi.h>
+#include <minigui/window.h>
+#include <minigui/control.h>
+
+#if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
+        && defined(_MGCHARSET_UNICODE)
+
+static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
+{
+    int len = 0;
+    int first;
+    int i;
+
+    if (c < 0x80) {
+        first = 0;
+        len = 1;
+    }
+    else if (c < 0x800) {
+        first = 0xc0;
+        len = 2;
+    }
+    else if (c < 0x10000) {
+        first = 0xe0;
+        len = 3;
+    }
+    else if (c < 0x200000) {
+        first = 0xf0;
+        len = 4;
+    }
+    else if (c < 0x4000000) {
+        first = 0xf8;
+        len = 5;
+    }
+    else {
+        first = 0xfc;
+        len = 6;
+    }
+
+    if (outbuf) {
+        for (i = len - 1; i > 0; --i) {
+            outbuf[i] = (c & 0x3f) | 0x80;
+            c >>= 6;
+        }
+        outbuf[0] = c | first;
+    }
+
+    return len;
+}
+
+static int _curr_text;
+static const char* _text_cases[] = {
+    // 0
+    "这是一些汉字 and some Latin و کمی خط عربی และตัวอย่างการเขียนภาษาไทย",
+
+    // 1
+    "窓ぎわのトットちゃん",
+
+    // 2
+    "각 줄의 마지막에 한글이 올 때 줄 나눔 기준을 “글자” 또는 “어절” 단위로 한다.",
+
+    // 3
+    "12345678，123456789。",
+
+    // 4
+    "　登鹳雀楼　\n"
+    "      作者：王之涣 年代：唐\n"
+    "白日依山尽，黄河入海流。\n"
+    "欲穷千里目，更上一层楼。",
+
+    // 5
+    "其中，前两句写所见。“白日依山尽”写远景，写山，写的是登楼望见的景色，“黄河入海流”写近景，写水写得景象壮观，气势磅礴。这里，诗人运用极其朴素、极其浅显的语言，既高度形象又高度概括地把进入广大视野的万里河山，收入短短十个字中；而后人在千载之下读到这十个字时，也如临其地，如见其景，感到胸襟为之一开。",
+
+    // 6
+    "Grapheme clusters formed with an Enclosing Mark (Me) of the Common script are considered to be Other Symbols (So) in the Common script. They are assumed to have the same Unicode properties as the Replacement Character U+FFFD.",
+
+    // 7
+    "ぁ\tU+3041\tあ\tU+3042\n"
+    "ぃ\tU+3043\tい\tU+3044\n"
+    "ぅ\tU+3045\tう\tU+3046\n"
+    "ぇ\tU+3047\tえ\tU+3048\n"
+    "ぉ\tU+3049\tお\tU+304A\n"
+    "ゕ\tU+3095\tか\tU+304B\n"
+    "ゖ\tU+3096\tけ\tU+3051\n"
+    "っ\tU+3063\tつ\tU+3064\n"
+    "ゃ\tU+3083\tや\tU+3084\n"
+    "ゅ\tU+3085\tゆ\tU+3086\n"
+    "ょ\tU+3087\tよ\tU+3088\n"
+    "ゎ\tU+308E\tわ\tU+308F",
+
+    // 8
+    "If the content language is Chinese and the writing system is unspecified, or for any content language if the writing system to specified to be one of the ‘Hant’, ‘Hans’, ‘Hani’, ‘Hanb’, or ‘Bopo’ [ISO15924] codes, then the writing system is Chinese. ",
+
+    // 9
+    "    if (outbuf) {                      \n"
+    "    \tfor (i = len - 1; i > 0; --i) {  \n"
+    "    \t\toutbuf[i] = (c & 0x3f) | 0x80; \n"
+    "    \t\tc >>= 6;                       \n"
+    "    \t}                                \n"
+    "    outbuf[0] = c | first;\n"
+    "    }\n",
+
+    // 10
+    "        　",
+};
+
+typedef struct _RENDER_RULE {
+    Uint32 rule;
+    const char* desc;
+} RENDER_RULE;
+
+static int _curr_wsr;
+static RENDER_RULE _wsr_cases [] = {
+    { WSR_NORMAL,
+        "WSR_NORMAL" },
+    { WSR_PRE,
+        "WSR_PRE" },
+    { WSR_NOWRAP,
+        "WSR_NOWRAP" },
+    { WSR_PRE_WRAP,
+        "WSR_PRE_WRAP" },
+    { WSR_BREAK_SPACES,
+        "WSR_BREAK_SPACES" },
+    { WSR_PRE_LINE,
+        "WSR_PRE_LINE" },
+};
+
+static int _curr_ctr;
+static RENDER_RULE _ctr_cases [] = {
+    { CTR_CAPITALIZE,
+        "CTR_CAPITALIZE" },
+    { CTR_UPPERCASE,
+        "CTR_UPPERCASE" },
+    { CTR_LOWERCASE,
+        "CTR_LOWERCASE" },
+    { CTR_CAPITALIZE | CTR_FULL_WIDTH,
+        "CTR_CAPITALIZE | CTR_FULL_WIDTH" },
+    { CTR_UPPERCASE | CTR_FULL_WIDTH,
+        "CTR_UPPERCASE | CTR_FULL_WIDTH" },
+    { CTR_LOWERCASE | CTR_FULL_WIDTH,
+        "CTR_LOWERCASE | CTR_FULL_WIDTH" },
+    { CTR_CAPITALIZE | CTR_FULL_SIZE_KANA,
+        "CTR_CAPITALIZE | CTR_FULL_SIZE_KANA" },
+    { CTR_UPPERCASE | CTR_FULL_SIZE_KANA,
+        "CTR_UPPERCASE | CTR_FULL_SIZE_KANA" },
+    { CTR_LOWERCASE | CTR_FULL_SIZE_KANA,
+        "CTR_LOWERCASE | CTR_FULL_SIZE_KANA" },
+    { CTR_CAPITALIZE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA,
+        "CTR_CAPITALIZE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA" },
+    { CTR_UPPERCASE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA,
+        "CTR_UPPERCASE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA" },
+    { CTR_LOWERCASE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA,
+        "CTR_LOWERCASE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA" },
+};
+
+static int _curr_wbr;
+static RENDER_RULE _wbr_cases [] = {
+    { WBR_NORMAL,
+        "WBR_NORMAL" },
+    { WBR_BREAK_ALL,
+        "WBR_BREAK_ALL" },
+    { WBR_KEEP_ALL,
+        "WBR_KEEP_ALL" },
+};
+
+static int _curr_lbp;
+static RENDER_RULE _lbp_cases [] = {
+    { LBP_NORMAL,
+        "LBP_NORMAL" },
+    { LBP_LOOSE,
+        "LBP_LOOSE" },
+    { LBP_STRICT,
+        "LBP_STRICT" },
+    { LBP_ANYWHERE,
+        "LBP_ANYWHERE" },
+};
+
+static int _letter_spacing = 0;
+static int _word_spacing = 0;
+static int _tab_size = 100;
+static RECT _rc_output = {5, 100, 470, 340};
+
+static int _curr_writing_mode;
+static RENDER_RULE _writing_mode_cases [] = {
+    { GRF_WRITING_MODE_HORIZONTAL_TB,
+        "GRF_WRITING_MODE_HORIZONTAL_TB" },
+    { GRF_WRITING_MODE_VERTICAL_RL,
+        "GRF_WRITING_MODE_VERTICAL_RL" },
+    { GRF_WRITING_MODE_VERTICAL_LR,
+        "GRF_WRITING_MODE_VERTICAL_LR" },
+};
+
+static int _curr_text_ort;
+static RENDER_RULE _text_ort_cases [] = {
+    { GRF_TEXT_ORIENTATION_UPRIGHT,
+        "GRF_TEXT_ORIENTATION_UPRIGHT" },
+    { GRF_TEXT_ORIENTATION_SIDEWAYS,
+        "GRF_TEXT_ORIENTATION_SIDEWAYS" },
+};
+
+static int _curr_overflow_wrap;
+static RENDER_RULE _overflow_wrap_cases [] = {
+    { GRF_OVERFLOW_WRAP_NORMAL,
+        "GRF_OVERFLOW_WRAP_NORMAL" },
+    { GRF_OVERFLOW_WRAP_BREAK_WORD,
+        "GRF_OVERFLOW_WRAP_BREAK_WORD" },
+    { GRF_OVERFLOW_WRAP_ANYWHERE,
+        "GRF_OVERFLOW_WRAP_ANYWHERE" },
+};
+
+static int _curr_align;
+static RENDER_RULE _align_cases [] = {
+    { GRF_ALIGN_START,
+        "GRF_ALIGN_START" },
+    { GRF_ALIGN_END,
+        "GRF_ALIGN_END" },
+    { GRF_ALIGN_LEFT,
+        "GRF_ALIGN_LEFT" },
+    { GRF_ALIGN_RIGHT,
+        "GRF_ALIGN_RIGHT" },
+    { GRF_ALIGN_CENTER,
+        "GRF_ALIGN_CENTER" },
+    { GRF_ALIGN_JUSTIFY,
+        "GRF_ALIGN_JUSTIFY" },
+};
+
+static int _curr_text_justify;
+static RENDER_RULE _text_justify_cases [] = {
+    { GRF_TEXT_JUSTIFY_AUTO,
+        "GRF_TEXT_JUSTIFY_AUTO" },
+    { GRF_TEXT_JUSTIFY_INTER_WORD,
+        "GRF_TEXT_JUSTIFY_INTER_WORD" },
+    { GRF_TEXT_JUSTIFY_INTER_CHAR,
+        "GRF_TEXT_JUSTIFY_INTER_CHAR" },
+};
+
+static int _curr_hanging_punc;
+static RENDER_RULE _hanging_punc_cases [] = {
+    { GRF_HANGING_PUNC_NONE,
+        "GRF_HANGING_PUNC_NONE" },
+    { GRF_HANGING_PUNC_FORCE_END,
+        "GRF_HANGING_PUNC_FORCE_END" },
+    { GRF_HANGING_PUNC_ALLOW_END,
+        "GRF_HANGING_PUNC_ALLOW_END" },
+    { GRF_HANGING_PUNC_OPEN,
+        "GRF_HANGING_PUNC_OPEN" },
+    { GRF_HANGING_PUNC_FORCE_END | GRF_HANGING_PUNC_OPEN,
+        "GRF_HANGING_PUNC_FORCE_END | GRF_HANGING_PUNC_OPEN" },
+    { GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_OPEN,
+        "GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_OPEN" },
+    { GRF_HANGING_PUNC_CLOSE,
+        "GRF_HANGING_PUNC_CLOSE" },
+    { GRF_HANGING_PUNC_FORCE_END | GRF_HANGING_PUNC_CLOSE,
+        "GRF_HANGING_PUNC_FORCE_END | GRF_HANGING_PUNC_CLOSE" },
+    { GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_CLOSE,
+        "GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_CLOSE" },
+    { GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE,
+        "GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE" },
+    { GRF_HANGING_PUNC_FORCE_END | GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE,
+        "GRF_HANGING_PUNC_FORCE_END | GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE" },
+    { GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE,
+        "GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE" },
+};
+
+static int _curr_spaces;
+static RENDER_RULE _spaces_cases [] = {
+    { GRF_SPACES_KEEP,
+        "GRF_SPACES_KEEP" },
+    { GRF_SPACES_REMOVE_START,
+        "GRF_SPACES_REMOVE_START" },
+    { GRF_SPACES_REMOVE_END,
+        "GRF_SPACES_REMOVE_END" },
+    { GRF_SPACES_HANGE_END,
+        "GRF_SPACES_HANGE_END" },
+    { GRF_SPACES_REMOVE_START | GRF_SPACES_REMOVE_END,
+        "GRF_SPACES_REMOVE_START | GRF_SPACES_REMOVE_END" },
+    { GRF_SPACES_REMOVE_START | GRF_SPACES_HANGE_END,
+        "GRF_SPACES_REMOVE_START | GRF_SPACES_HANGE_END" },
+};
+
+static LRESULT MyMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message) {
+    case MSG_CREATE:
+        break;
+
+    case MSG_PAINT: {
+        HDC hdc;
+        hdc = BeginPaint (hWnd);
+        EndPaint (hWnd, hdc);
+        return 0;
+    }
+
+    case MSG_KEYDOWN: {
+        switch (wParam) {
+        case SCANCODE_F1:
+            _curr_text++;
+            _curr_text %= TABLESIZE(_text_cases);
+            break;
+
+        case SCANCODE_F2:
+            _curr_wsr++;
+            _curr_wsr %= TABLESIZE(_wsr_cases);
+            break;
+
+        case SCANCODE_F3:
+            _curr_ctr++;
+            _curr_ctr %= TABLESIZE(_ctr_cases);
+            break;
+
+        case SCANCODE_F4:
+            _curr_wbr++;
+            _curr_wbr %= TABLESIZE(_wbr_cases);
+            break;
+
+        case SCANCODE_F5:
+            _curr_lbp++;
+            _curr_lbp %= TABLESIZE(_lbp_cases);
+            break;
+
+        case SCANCODE_F6:
+            _curr_writing_mode++;
+            _curr_writing_mode %= TABLESIZE(_writing_mode_cases);
+            break;
+
+        case SCANCODE_F7:
+            _curr_text_ort++;
+            _curr_text_ort %= TABLESIZE(_text_ort_cases);
+            break;
+
+        case SCANCODE_F8:
+            _curr_overflow_wrap++;
+            _curr_overflow_wrap %= TABLESIZE(_overflow_wrap_cases);
+            break;
+
+        case SCANCODE_F9:
+            _curr_align++;
+            _curr_align %= TABLESIZE(_align_cases);
+            break;
+
+        case SCANCODE_F10:
+            _curr_text_justify++;
+            _curr_text_justify %= TABLESIZE(_text_justify_cases);
+            break;
+
+        case SCANCODE_F11:
+            _curr_hanging_punc++;
+            _curr_hanging_punc %= TABLESIZE(_hanging_punc_cases);
+            break;
+
+        case SCANCODE_F12:
+            _curr_spaces++;
+            _curr_spaces %= TABLESIZE(_spaces_cases);
+            break;
+
+        case SCANCODE_CURSORBLOCKLEFT:
+            _rc_output.right -= 5;
+            break;
+
+        case SCANCODE_CURSORBLOCKRIGHT:
+            _rc_output.right += 5;
+            break;
+
+        case SCANCODE_CURSORBLOCKUP:
+            _rc_output.bottom -= 20;
+            break;
+
+        case SCANCODE_CURSORBLOCKDOWN:
+            _rc_output.bottom += 20;
+            break;
+
+        case SCANCODE_INSERT:
+            _letter_spacing += 1;
+            break;
+
+        case SCANCODE_REMOVE:
+            _letter_spacing -= 1;
+            break;
+
+        case SCANCODE_HOME:
+            _word_spacing += 2;
+            break;
+
+        case SCANCODE_END:
+            _word_spacing -= 2;
+            break;
+
+        case SCANCODE_PAGEUP:
+            _tab_size += 2;
+            break;
+
+        case SCANCODE_PAGEDOWN:
+            _tab_size -= 2;
+            break;
+
+        default:
+            return 0;
+        }
+
+        InvalidateRect (hWnd, NULL, TRUE);
+        return 0;
+    }
+
+    case MSG_CLOSE:
+        DestroyMainWindow (hWnd);
+        PostQuitMessage (hWnd);
+        return 0;
+    }
+
+    return DefaultMainWinProc (hWnd, message, wParam, lParam);
+}
+
+static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
+{
+    pCreateInfo->dwStyle = WS_CAPTION;
+    pCreateInfo->dwExStyle = WS_EX_NONE;
+    pCreateInfo->spCaption = "F1: change text; F2~F5: change rules; CURSORS: change size";
+    pCreateInfo->hMenu = 0;
+    pCreateInfo->hCursor = 0;
+    pCreateInfo->hIcon = 0;
+    pCreateInfo->MainWindowProc = MyMainWinProc;
+    pCreateInfo->lx = 0;
+    pCreateInfo->ty = 0;
+    pCreateInfo->rx = 480;
+    pCreateInfo->by = 360;
+    pCreateInfo->iBkColor = COLOR_lightwhite;
+    pCreateInfo->dwAddData = 0;
+    pCreateInfo->hHosting = HWND_DESKTOP;
+}
+
+int MiniGUIMain (int args, const char* arg[])
+{
+    MSG Msg;
+    MAINWINCREATE CreateInfo;
+    HWND hMainWnd;
+
+#ifdef _MGRM_PROCESSES
+    int i;
+    const char* layer = NULL;
+
+    for (i = 1; i < args; i++) {
+        if (strcmp (arg[i], "-layer") == 0) {
+            layer = arg[i + 1];
+            break;
+        }
+    }
+
+    GetLayerInfo (layer, NULL, NULL, NULL);
+
+    if (JoinLayer (layer, arg[0], 0, 0) == INV_LAYER_HANDLE) {
+        printf ("JoinLayer: invalid layer handle.\n");
+        exit (1);
+    }
+
+    if (!InitVectorialFonts ()) {
+        printf ("InitVectorialFonts: error.\n");
+        exit (2);
+    }
+#endif
+
+    InitCreateInfo (&CreateInfo);
+
+    hMainWnd = CreateMainWindow (&CreateInfo);
+    if (hMainWnd == HWND_INVALID)
+        exit (3);
+
+    ShowWindow (hMainWnd, SW_SHOWNORMAL);
+    while (GetMessage (&Msg, hMainWnd)) {
+        TranslateMessage (&Msg);
+        DispatchMessage (&Msg);
+    }
+
+    MainWindowThreadCleanup (hMainWnd);
+
+#ifndef _MGRM_THREADS
+    TermVectorialFonts ();
+#endif
+    return 0;
+}
+
+
+#else
+#error "To test GetGlyphsExtentPointEx, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#endif /* checking version and features */

@@ -1,5 +1,6 @@
 /*
-** getglyphsbyrules.c: test code for GetGlyphsByRules of MiniGUI 3.4.0
+** getglyphsbyrules.c:
+**  test code for GetGlyphsByRules of MiniGUI 3.4.0
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
