@@ -73,7 +73,6 @@ static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
     return len;
 }
 
-static int _curr_text;
 static const char* _text_cases[] = {
     // 0
     "这是一些汉字 and some Latin و کمی خط عربی และตัวอย่างการเขียนภาษาไทย",
@@ -85,7 +84,7 @@ static const char* _text_cases[] = {
     "각 줄의 마지막에 한글이 올 때 줄 나눔 기준을 “글자” 또는 “어절” 단위로 한다.",
 
     // 3
-    "12345678，123456789。",
+    "12345678，\n123456789。",
 
     // 4
     "　登鹳雀楼　\n"
@@ -127,6 +126,19 @@ static const char* _text_cases[] = {
 
     // 10
     "        　",
+
+    // 11
+    "Amazon Will Pay a Whopping $0 in Federal Taxes on $11.2 Billion Profits\n"
+    "\n"
+    "Those wondering how many zeros Amazon, which is valued at nearly $800 billion, has to pay in federal taxes might be surprised to learn that its check to the IRS will read exactly $0.00.\n"
+    "\n"
+    "According to a report published by the Institute on Taxation and Economic (ITEP) policy Wednesday, the e-tail/retail/tech/entertainment/everything giant won’t have to pay a cent in federal taxes for the second year in a row.\n"
+    "\n"
+    "This tax-free break comes even though Amazon almost doubled its U.S. profits from $5.6 billion to $11.2 billion between 2017 and 2018.\n"
+    "\n"
+    "To top it off, Amazon actually reported a $129 million 2018 federal income tax rebate—making its tax rate -1%.\n"
+    "\n"
+    "Amazon’s low (to non-existent) tax rate has been chided by politicians ranging from Senator Bernie Sanders to President Donald Trump.\n",
 };
 
 typedef struct _RENDER_RULE {
@@ -134,7 +146,6 @@ typedef struct _RENDER_RULE {
     const char* desc;
 } RENDER_RULE;
 
-static int _curr_wsr;
 static RENDER_RULE _wsr_cases [] = {
     { WSR_NORMAL,
         "WSR_NORMAL" },
@@ -150,7 +161,6 @@ static RENDER_RULE _wsr_cases [] = {
         "WSR_PRE_LINE" },
 };
 
-static int _curr_ctr;
 static RENDER_RULE _ctr_cases [] = {
     { CTR_CAPITALIZE,
         "CTR_CAPITALIZE" },
@@ -178,7 +188,6 @@ static RENDER_RULE _ctr_cases [] = {
         "CTR_LOWERCASE | CTR_FULL_WIDTH | CTR_FULL_SIZE_KANA" },
 };
 
-static int _curr_wbr;
 static RENDER_RULE _wbr_cases [] = {
     { WBR_NORMAL,
         "WBR_NORMAL" },
@@ -188,7 +197,6 @@ static RENDER_RULE _wbr_cases [] = {
         "WBR_KEEP_ALL" },
 };
 
-static int _curr_lbp;
 static RENDER_RULE _lbp_cases [] = {
     { LBP_NORMAL,
         "LBP_NORMAL" },
@@ -200,12 +208,6 @@ static RENDER_RULE _lbp_cases [] = {
         "LBP_ANYWHERE" },
 };
 
-static int _letter_spacing = 0;
-static int _word_spacing = 0;
-static int _tab_size = 100;
-static RECT _rc_output = {5, 100, 470, 340};
-
-static int _curr_writing_mode;
 static RENDER_RULE _writing_mode_cases [] = {
     { GRF_WRITING_MODE_HORIZONTAL_TB,
         "GRF_WRITING_MODE_HORIZONTAL_TB" },
@@ -215,7 +217,6 @@ static RENDER_RULE _writing_mode_cases [] = {
         "GRF_WRITING_MODE_VERTICAL_LR" },
 };
 
-static int _curr_text_ort;
 static RENDER_RULE _text_ort_cases [] = {
     { GRF_TEXT_ORIENTATION_UPRIGHT,
         "GRF_TEXT_ORIENTATION_UPRIGHT" },
@@ -223,7 +224,6 @@ static RENDER_RULE _text_ort_cases [] = {
         "GRF_TEXT_ORIENTATION_SIDEWAYS" },
 };
 
-static int _curr_overflow_wrap;
 static RENDER_RULE _overflow_wrap_cases [] = {
     { GRF_OVERFLOW_WRAP_NORMAL,
         "GRF_OVERFLOW_WRAP_NORMAL" },
@@ -233,7 +233,6 @@ static RENDER_RULE _overflow_wrap_cases [] = {
         "GRF_OVERFLOW_WRAP_ANYWHERE" },
 };
 
-static int _curr_align;
 static RENDER_RULE _align_cases [] = {
     { GRF_ALIGN_START,
         "GRF_ALIGN_START" },
@@ -249,7 +248,6 @@ static RENDER_RULE _align_cases [] = {
         "GRF_ALIGN_JUSTIFY" },
 };
 
-static int _curr_text_justify;
 static RENDER_RULE _text_justify_cases [] = {
     { GRF_TEXT_JUSTIFY_AUTO,
         "GRF_TEXT_JUSTIFY_AUTO" },
@@ -259,7 +257,6 @@ static RENDER_RULE _text_justify_cases [] = {
         "GRF_TEXT_JUSTIFY_INTER_CHAR" },
 };
 
-static int _curr_hanging_punc;
 static RENDER_RULE _hanging_punc_cases [] = {
     { GRF_HANGING_PUNC_NONE,
         "GRF_HANGING_PUNC_NONE" },
@@ -287,7 +284,6 @@ static RENDER_RULE _hanging_punc_cases [] = {
         "GRF_HANGING_PUNC_ALLOW_END | GRF_HANGING_PUNC_OPEN | GRF_HANGING_PUNC_CLOSE" },
 };
 
-static int _curr_spaces;
 static RENDER_RULE _spaces_cases [] = {
     { GRF_SPACES_KEEP,
         "GRF_SPACES_KEEP" },
@@ -303,7 +299,298 @@ static RENDER_RULE _spaces_cases [] = {
         "GRF_SPACES_REMOVE_START | GRF_SPACES_HANGE_END" },
 };
 
-static LRESULT MyMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static BOOL _limited;
+static int _curr_text;
+static int _curr_wsr;
+static int _curr_ctr;
+static int _curr_wbr;
+static int _curr_lbp;
+static int _curr_writing_mode;
+static int _curr_text_ort;
+static int _curr_overflow_wrap;
+static int _curr_align;
+static int _curr_text_justify;
+static int _curr_hanging_punc;
+static int _curr_spaces;
+static int _letter_spacing = 0;
+static int _word_spacing = 0;
+static int _tab_size = 100;
+static RECT _rc_output = {400, 5, 1024 - 5, 330};
+
+static void output_rules(HDC hdc)
+{
+    char buf[64];
+    int y = 5;
+
+    TextOut(hdc, 5,   y,     "LIMITED");
+    TextOut(hdc, 100, y, _limited?"YES":"NO");
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "TEXT(F1)");
+    TextOutLen(hdc, 100, y, _text_cases[_curr_text], 10);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "WSR(F2)");
+    TextOut(hdc, 100, y, _wsr_cases[_curr_wsr].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "CTR(F3)");
+    TextOut(hdc, 100, y, _ctr_cases[_curr_ctr].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "WBR(F4)");
+    TextOut(hdc, 100, y, _wbr_cases[_curr_wbr].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "LBP(F5)");
+    TextOut(hdc, 100, y, _lbp_cases[_curr_lbp].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "WRT(F6)");
+    TextOut(hdc, 100, y, _writing_mode_cases[_curr_writing_mode].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "ORT(F7)");
+    TextOut(hdc, 100, y, _text_ort_cases[_curr_text_ort].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "OVF(F8)");
+    TextOut(hdc, 100, y, _overflow_wrap_cases[_curr_overflow_wrap].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "ALG(F9)");
+    TextOut(hdc, 100, y, _align_cases[_curr_align].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "JST(F10)");
+    TextOut(hdc, 100, y, _text_justify_cases[_curr_text_justify].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "HNG(F11)");
+    TextOut(hdc, 100, y, _hanging_punc_cases[_curr_hanging_punc].desc);
+    y += 20;
+
+    TextOut(hdc, 5,   y,     "SPC(F12)");
+    TextOut(hdc, 100, y, _spaces_cases[_curr_spaces].desc);
+    y += 20;
+
+    snprintf(buf, 63, "%d", _letter_spacing);
+    TextOut(hdc, 5,   y,     "LTRSPC");
+    TextOut(hdc, 100, y, buf);
+    y += 20;
+
+    snprintf(buf, 63, "%d", _word_spacing);
+    TextOut(hdc, 5,   y,     "WORDSPC");
+    TextOut(hdc, 100, y, buf);
+    y += 20;
+
+    snprintf(buf, 63, "%d", _tab_size);
+    TextOut(hdc, 5,   y,     "TABSIZE");
+    TextOut(hdc, 100, y, buf);
+    y += 20;
+}
+
+static int _curr_font = 1;
+static char* _font_cases [] = {
+    "ttf-SourceHanSans-rrnnns-*-12-UTF-8",
+    "ttf-SourceHanSans-rrnnns-*-14-UTF-8",
+    "ttf-SourceHanSans-rrnnns-*-16-UTF-8",
+    "ttf-SourceHanSans-rrnnns-*-20-UTF-8",
+    "ttf-SourceHanSans-rrnnns-*-26-UTF-8",
+    "ttf-SourceHanSans-rrnnns-*-36-UTF-8",
+};
+
+static int render_glyphs(HDC hdc, PLOGFONT lf,
+    const Glyph32* gvs, const Uint8* bos, const Uint8* bts, int n)
+{
+    Uint32 render_flags;
+    int x, y, max_extent;
+    PLOGFONT lf_sw = NULL;
+
+    GLYPHEXTINFO* my_gei;
+    GLYPHPOS* my_gps;
+
+
+    my_gei = (GLYPHEXTINFO*)malloc(sizeof(GLYPHEXTINFO) * n);
+    my_gps = (GLYPHPOS*)malloc(sizeof(GLYPHPOS) * n);
+    if (my_gei == NULL || my_gps == NULL) {
+        _ERR_PRINTF("%s: failed to allocate memory\n",
+            __FUNCTION__);
+        return -1;
+    }
+
+    render_flags =
+            _writing_mode_cases[_curr_writing_mode].rule |
+            _text_ort_cases[_curr_text_ort].rule |
+            _overflow_wrap_cases[_curr_overflow_wrap].rule |
+            _align_cases[_curr_align].rule |
+            _text_justify_cases[_curr_text_justify].rule |
+            _hanging_punc_cases[_curr_hanging_punc].rule |
+            _spaces_cases[_curr_spaces].rule;
+
+    if (_writing_mode_cases[_curr_writing_mode].rule
+            == GRF_WRITING_MODE_VERTICAL_RL) {
+        x = _rc_output.right;
+        y = _rc_output.top;
+    }
+    else {
+        x = _rc_output.left;
+        y = _rc_output.top;
+    }
+
+    if (_limited) {
+        if (_writing_mode_cases[_curr_writing_mode].rule
+                == GRF_WRITING_MODE_HORIZONTAL_TB) {
+            max_extent = RECTW(_rc_output);
+        }
+        else {
+            max_extent = RECTH(_rc_output);
+        }
+    }
+    else {
+        max_extent = -1;
+    }
+
+    while (n > 0) {
+        int consumed;
+        SIZE line_size;
+        RECT rc_line;
+
+        consumed = GetGlyphsExtentPointEx (lf, gvs, n, bos, bts,
+            x, y, render_flags,
+            _letter_spacing, _word_spacing, _tab_size, max_extent,
+            &line_size, my_gei, my_gps, &lf_sw);
+
+        if (consumed > 0) {
+            _ERR_PRINTF("%s: GetGlyphsExtentPointEx did not eat any glyph\n",
+                __FUNCTION__);
+            goto error;
+        }
+
+        DrawGlyphStringEx(hdc, lf, lf_sw, gvs, consumed, my_gps);
+
+        switch (_writing_mode_cases[_curr_writing_mode].rule) {
+        case GRF_WRITING_MODE_VERTICAL_RL:
+            rc_line.left = x - line_size.cx;
+            rc_line.top = y;
+            rc_line.right = x;
+            rc_line.bottom = y + line_size.cy;
+
+            x -= line_size.cx;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_LR:
+            rc_line.left = x;
+            rc_line.top = y;
+            rc_line.right = x + line_size.cx;
+            rc_line.bottom = y + line_size.cy;
+
+            x += line_size.cx;
+            break;
+
+        case GRF_WRITING_MODE_HORIZONTAL_TB:
+        default:
+            rc_line.left = x;
+            rc_line.top = y;
+            rc_line.right = x + line_size.cx;
+            rc_line.bottom = y + line_size.cy;
+
+            y += line_size.cy;
+            break;
+        }
+
+        // draw the outline of the line.
+        SetPenColor(hdc, PIXEL_blue);
+        Rectangle(hdc, rc_line.left, rc_line.top,
+            rc_line.right, rc_line.bottom);
+
+        gvs += consumed;
+        bos += consumed;
+        bts += consumed;
+        n -= consumed;
+    }
+
+    if (my_gei) free(my_gei);
+    if (my_gps) free(my_gps);
+    if (lf_sw) DestroyLogFont(lf_sw);
+    return 0;
+
+error:
+    if (my_gei) free(my_gei);
+    if (my_gps) free(my_gps);
+    if (lf_sw) DestroyLogFont(lf_sw);
+
+    return 1;
+}
+
+static void render_text(HDC hdc)
+{
+    PLOGFONT lf = NULL;
+    const char* text;
+    int left_len_text;
+    Glyph32* gvs;
+    Uint8* bos;
+    Uint8* bts;
+
+    lf = CreateLogFontByName (_font_cases[_curr_font]);
+    if (lf == NULL) {
+        _ERR_PRINTF ("%s: Failed to create logfont\n", __FUNCTION__);
+        return;
+    }
+
+    text = _text_cases[_curr_text];
+    left_len_text = strlen(text);
+    while (left_len_text > 0) {
+        int consumed;
+        int n;
+
+        gvs = NULL;
+        bos = NULL;
+        consumed = GetGlyphsByRules(lf, text, left_len_text,
+                LANGCODE_en, UCHAR_SCRIPT_LATIN,
+                (Uint8)_wsr_cases[_curr_wsr].rule,
+                (Uint8)_ctr_cases[_curr_ctr].rule,
+                (Uint8)_wbr_cases[_curr_wbr].rule,
+                (Uint8)_lbp_cases[_curr_lbp].rule,
+                &gvs, &bos, &bts, &n);
+        if (consumed > 0) {
+
+            if (n > 0) {
+                if (render_glyphs(hdc, lf, gvs, bos, bts, n))
+                    goto error;
+            }
+            else {
+                _ERR_PRINTF("%s: GetGlyphsByRules did not generate any glyph\n",
+                    __FUNCTION__);
+                goto error;
+            }
+        }
+        else {
+            _ERR_PRINTF("%s: GetGlyphsByRules failed\n", __FUNCTION__);
+            goto error;
+        }
+
+        if (gvs) {
+            free (gvs);
+            gvs = NULL;
+        }
+
+        if (bos) {
+            free (bos);
+            bos = NULL;
+        }
+
+        left_len_text -= consumed;
+        text += consumed;
+    }
+
+error:
+    if (gvs) free (gvs);
+    if (bos) free (bos);
+    DestroyLogFont(lf);
+}
+
+static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
@@ -311,13 +598,24 @@ static LRESULT MyMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
     case MSG_PAINT: {
         HDC hdc;
-        hdc = BeginPaint (hWnd);
-        EndPaint (hWnd, hdc);
+        hdc = BeginPaint(hWnd);
+        output_rules(hdc);
+
+        SetPenColor(hdc, PIXEL_red);
+        Rectangle(hdc, _rc_output.left, _rc_output.top,
+            _rc_output.right, _rc_output.bottom);
+
+        render_text(hdc);
+        EndPaint(hWnd, hdc);
         return 0;
     }
 
     case MSG_KEYDOWN: {
         switch (wParam) {
+        case SCANCODE_SPACE:
+            _limited = !_limited;
+            break;
+
         case SCANCODE_F1:
             _curr_text++;
             _curr_text %= TABLESIZE(_text_cases);
@@ -439,14 +737,14 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
 {
     pCreateInfo->dwStyle = WS_CAPTION;
     pCreateInfo->dwExStyle = WS_EX_NONE;
-    pCreateInfo->spCaption = "F1: change text; F2~F5: change rules; CURSORS: change size";
+    pCreateInfo->spCaption = "SPACE: limit or not; F1~F12: change text/rules; CURSORS: change size";
     pCreateInfo->hMenu = 0;
     pCreateInfo->hCursor = 0;
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = MyMainWinProc;
     pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
-    pCreateInfo->rx = 480;
+    pCreateInfo->rx = 1024;
     pCreateInfo->by = 360;
     pCreateInfo->iBkColor = COLOR_lightwhite;
     pCreateInfo->dwAddData = 0;
