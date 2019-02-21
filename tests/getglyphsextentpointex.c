@@ -106,7 +106,7 @@ static const char* _text_cases[] = {
     "ょ\tU+3087\tよ\tU+3088\n"
     "ゎ\tU+308E\tわ\tU+308F",
 
-    "If the content language is Chinese and the writing system is unspecified, or for any content language if the writing system to specified to be one of the ‘Hant’, ‘Hans’, ‘Hani’, ‘Hanb’, or ‘Bopo’ [ISO15924] codes, then the writing system is Chinese. ",
+    "If the content language is Chinese and the writing system is unspecified, or for any content language if the writing system to specified to be one of the ‘Hant’, ‘Hans’, ‘Hani’, ‘Hanb’, or ‘Bopo’ [ISO15924] codes, then the writing system is Chinese.",
 
     "    if (outbuf) {                      \n"
     "    \tfor (i = len - 1; i > 0; --i) {  \n"
