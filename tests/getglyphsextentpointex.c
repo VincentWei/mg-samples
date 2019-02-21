@@ -74,31 +74,25 @@ static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
 }
 
 static const char* _text_cases[] = {
-    // 0
+    "1234567890",
+
     "这是一些汉字 and some Latin و کمی خط عربی และตัวอย่างการเขียนภาษาไทย",
 
-    // 1
     "窓ぎわのトットちゃん",
 
-    // 2
     "각 줄의 마지막에 한글이 올 때 줄 나눔 기준을 “글자” 또는 “어절” 단위로 한다.",
 
-    // 3
     "12345678，\n123456789。",
 
-    // 4
     "　登鹳雀楼　\n"
     "      作者：王之涣 年代：唐\n"
     "白日依山尽，黄河入海流。\n"
     "欲穷千里目，更上一层楼。",
 
-    // 5
     "其中，前两句写所见。“白日依山尽”写远景，写山，写的是登楼望见的景色，“黄河入海流”写近景，写水写得景象壮观，气势磅礴。这里，诗人运用极其朴素、极其浅显的语言，既高度形象又高度概括地把进入广大视野的万里河山，收入短短十个字中；而后人在千载之下读到这十个字时，也如临其地，如见其景，感到胸襟为之一开。",
 
-    // 6
     "Grapheme clusters formed with an Enclosing Mark (Me) of the Common script are considered to be Other Symbols (So) in the Common script. They are assumed to have the same Unicode properties as the Replacement Character U+FFFD.",
 
-    // 7
     "ぁ\tU+3041\tあ\tU+3042\n"
     "ぃ\tU+3043\tい\tU+3044\n"
     "ぅ\tU+3045\tう\tU+3046\n"
@@ -112,10 +106,8 @@ static const char* _text_cases[] = {
     "ょ\tU+3087\tよ\tU+3088\n"
     "ゎ\tU+308E\tわ\tU+308F",
 
-    // 8
     "If the content language is Chinese and the writing system is unspecified, or for any content language if the writing system to specified to be one of the ‘Hant’, ‘Hans’, ‘Hani’, ‘Hanb’, or ‘Bopo’ [ISO15924] codes, then the writing system is Chinese. ",
 
-    // 9
     "    if (outbuf) {                      \n"
     "    \tfor (i = len - 1; i > 0; --i) {  \n"
     "    \t\toutbuf[i] = (c & 0x3f) | 0x80; \n"
@@ -124,10 +116,8 @@ static const char* _text_cases[] = {
     "    outbuf[0] = c | first;\n"
     "    }\n",
 
-    // 10
     "        　",
 
-    // 11
     "Amazon Will Pay a Whopping $0 in Federal Taxes on $11.2 Billion Profits\n"
     "\n"
     "Those wondering how many zeros Amazon, which is valued at nearly $800 billion, has to pay in federal taxes might be surprised to learn that its check to the IRS will read exactly $0.00.\n"
@@ -162,6 +152,8 @@ static RENDER_RULE _wsr_cases [] = {
 };
 
 static RENDER_RULE _ctr_cases [] = {
+    { CTR_NONE,
+        "CTR_NONE" },
     { CTR_CAPITALIZE,
         "CTR_CAPITALIZE" },
     { CTR_UPPERCASE,
@@ -457,42 +449,116 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         RECT rc_line;
 
         consumed = GetGlyphsExtentPointEx (lf, gvs, n, bos, bts,
-            x, y, render_flags,
+            render_flags, x, y,
             _letter_spacing, _word_spacing, _tab_size, max_extent,
             &line_size, my_gei, my_gps, &lf_sw);
 
-        if (consumed > 0) {
+        if (consumed <= 0) {
             _ERR_PRINTF("%s: GetGlyphsExtentPointEx did not eat any glyph\n",
                 __FUNCTION__);
             goto error;
         }
 
+#if 0
+        int i;
+        for (i = 0; i < consumed; i++) {
+            _DBG_PRINTF("%s: position of glyph (%x): (%d, %d)\n",
+                __FUNCTION__, gvs[i], my_gps[i].x, my_gps[i].y);
+        }
+#endif
+
         DrawGlyphStringEx(hdc, lf, lf_sw, gvs, consumed, my_gps);
 
         switch (_writing_mode_cases[_curr_writing_mode].rule) {
         case GRF_WRITING_MODE_VERTICAL_RL:
+            switch(_align_cases[_curr_align].rule) {
+            case GRF_ALIGN_START:
+            case GRF_ALIGN_LEFT:
+            default:
+                rc_line.top = y;
+                rc_line.bottom = rc_line.top + line_size.cy;
+                break;
+
+            case GRF_ALIGN_END:
+            case GRF_ALIGN_RIGHT:
+                rc_line.top = y + max_extent - line_size.cy;
+                rc_line.bottom = rc_line.top + line_size.cy;
+                break;
+
+            case GRF_ALIGN_CENTER:
+                rc_line.top = y + max_extent/2 - line_size.cy/2;
+                rc_line.bottom = rc_line.top + line_size.cy;
+                break;
+
+            case GRF_ALIGN_JUSTIFY:
+                rc_line.top = y;
+                rc_line.bottom = rc_line.top + max_extent;
+                break;
+            }
             rc_line.left = x - line_size.cx;
-            rc_line.top = y;
             rc_line.right = x;
-            rc_line.bottom = y + line_size.cy;
 
             x -= line_size.cx;
             break;
 
         case GRF_WRITING_MODE_VERTICAL_LR:
+            switch(_align_cases[_curr_align].rule) {
+            case GRF_ALIGN_START:
+            case GRF_ALIGN_LEFT:
+            default:
+                rc_line.top = y;
+                rc_line.bottom = rc_line.top + line_size.cy;
+                break;
+
+            case GRF_ALIGN_END:
+            case GRF_ALIGN_RIGHT:
+                rc_line.top = y + max_extent - line_size.cy;
+                rc_line.bottom = rc_line.top + line_size.cy;
+                break;
+
+            case GRF_ALIGN_CENTER:
+                rc_line.top = y + max_extent/2 - line_size.cy/2;
+                rc_line.bottom = rc_line.top + line_size.cy;
+                break;
+
+            case GRF_ALIGN_JUSTIFY:
+                rc_line.top = y;
+                rc_line.bottom = rc_line.top + max_extent;
+                break;
+            }
             rc_line.left = x;
-            rc_line.top = y;
             rc_line.right = x + line_size.cx;
-            rc_line.bottom = y + line_size.cy;
 
             x += line_size.cx;
             break;
 
         case GRF_WRITING_MODE_HORIZONTAL_TB:
         default:
-            rc_line.left = x;
+            switch(_align_cases[_curr_align].rule) {
+            case GRF_ALIGN_START:
+            case GRF_ALIGN_LEFT:
+            default:
+                rc_line.left = x;
+                rc_line.right = rc_line.left + line_size.cx;
+                break;
+
+            case GRF_ALIGN_END:
+            case GRF_ALIGN_RIGHT:
+                rc_line.left = x + max_extent - line_size.cx;
+                rc_line.right = rc_line.left + line_size.cx;
+                break;
+
+            case GRF_ALIGN_CENTER:
+                rc_line.left = x + max_extent/2 - line_size.cx/2;
+                rc_line.right = rc_line.left + line_size.cx;
+                break;
+
+            case GRF_ALIGN_JUSTIFY:
+                rc_line.left = x;
+                rc_line.right = rc_line.left + max_extent;
+                break;
+            }
             rc_line.top = y;
-            rc_line.right = x + line_size.cx;
             rc_line.bottom = y + line_size.cy;
 
             y += line_size.cy;
@@ -500,9 +566,11 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         }
 
         // draw the outline of the line.
-        SetPenColor(hdc, PIXEL_blue);
-        Rectangle(hdc, rc_line.left, rc_line.top,
-            rc_line.right, rc_line.bottom);
+        if (max_extent > 0) {
+            SetPenColor(hdc, PIXEL_blue);
+            Rectangle(hdc, rc_line.left, rc_line.top,
+                rc_line.right, rc_line.bottom);
+        }
 
         gvs += consumed;
         bos += consumed;
@@ -555,8 +623,11 @@ static void render_text(HDC hdc)
                 &gvs, &bos, &bts, &n);
         if (consumed > 0) {
 
+            _DBG_PRINTF("%s: GetGlyphsByRules: bytes: %d, glyphs: %d\n",
+                __FUNCTION__, consumed, n);
+
             if (n > 0) {
-                if (render_glyphs(hdc, lf, gvs, bos, bts, n))
+                if (render_glyphs(hdc, lf, gvs, bos + 1, bts, n))
                     goto error;
             }
             else {
