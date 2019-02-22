@@ -76,19 +76,22 @@ static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
 static const char* _text_cases[] = {
     "1234567890",
 
-    "这是一些汉字 and some Latin و کمی خط عربی และตัวอย่างการเขียนภาษาไทย",
-
-    "窓ぎわのトットちゃん",
-
-    "각 줄의 마지막에 한글이 올 때 줄 나눔 기준을 “글자” 또는 “어절” 단위로 한다.",
-
     "12345678，\n123456789。",
 
+    " some Latin letters.",
+
+    "这是一些汉字; some Latin letters; \n"
+    "$89.00 (￥50.00); 80,000.00; 90.2%\n"
+    "窓ぎわのトットちゃん\n"
+    "각 줄의 마지막에 한글이 올 때 줄 나눔 기준을 “글자” 또는 “어절” 단위로 한다.",
+
     "　登鹳雀楼　\n"
+    "\n"
     "      作者：王之涣 年代：唐\n"
     "白日依山尽，黄河入海流。\n"
-    "欲穷千里目，更上一层楼。",
-
+    "欲穷千里目，更上一层楼。\n"
+    "\n"
+    "\n"
     "其中，前两句写所见。“白日依山尽”写远景，写山，写的是登楼望见的景色，“黄河入海流”写近景，写水写得景象壮观，气势磅礴。这里，诗人运用极其朴素、极其浅显的语言，既高度形象又高度概括地把进入广大视野的万里河山，收入短短十个字中；而后人在千载之下读到这十个字时，也如临其地，如见其景，感到胸襟为之一开。",
 
     "Grapheme clusters formed with an Enclosing Mark (Me) of the Common script are considered to be Other Symbols (So) in the Common script. They are assumed to have the same Unicode properties as the Replacement Character U+FFFD.",
@@ -307,7 +310,7 @@ static int _curr_spaces;
 static int _letter_spacing = 0;
 static int _word_spacing = 0;
 static int _tab_size = 100;
-static RECT _rc_output = {400, 5, 1024 - 5, 330};
+static RECT _rc_output = {400, 5, 1024 - 5, 500};
 
 static void output_rules(HDC hdc)
 {
@@ -457,6 +460,10 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
             _ERR_PRINTF("%s: GetGlyphsExtentPointEx did not eat any glyph\n",
                 __FUNCTION__);
             goto error;
+        }
+        else {
+            _ERR_PRINTF("%s: GetGlyphsExtentPointEx returns %d glyphs\n",
+                __FUNCTION__, consumed);
         }
 
 #if 0
@@ -816,7 +823,7 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 1024;
-    pCreateInfo->by = 360;
+    pCreateInfo->by = 530;
     pCreateInfo->iBkColor = COLOR_lightwhite;
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
