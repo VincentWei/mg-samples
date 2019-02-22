@@ -76,7 +76,13 @@ static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
 static const char* _text_cases[] = {
     "1234567890",
 
-    "12345678，\n123456789。",
+    "A stop, or comma at the end of a line hangs.",
+
+    "An opening bracket or quote at the start of the line or a closing bracket or quote at the end line hangs:\n(12)\n'345'\n\"67890\"",
+
+    "     (12) '345'\n \"67890\"  　　",
+
+    "   12345678，\n123456789。",
 
     " some Latin letters.",
 
@@ -217,6 +223,8 @@ static RENDER_RULE _text_ort_cases [] = {
         "GRF_TEXT_ORIENTATION_UPRIGHT" },
     { GRF_TEXT_ORIENTATION_SIDEWAYS,
         "GRF_TEXT_ORIENTATION_SIDEWAYS" },
+    { GRF_TEXT_ORIENTATION_MIXED,
+        "GRF_TEXT_ORIENTATION_MIXED" },
 };
 
 static RENDER_RULE _overflow_wrap_cases [] = {
@@ -462,7 +470,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
             goto error;
         }
         else {
-            _ERR_PRINTF("%s: GetGlyphsExtentPointEx returns %d glyphs\n",
+            _MG_PRINTF("%s: GetGlyphsExtentPointEx returns %d glyphs\n",
                 __FUNCTION__, consumed);
         }
 
