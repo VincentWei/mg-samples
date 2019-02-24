@@ -1,3 +1,4 @@
+LDFLAGS=-lefence
 noinst_PROGRAMS=font_text
 
 CUSTOMMG_SRC=custom_minigui.c

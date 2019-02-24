@@ -205,8 +205,12 @@ static const DEVFONTINFO  FontName[]={
     {FONTFILE_PATH"font/fmkai-latin-12.upf", "upf-fmkai-rrncnn-12-12-GB2312-0,UTF-8"},
     {FONTFILE_PATH"font/fmkai-latin-16.upf", "upf-fmkai-rrncnn-16-16-GB2312-0,UTF-8"},
     //iso8859-6,iso8859-8, JISX0201-1, EUC-KR 36 - 44
+#if 0
+    {FONTFILE_PATH"font/unifont_160_50.upf", "upf-unifont-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8"},
+#else
     {FONTFILE_PATH"font/naskhi-18-21-iso8859-6.vbf", "vbf-naskhi-rrncnn-18-21-ISO8859-6"},
     {FONTFILE_PATH"font/fixed-10-20-iso8859-8.vbf", "vbf-fixed-mrncnn-10-20-ISO8859-8"},
+#endif
     {FONTFILE_PATH"font/gothic-6x12-jisx0201.bin", "rbf-gothic-rrncnn-12-12-JISX0201-1"},
     {FONTFILE_PATH"font/batang-12-ksc5601.bin", "rbf-batang-rrncnn-12-12-EUC-KR"},
     {FONTFILE_PATH"font/gothic-12-jiskan.bin","rbf-gothic-rrncnn-12-12-JISX0208-1"},
@@ -323,7 +327,7 @@ static HMENU CreatePmenuType (void)
     mii.type        = MFT_STRING ;
     mii.state       = 0;
     mii.id          = IDM_TEXTOUTVBF;
-    mii.typedata    = (DWORD)"VPF";
+    mii.typedata    = (DWORD)"VBF";
     InsertMenuItem(hmnu, 1, TRUE, &mii);
 
     mii.type        = MFT_STRING ;
@@ -1813,13 +1817,12 @@ void OnModeDrawText (HDC hdc)
     SelectFont (hdc, logfont_rbf_gb12_song);
     DrawText (hdc, szBuff1, -1, &rc1, DT_NOCLIP | DT_CENTER | DT_WORDBREAK);
 
-    SelectFont (hdc, logfont_rbf_gb16_song);
-    DrawText (hdc, szBuff2, -1, &rc2, DT_NOCLIP | DT_RIGHT | DT_WORDBREAK);
-
     DrawText (hdc, szBuff3, -1, &rc3, DT_NOCLIP | DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
     DrawTextEx (hdc, szBuff4, -1, &rc4, 32, DT_LEFT | DT_WORDBREAK);
 
+    SelectFont (hdc, logfont_rbf_gb16_song);
+    DrawText (hdc, szBuff2, -1, &rc2, DT_NOCLIP | DT_RIGHT | DT_WORDBREAK);
 }
 
 static void OnModeRotation (HWND hWnd, HDC hdc)
