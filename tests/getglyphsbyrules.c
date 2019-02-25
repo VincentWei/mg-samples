@@ -83,10 +83,10 @@ static const char* _bt_names[] = {
 #define TOKEN_HAVE_NO_BREAK_OPPORTUNITY   "×"
 #define TOKEN_HAVE_BREAK_OPPORTUNITY      "÷"
 
-static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
+static int parse_one_test(const char* line, Uchar32* uc, Uint16* bt)
 {
     int nr_ucs = 0;
-    int nr_bts = 0;
+    int nr_bos = 0;
     const char* current;
 
     if (!line)
@@ -105,16 +105,16 @@ static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
 
             current += strlen(TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_LB_NOTALLOWED;
-            nr_bts++;
+            bt[nr_bos] = BOV_LB_NOTALLOWED;
+            nr_bos++;
         }
         else if (strncmp(current, TOKEN_HAVE_BREAK_OPPORTUNITY,
                 strlen(TOKEN_HAVE_BREAK_OPPORTUNITY)) == 0) {
 
             current += strlen(TOKEN_HAVE_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_LB_ALLOWED;
-            nr_bts++;
+            bt[nr_bos] = BOV_LB_ALLOWED;
+            nr_bos++;
         }
         else if (isxdigit(*current)) {
             int tmp = sscanf(current, "%X", uc + nr_ucs);
@@ -175,12 +175,12 @@ static int uc32_to_utf8(Uchar32 c, char* outbuf)
     return len;
 }
 
-static void do_check(Uchar32* ucs, Uint8* bts, int n,
+static void do_check(Uchar32* ucs, Uint16* bos, int n,
         Glyph32* my_gvs, Uint16* my_bos, int my_n)
 {
     printf("PARSED: \n");
 
-    if (bts[0] & BOV_LB_BREAK_FLAG) {
+    if (bos[0] & BOV_LB_BREAK_FLAG) {
         printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
     }
     else {
@@ -190,7 +190,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     for (int i = 0; i < n; i++) {
         printf (" %04X ", ucs[i]);
 
-        if (bts[i + 1] & BOV_LB_BREAK_FLAG) {
+        if (bos[i + 1] & BOV_LB_BREAK_FLAG) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
         }
         else {
@@ -225,7 +225,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     }
     else {
         for (int i = 0; i < n; i++) {
-            if ((bts[i] & BOV_LB_BREAK_FLAG) != (my_bos[i] & BOV_LB_BREAK_FLAG)) {
+            if ((bos[i] & BOV_LB_BREAK_FLAG) != (my_bos[i] & BOV_LB_BREAK_FLAG)) {
                 ok = FALSE;
                 break;
             }
@@ -242,7 +242,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
 {
     char buff[MAX_LINE_LEN + 1];
     Uchar32 ucs[MAX_UCHARS];
-    Uint8 bts[MAX_UCHARS + 1];
+    Uint16 bos[MAX_UCHARS + 1];
     int n;
 
     Glyph32* my_gvs;
@@ -260,7 +260,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         printf("==== LINE %d ====\n", line);
         printf("CASE: \n%s", buff);
 
-        n = parse_one_test(buff, ucs, bts);
+        n = parse_one_test(buff, ucs, bos);
         if (n == 0) {
             continue;
         }
@@ -290,7 +290,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
                 WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
                 &my_gvs, &my_bos, NULL, &my_n);
         if (cosumed > 0) {
-            do_check(ucs, bts, n, my_gvs, my_bos, my_n);
+            do_check(ucs, bos, n, my_gvs, my_bos, my_n);
 
             if (my_gvs) free (my_gvs);
             if (my_bos) free (my_bos);
