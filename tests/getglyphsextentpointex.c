@@ -76,7 +76,7 @@ static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
 static const char* _text_cases[] = {
     "1234567890",
 
-    "A stop, or comma at the end of a line hangs.",
+    "Source Han Serif is the serif-style typeface family companion to Source Han Sans. The Chinese glyphs, both simplified and traditional, were designed by partner type foundry Changzhou SinoType. The Simplified Chinese fonts support the GB 18030 standard, along with China’s list of 8,105 hanzi (Tōngyòng Guīfàn Hànzìbiǎo, which includes 199 hanzi that are outside the scope of the GB 18030 standard). The Traditional Chinese fonts support the Big 5 standard, and glyph shapes adhere to the Taiwan Ministry of Education standard. Learn more about how these fonts were created.",
 
     "An opening bracket or quote at the start of the line or a closing bracket or quote at the end line hangs:\n(12)\n'345'\n\"67890\"",
 
@@ -404,7 +404,7 @@ static char* _font_cases [] = {
 };
 
 static int render_glyphs(HDC hdc, PLOGFONT lf,
-    const Glyph32* gvs, const Uint8* bos, const Uint8* bts, int n)
+    const Glyph32* gvs, const Uint16* bos, const Uint8* bts, int n)
 {
     Uint32 render_flags;
     int x, y, max_extent;
@@ -612,7 +612,7 @@ static void render_text(HDC hdc)
     const char* text;
     int left_len_text;
     Glyph32* gvs;
-    Uint8* bos;
+    Uint16* bos;
     Uint8* bts;
 
     lf = CreateLogFontByName (_font_cases[_curr_font]);

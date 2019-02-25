@@ -105,7 +105,7 @@ static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
 
             current += strlen(TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_NOTALLOWED_UNCERTAINLY;
+            bt[nr_bts] = BOV_LB_NOTALLOWED;
             nr_bts++;
         }
         else if (strncmp(current, TOKEN_HAVE_BREAK_OPPORTUNITY,
@@ -113,7 +113,7 @@ static int parse_one_test(const char* line, Uchar32* uc, Uint8* bt)
 
             current += strlen(TOKEN_HAVE_BREAK_OPPORTUNITY);
 
-            bt[nr_bts] = BOV_ALLOWED;
+            bt[nr_bts] = BOV_LB_ALLOWED;
             nr_bts++;
         }
         else if (isxdigit(*current)) {
@@ -176,11 +176,11 @@ static int uc32_to_utf8(Uchar32 c, char* outbuf)
 }
 
 static void do_check(Uchar32* ucs, Uint8* bts, int n,
-        Glyph32* my_gvs, Uint8* my_bts, int my_n)
+        Glyph32* my_gvs, Uint16* my_bos, int my_n)
 {
     printf("PARSED: \n");
 
-    if (bts[0] & BOV_BREAK_FLAG) {
+    if (bts[0] & BOV_LB_BREAK_FLAG) {
         printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
     }
     else {
@@ -190,7 +190,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     for (int i = 0; i < n; i++) {
         printf (" %04X ", ucs[i]);
 
-        if (bts[i + 1] & BOV_BREAK_FLAG) {
+        if (bts[i + 1] & BOV_LB_BREAK_FLAG) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
         }
         else {
@@ -200,7 +200,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     printf("\n");
 
     printf("MINIGUI: \n");
-    if (my_bts[0] & BOV_BREAK_FLAG) {
+    if (my_bos[0] & BOV_LB_BREAK_FLAG) {
         printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
     }
     else {
@@ -210,7 +210,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     for (int i = 0; i < my_n; i++) {
         printf (" %04X ", REAL_GLYPH(my_gvs[i]));
 
-        if (my_bts[i + 1] & BOV_BREAK_FLAG) {
+        if (my_bos[i + 1] & BOV_LB_BREAK_FLAG) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
         }
         else {
@@ -225,7 +225,7 @@ static void do_check(Uchar32* ucs, Uint8* bts, int n,
     }
     else {
         for (int i = 0; i < n; i++) {
-            if ((bts[i] & BOV_BREAK_FLAG) != (my_bts[i] & BOV_BREAK_FLAG)) {
+            if ((bts[i] & BOV_LB_BREAK_FLAG) != (my_bos[i] & BOV_LB_BREAK_FLAG)) {
                 ok = FALSE;
                 break;
             }
@@ -246,7 +246,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
     int n;
 
     Glyph32* my_gvs;
-    Uint8* my_bts;
+    Uint16* my_bos;
     int my_n;
     int cosumed;
     int line = 0;
@@ -284,16 +284,16 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         }
 
         my_gvs = NULL;
-        my_bts = NULL;
+        my_bos = NULL;
         cosumed = GetGlyphsByRules(lf, utf8, len_utf8,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
                 WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
-                &my_gvs, &my_bts, NULL, &my_n);
+                &my_gvs, &my_bos, NULL, &my_n);
         if (cosumed > 0) {
-            do_check(ucs, bts, n, my_gvs, my_bts, my_n);
+            do_check(ucs, bts, n, my_gvs, my_bos, my_n);
 
             if (my_gvs) free (my_gvs);
-            if (my_bts) free (my_bts);
+            if (my_bos) free (my_bos);
         }
         else {
             _ERR_PRINTF("%s: GetGlyphsByRules failed\n", __FUNCTION__);
