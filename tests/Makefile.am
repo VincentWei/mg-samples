@@ -2,10 +2,10 @@ LDFLAGS=-lefence
 EXTRA_DIST = res
 
 noinst_PROGRAMS = \
-    getglyphsbyrules \
+    getglyphsandbreaks \
     getglyphsextentpointex
 
-getglyphsbyrules_SOURCES = getglyphsbyrules.c
+getglyphsandbreaks_SOURCES = getglyphsandbreaks.c
 getglyphsextentpointex_SOURCES = getglyphsextentpointex.c
 
 

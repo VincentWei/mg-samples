@@ -404,7 +404,7 @@ static char* _font_cases [] = {
 };
 
 static int render_glyphs(HDC hdc, PLOGFONT lf,
-    const Glyph32* gvs, const Uint16* bos, const Uint8* bts, int n)
+    const Glyph32* gvs, const Uint16* bos, int n)
 {
     Uint32 render_flags;
     int x, y, max_extent;
@@ -459,7 +459,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         SIZE line_size;
         RECT rc_line;
 
-        consumed = GetGlyphsExtentPointEx (lf, gvs, n, bos, bts,
+        consumed = GetGlyphsExtentPointEx (lf, gvs, n, bos,
             render_flags, x, y,
             _letter_spacing, _word_spacing, _tab_size, max_extent,
             &line_size, my_gei, my_gps, &lf_sw);
@@ -589,7 +589,6 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
 
         gvs += consumed;
         bos += consumed;
-        bts += consumed;
         n -= consumed;
     }
 
@@ -613,7 +612,6 @@ static void render_text(HDC hdc)
     int left_len_text;
     Glyph32* gvs;
     Uint16* bos;
-    Uint8* bts;
 
     lf = CreateLogFontByName (_font_cases[_curr_font]);
     if (lf == NULL) {
@@ -629,30 +627,30 @@ static void render_text(HDC hdc)
 
         gvs = NULL;
         bos = NULL;
-        consumed = GetGlyphsByRules(lf, text, left_len_text,
+        consumed = GetGlyphsAndBreaks(lf, text, left_len_text,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
                 (Uint8)_wsr_cases[_curr_wsr].rule,
                 (Uint8)_ctr_cases[_curr_ctr].rule,
                 (Uint8)_wbr_cases[_curr_wbr].rule,
                 (Uint8)_lbp_cases[_curr_lbp].rule,
-                &gvs, &bos, &bts, &n);
+                &gvs, &bos, NULL, &n);
         if (consumed > 0) {
 
-            _DBG_PRINTF("%s: GetGlyphsByRules: bytes: %d, glyphs: %d\n",
+            _DBG_PRINTF("%s: GetGlyphsAndBreaks: bytes: %d, glyphs: %d\n",
                 __FUNCTION__, consumed, n);
 
             if (n > 0) {
-                if (render_glyphs(hdc, lf, gvs, bos + 1, bts, n))
+                if (render_glyphs(hdc, lf, gvs, bos + 1, n))
                     goto error;
             }
             else {
-                _ERR_PRINTF("%s: GetGlyphsByRules did not generate any glyph\n",
+                _ERR_PRINTF("%s: GetGlyphsAndBreaks did not generate any glyph\n",
                     __FUNCTION__);
                 goto error;
             }
         }
         else {
-            _ERR_PRINTF("%s: GetGlyphsByRules failed\n", __FUNCTION__);
+            _ERR_PRINTF("%s: GetGlyphsAndBreaks failed\n", __FUNCTION__);
             goto error;
         }
 

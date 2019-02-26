@@ -1,6 +1,6 @@
 /*
 ** getglyphsbyrules.c:
-**  test code for GetGlyphsByRules of MiniGUI 3.4.0
+**  test code for GetGlyphsAndBreaks of MiniGUI 3.4.0
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
@@ -285,7 +285,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
 
         my_gvs = NULL;
         my_bos = NULL;
-        cosumed = GetGlyphsByRules(lf, utf8, len_utf8,
+        cosumed = GetGlyphsAndBreaks(lf, utf8, len_utf8,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
                 WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
                 &my_gvs, &my_bos, NULL, &my_n);
@@ -296,7 +296,7 @@ static void do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
             if (my_bos) free (my_bos);
         }
         else {
-            _ERR_PRINTF("%s: GetGlyphsByRules failed\n", __FUNCTION__);
+            _ERR_PRINTF("%s: GetGlyphsAndBreaks failed\n", __FUNCTION__);
             break;
         }
     }
@@ -358,5 +358,5 @@ int MiniGUIMain (int argc, const char* argv[])
 }
 
 #else
-#error "To test GetGlyphsByRules, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test GetGlyphsAndBreaks, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
