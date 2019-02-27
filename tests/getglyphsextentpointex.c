@@ -26,52 +26,11 @@
 #include <minigui/minigui.h>
 #include <minigui/gdi.h>
 #include <minigui/window.h>
-#include <minigui/control.h>
 
 #if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
         && defined(_MGCHARSET_UNICODE)
 
-static inline int uc32_to_utf8(Uchar32 c, char* outbuf)
-{
-    int len = 0;
-    int first;
-    int i;
-
-    if (c < 0x80) {
-        first = 0;
-        len = 1;
-    }
-    else if (c < 0x800) {
-        first = 0xc0;
-        len = 2;
-    }
-    else if (c < 0x10000) {
-        first = 0xe0;
-        len = 3;
-    }
-    else if (c < 0x200000) {
-        first = 0xf0;
-        len = 4;
-    }
-    else if (c < 0x4000000) {
-        first = 0xf8;
-        len = 5;
-    }
-    else {
-        first = 0xfc;
-        len = 6;
-    }
-
-    if (outbuf) {
-        for (i = len - 1; i > 0; --i) {
-            outbuf[i] = (c & 0x3f) | 0x80;
-            c >>= 6;
-        }
-        outbuf[0] = c | first;
-    }
-
-    return len;
-}
+#include "helpers.h"
 
 static const char* _text_cases[] = {
     "1234567890",
@@ -605,6 +564,113 @@ error:
     return 1;
 }
 
+#define TOKEN_HAVE_NO_BREAK_OPPORTUNITY "×"
+#define TOKEN_HAVE_BREAK_OPPORTUNITY    "÷"
+
+static void do_dump(const Glyph32* gvs, const Uint16* bos, int n,
+        Uint16 bo_flag)
+{
+    int i;
+
+    if (bos[0] & bo_flag) {
+        printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
+    }
+    else {
+        printf (TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
+    }
+
+    for (i = 0; i < n; i++) {
+        char utf8[16];
+        int len;
+        Uchar32 uc = GLYPH2UCHAR(gvs[i]);
+
+        len = uc32_to_utf8(uc, utf8);
+        utf8[len] = 0;
+        printf(" %s ", utf8);
+
+        if (bos[i + 1] & bo_flag) {
+            printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
+        }
+        else {
+            printf (TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
+        }
+    }
+}
+
+static void dump_glyphs_and_breaks(const char* text,
+        const Glyph32* gvs, const Uint16* bos, int n)
+{
+    int i;
+
+    printf("START OF DUMPING GLYPHS AND BREAKS\n");
+    printf("==================================\n");
+    puts(text);
+    printf("\n");
+
+    for (i = 0; i < n; i++) {
+        Uchar32 uc = GLYPH2UCHAR(gvs[i]);
+        printf("%04X(%s, %s)\n", uc,
+            get_general_category_name(UCharGetCategory(uc)),
+            get_break_type_name(UCharGetBreak(uc)));
+    }
+    printf("\n");
+
+    printf("\tBOV_LB_BREAK_FLAG\n");
+    do_dump(gvs, bos, n, BOV_LB_BREAK_FLAG);
+    printf("\n\n");
+
+    printf("\tBOV_WHITESPACE\n");
+    do_dump(gvs, bos, n, BOV_WHITESPACE);
+    printf("\n\n");
+
+    printf("\tBOV_EXPANDABLE_SPACE\n");
+    do_dump(gvs, bos, n, BOV_EXPANDABLE_SPACE);
+    printf("\n\n");
+
+    printf("\tBOV_ZERO_WIDTH\n");
+    do_dump(gvs, bos, n, BOV_ZERO_WIDTH);
+    printf("\n\n");
+
+    printf("\tBOV_GB_CHAR_BREAK\n");
+    do_dump(gvs, bos, n, BOV_GB_CHAR_BREAK);
+    printf("\n\n");
+
+    printf("\tBOV_GB_CURSOR_POS\n");
+    do_dump(gvs, bos, n, BOV_GB_CURSOR_POS);
+    printf("\n\n");
+
+    printf("\tBOV_GB_BACKSPACE_DEL_CH\n");
+    do_dump(gvs, bos, n, BOV_GB_BACKSPACE_DEL_CH);
+    printf("\n\n");
+
+    printf("\tBOV_WB_WORD_BOUNDARY\n");
+    do_dump(gvs, bos, n, BOV_WB_WORD_BOUNDARY);
+    printf("\n\n");
+
+    printf("\tBOV_WB_WORD_START\n");
+    do_dump(gvs, bos, n, BOV_WB_WORD_START);
+    printf("\n\n");
+
+    printf("\tBOV_WB_WORD_END\n");
+    do_dump(gvs, bos, n, BOV_WB_WORD_END);
+    printf("\n\n");
+
+    printf("\tBOV_SB_SENTENCE_BOUNDARY\n");
+    do_dump(gvs, bos, n, BOV_SB_SENTENCE_BOUNDARY);
+    printf("\n\n");
+
+    printf("\tBOV_SB_SENTENCE_START\n");
+    do_dump(gvs, bos, n, BOV_SB_SENTENCE_START);
+    printf("\n\n");
+
+    printf("\tBOV_SB_SENTENCE_END\n");
+    do_dump(gvs, bos, n, BOV_SB_SENTENCE_END);
+    printf("\n\n");
+
+    printf("================================\n");
+    printf("END OF DUMPING GLYPHS AND BREAKS\n");
+}
+
 static void render_text(HDC hdc)
 {
     PLOGFONT lf = NULL;
@@ -640,6 +706,8 @@ static void render_text(HDC hdc)
                 __FUNCTION__, consumed, n);
 
             if (n > 0) {
+                dump_glyphs_and_breaks(text, gvs, bos, n);
+
                 if (render_glyphs(hdc, lf, gvs, bos + 1, n))
                     goto error;
             }

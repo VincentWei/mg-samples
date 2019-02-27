@@ -31,126 +31,7 @@
 #if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
         && defined(_MGCHARSET_UNICODE)
 
-static int uc32_to_utf8(Uchar32 c, char* outbuf)
-{
-    int len = 0;
-    int first;
-    int i;
-
-    if (c < 0x80) {
-        first = 0;
-        len = 1;
-    }
-    else if (c < 0x800) {
-        first = 0xc0;
-        len = 2;
-    }
-    else if (c < 0x10000) {
-        first = 0xe0;
-        len = 3;
-    }
-    else if (c < 0x200000) {
-        first = 0xf0;
-        len = 4;
-    }
-    else if (c < 0x4000000) {
-        first = 0xf8;
-        len = 5;
-    }
-    else {
-        first = 0xfc;
-        len = 6;
-    }
-
-    if (outbuf) {
-        for (i = len - 1; i > 0; --i) {
-            outbuf[i] = (c & 0x3f) | 0x80;
-            c >>= 6;
-        }
-        outbuf[0] = c | first;
-    }
-
-    return len;
-}
-
-static const char* _gc_names[] = {
-    "UCHAR_CATEGORY_CONTROL",
-    "UCHAR_CATEGORY_FORMAT",
-    "UCHAR_CATEGORY_UNASSIGNED",
-    "UCHAR_CATEGORY_PRIVATE_USE",
-    "UCHAR_CATEGORY_SURROGATE",
-    "UCHAR_CATEGORY_LOWERCASE_LETTER",
-    "UCHAR_CATEGORY_MODIFIER_LETTER",
-    "UCHAR_CATEGORY_OTHER_LETTER",
-    "UCHAR_CATEGORY_TITLECASE_LETTER",
-    "UCHAR_CATEGORY_UPPERCASE_LETTER",
-    "UCHAR_CATEGORY_SPACING_MARK",
-    "UCHAR_CATEGORY_ENCLOSING_MARK",
-    "UCHAR_CATEGORY_NON_SPACING_MARK",
-    "UCHAR_CATEGORY_DECIMAL_NUMBER",
-    "UCHAR_CATEGORY_LETTER_NUMBER",
-    "UCHAR_CATEGORY_OTHER_NUMBER",
-    "UCHAR_CATEGORY_CONNECT_PUNCTUATION",
-    "UCHAR_CATEGORY_DASH_PUNCTUATION",
-    "UCHAR_CATEGORY_CLOSE_PUNCTUATION",
-    "UCHAR_CATEGORY_FINAL_PUNCTUATION",
-    "UCHAR_CATEGORY_INITIAL_PUNCTUATION",
-    "UCHAR_CATEGORY_OTHER_PUNCTUATION",
-    "UCHAR_CATEGORY_OPEN_PUNCTUATION",
-    "UCHAR_CATEGORY_CURRENCY_SYMBOL",
-    "UCHAR_CATEGORY_MODIFIER_SYMBOL",
-    "UCHAR_CATEGORY_MATH_SYMBOL",
-    "UCHAR_CATEGORY_OTHER_SYMBOL",
-    "UCHAR_CATEGORY_LINE_SEPARATOR",
-    "UCHAR_CATEGORY_PARAGRAPH_SEPARATOR",
-    "UCHAR_CATEGORY_SPACE_SEPARATOR",
-};
-
-static const char* _bt_names[] = {
-    "UCHAR_BREAK_MANDATORY",
-    "UCHAR_BREAK_CARRIAGE_RETURN",
-    "UCHAR_BREAK_LINE_FEED",
-    "UCHAR_BREAK_COMBINING_MARK",
-    "UCHAR_BREAK_SURROGATE",
-    "UCHAR_BREAK_ZERO_WIDTH_SPACE",
-    "UCHAR_BREAK_INSEPARABLE",
-    "UCHAR_BREAK_NON_BREAKING_GLUE",
-    "UCHAR_BREAK_CONTINGENT",
-    "UCHAR_BREAK_SPACE",
-    "UCHAR_BREAK_AFTER",
-    "UCHAR_BREAK_BEFORE",
-    "UCHAR_BREAK_BEFORE_AND_AFTER",
-    "UCHAR_BREAK_HYPHEN",
-    "UCHAR_BREAK_NON_STARTER",
-    "UCHAR_BREAK_OPEN_PUNCTUATION",
-    "UCHAR_BREAK_CLOSE_PUNCTUATION",
-    "UCHAR_BREAK_QUOTATION",
-    "UCHAR_BREAK_EXCLAMATION",
-    "UCHAR_BREAK_IDEOGRAPHIC",
-    "UCHAR_BREAK_NUMERIC",
-    "UCHAR_BREAK_INFIX_SEPARATOR",
-    "UCHAR_BREAK_SYMBOL",
-    "UCHAR_BREAK_ALPHABETIC",
-    "UCHAR_BREAK_PREFIX",
-    "UCHAR_BREAK_POSTFIX",
-    "UCHAR_BREAK_COMPLEX_CONTEXT",
-    "UCHAR_BREAK_AMBIGUOUS",
-    "UCHAR_BREAK_UNKNOWN",
-    "UCHAR_BREAK_NEXT_LINE",
-    "UCHAR_BREAK_WORD_JOINER",
-    "UCHAR_BREAK_HANGUL_L_JAMO",
-    "UCHAR_BREAK_HANGUL_V_JAMO",
-    "UCHAR_BREAK_HANGUL_T_JAMO",
-    "UCHAR_BREAK_HANGUL_LV_SYLLABLE",
-    "UCHAR_BREAK_HANGUL_LVT_SYLLABLE",
-    "UCHAR_BREAK_CLOSE_PARANTHESIS",
-    "UCHAR_BREAK_CONDITIONAL_JAPANESE_STARTER",
-    "UCHAR_BREAK_HEBREW_LETTER",
-    "UCHAR_BREAK_REGIONAL_INDICATOR",
-    "UCHAR_BREAK_EMOJI_BASE",
-    "UCHAR_BREAK_EMOJI_MODIFIER",
-    "UCHAR_BREAK_ZERO_WIDTH_JOINER"
-};
+#include "helpers.h"
 
 #define MAX_LINE_LEN        4096
 #define MAX_UCHARS          128
@@ -504,7 +385,9 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
 
         printf("CHARS: ");
         for (int i = 0; i < n; i++) {
-            printf("%04X(%s, %s) ", ucs[i], _gc_names[UCharGetCategory(ucs[i])], _bt_names[UCharGetBreak(ucs[i])]);
+            printf("%04X(%s, %s) ", ucs[i],
+                get_general_category_name(UCharGetCategory(ucs[i])),
+                get_break_type_name(UCharGetBreak(ucs[i])));
             len_utf8 += uc32_to_utf8(ucs[i], utf8 + len_utf8);
         }
         printf("\n");

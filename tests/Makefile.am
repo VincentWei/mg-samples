@@ -5,7 +5,8 @@ noinst_PROGRAMS = \
     getglyphsandbreaks \
     getglyphsextentpointex
 
-getglyphsandbreaks_SOURCES = getglyphsandbreaks.c
-getglyphsextentpointex_SOURCES = getglyphsextentpointex.c
+COMMFILES = helpers.c helpers.h
+getglyphsandbreaks_SOURCES = getglyphsandbreaks.c $(COMMFILES)
+getglyphsextentpointex_SOURCES = getglyphsextentpointex.c $(COMMFILES)
 
 
