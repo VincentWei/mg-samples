@@ -93,12 +93,12 @@ static int parse_one_case(const char* line, Uchar32* ucs, Uint8* bos)
 }
 
 typedef void (* CB_CHECK_RESULT) (const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uint16* my_bos, int my_n);
+        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n);
 
 static CB_CHECK_RESULT _cb_check_result;
 
 static void check_result_lb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uint16* my_bos, int my_n)
+        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -162,7 +162,7 @@ static void check_result_lb(const Uchar32* ucs, const Uint8* bos, int n,
 }
 
 static void check_result_gb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uint16* my_bos, int my_n)
+        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -226,7 +226,7 @@ static void check_result_gb(const Uchar32* ucs, const Uint8* bos, int n,
 }
 
 static void check_result_wb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uint16* my_bos, int my_n)
+        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -290,7 +290,7 @@ static void check_result_wb(const Uchar32* ucs, const Uint8* bos, int n,
 }
 
 static void check_result_sb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uint16* my_bos, int my_n)
+        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -361,6 +361,7 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
     int n;
 
     Glyph32* my_gvs;
+    Uchar32* my_ucs;
     Uint16* my_bos;
     int my_n;
     int cosumed;
@@ -401,15 +402,17 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         }
 
         my_gvs = NULL;
+        my_ucs = NULL;
         my_bos = NULL;
         cosumed = GetGlyphsAndBreaks(lf, utf8, len_utf8,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
                 WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
-                &my_gvs, &my_bos, NULL, &my_n);
+                &my_gvs, &my_ucs, &my_bos, &my_n);
         if (cosumed > 0) {
-            _cb_check_result(ucs, bos, n, my_gvs, my_bos, my_n);
+            _cb_check_result(ucs, bos, n, my_gvs, my_ucs, my_bos, my_n);
 
             if (my_gvs) free (my_gvs);
+            if (my_ucs) free (my_ucs);
             if (my_bos) free (my_bos);
         }
         else {
