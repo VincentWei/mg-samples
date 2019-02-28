@@ -615,7 +615,7 @@ static void dump_glyphs_and_breaks(const char* text,
         Uchar32 uc = GLYPH2UCHAR(gvs[i]);
         printf("%04X(%s, %s)\n", uc,
             get_general_category_name(UCharGetCategory(uc)),
-            get_break_type_name(UCharGetBreak(uc)));
+            get_break_type_name(UCharGetBreakType(uc)));
     }
     printf("\n");
 

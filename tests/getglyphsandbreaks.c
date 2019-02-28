@@ -387,7 +387,7 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         for (int i = 0; i < n; i++) {
             printf("%04X(%s, %s) ", ucs[i],
                 get_general_category_name(UCharGetCategory(ucs[i])),
-                get_break_type_name(UCharGetBreak(ucs[i])));
+                get_break_type_name(UCharGetBreakType(ucs[i])));
             len_utf8 += uc32_to_utf8(ucs[i], utf8 + len_utf8);
         }
         printf("\n");
