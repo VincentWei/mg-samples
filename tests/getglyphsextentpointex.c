@@ -1,6 +1,12 @@
 /*
 ** getglyphsextentpointex.c:
-**  test code for GetGlyphsExtentPointEx of MiniGUI 3.4.0
+**
+**  Test code for GetGlyphsExtentPointEx of MiniGUI 3.4.0.
+**  The following APIs are covered:
+**
+**      GetGlyphsAndBreaks
+**      GetGlyphsExtentPointEx
+**      DrawGlyphStringEx
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **

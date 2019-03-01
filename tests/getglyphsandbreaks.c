@@ -1,6 +1,12 @@
 /*
 ** getglyphsbyrules.c:
-**  test code for GetGlyphsAndBreaks of MiniGUI 3.4.0
+**
+**  Test code for GetGlyphsAndBreaks of MiniGUI 3.4.0
+**  The following APIs are covered:
+**
+**      GetGlyphsAndBreaks
+**      UCharGetCategory
+**      UCharGetBreakType
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **

@@ -1870,7 +1870,7 @@ static void OnModeRotation (HWND hWnd, HDC hdc)
 LRESULT FontTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int i = 0;
-    DEVFONT* devfont[68];
+    static DEVFONT* devfont[68];
     static int mode = MODE_TEXTOUTRBF;
     static int textmodedire = TEXTOUT_L2R; 
     switch (message) {
