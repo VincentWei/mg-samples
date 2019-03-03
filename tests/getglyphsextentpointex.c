@@ -364,12 +364,12 @@ static void output_rules(HDC hdc)
 
 static int _curr_font = 1;
 static char* _font_cases [] = {
-    "ttf-SourceHanSans-rrnnns-*-12-UTF-8",
-    "ttf-SourceHanSans-rrnnns-*-14-UTF-8",
-    "ttf-SourceHanSans-rrnnns-*-16-UTF-8",
-    "ttf-SourceHanSans-rrnnns-*-20-UTF-8",
-    "ttf-SourceHanSans-rrnnns-*-26-UTF-8",
-    "ttf-SourceHanSans-rrnnns-*-36-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-12-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-14-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-16-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-20-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-26-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-36-UTF-8",
 };
 
 static int render_glyphs(HDC hdc, PLOGFONT lf,
@@ -913,8 +913,22 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->hHosting = HWND_DESKTOP;
 }
 
+#define  FONTFILE_PATH   "/usr/local/share/minigui/res/"
+
+typedef struct _DEVFONTINFO {
+    const char* filename;
+    const char* fontname;
+    DEVFONT*    devfont;
+} DEVFONTINFO;
+
+static DEVFONTINFO _devfontinfo[] = {
+    { FONTFILE_PATH "font/SourceHanSans-Regular.ttc",
+        "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
+};
+
 int MiniGUIMain (int args, const char* arg[])
 {
+    int i;
     MSG Msg;
     MAINWINCREATE CreateInfo;
     HWND hMainWnd;
@@ -943,6 +957,15 @@ int MiniGUIMain (int args, const char* arg[])
     }
 #endif
 
+    for (i = 0; i < TABLESIZE(_devfontinfo); i++) {
+        _devfontinfo[i].devfont = LoadDevFontFromFile (_devfontinfo[i].fontname,
+                _devfontinfo[i].filename);
+        if (_devfontinfo[i].devfont == NULL) {
+            _ERR_PRINTF("%s: Failed to load devfont(%s) from %s\n",
+                __FUNCTION__, _devfontinfo[i].fontname, _devfontinfo[i].filename);
+        }
+    }
+
     InitCreateInfo (&CreateInfo);
 
     hMainWnd = CreateMainWindow (&CreateInfo);
@@ -956,6 +979,12 @@ int MiniGUIMain (int args, const char* arg[])
     }
 
     MainWindowThreadCleanup (hMainWnd);
+
+    for (i = 0; i < TABLESIZE(_devfontinfo); i++) {
+        if (_devfontinfo[i].devfont) {
+             DestroyDynamicDevFont (&_devfontinfo[i].devfont);
+        }
+    }
 
 #ifndef _MGRM_THREADS
     TermVectorialFonts ();

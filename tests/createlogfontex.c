@@ -43,15 +43,11 @@
 enum _TestMode {
     TM_MANUAL_SINGLE_MBC,
     TM_MANUAL_MULTI_MBC,
-    TM_RANDOM,
-    TM_RANDOM_RUN,
 };
 
 static const char* _test_modes[] = {
     "TM_MANUAL_SINGLE_MBC",
     "TM_MANUAL_MULTI_MBC",
-    "TM_RANDOM",
-    "TM_RANDOM_RUN",
 };
 
 static const char* _text_cases[] = {
@@ -137,7 +133,6 @@ static const char* _type_cases [] = {
     FONT_TYPE_NAME_BITMAP_VAR,
     FONT_TYPE_NAME_BITMAP_QPF,
     FONT_TYPE_NAME_BITMAP_UPF,
-    FONT_TYPE_NAME_BITMAP_BMP,
     FONT_TYPE_NAME_SCALE_TTF,
 };
 
@@ -145,7 +140,7 @@ static const char* _family_cases [] = {
     "fixed",
     "monospace",
     "serif",
-    "sans serif",
+    "SansSerif",
     "times",
     "Courier",
     "Helvetica",
@@ -178,6 +173,7 @@ static const char* _family_cases [] = {
 };
 
 static const char* _charset_cases[] = {
+    "UTF-8",
     "ISO8859-1",
     "ISO8859-6",
     "ISO8859-8",
@@ -187,7 +183,6 @@ static const char* _charset_cases[] = {
     "BIG5",
     "EUC-KR",
     "SHIFT-JIS",
-    "UTF-8",
 };
 
 typedef struct _LOGFONT_STYLE {
@@ -230,9 +225,9 @@ static LOGFONT_STYLE _weight_style_cases [] = {
 };
 
 static LOGFONT_STYLE _slant_style_cases [] = {
-    { FONT_SLANT_ALL,
-        FS_SLANT_ALL,
-        "FONT_SLANT_ALL" },
+    { FONT_SLANT_ANY,
+        FS_SLANT_ANY,
+        "FONT_SLANT_ANY" },
     { FONT_SLANT_ITALIC,
         FS_SLANT_ITALIC,
         "FONT_SLANT_ITALIC" },
@@ -245,6 +240,9 @@ static LOGFONT_STYLE _slant_style_cases [] = {
 };
 
 static LOGFONT_STYLE _flip_style_cases [] = {
+    { FONT_FLIP_NONE,
+        FS_FLIP_NONE,
+        "FONT_FLIP_NONE" },
     { FONT_FLIP_HORZ,
         FS_FLIP_HORZ,
         "FONT_FLIP_HORZ" },
@@ -254,9 +252,6 @@ static LOGFONT_STYLE _flip_style_cases [] = {
     { FONT_FLIP_HORZVERT,
         FS_FLIP_HORZVERT,
         "FONT_FLIP_HORZVERT" },
-    { FONT_FLIP_NONE,
-        FS_FLIP_NONE,
-        "FONT_FLIP_NONE" },
 };
 
 static LOGFONT_STYLE _other_style_cases [] = {
@@ -277,7 +272,7 @@ static LOGFONT_STYLE _other_style_cases [] = {
         "FONT_OTHER_TTFNOCACHEKERN" },
 };
 
-static LOGFONT_STYLE _decorate_style_cases [] = {
+static LOGFONT_STYLE _decoration_style_cases [] = {
     { FONT_DECORATE_NONE,
         FS_DECORATE_NONE,
         "FONT_DECORATE_NONE" },
@@ -298,7 +293,7 @@ static LOGFONT_STYLE _decorate_style_cases [] = {
         "FONT_DECORATE_US" },
 };
 
-static LOGFONT_STYLE _render_style_cases [] = {
+static LOGFONT_STYLE _rendering_style_cases [] = {
     { FONT_RENDER_ANY,
         FS_RENDER_ANY,
         "FONT_RENDER_ANY" },
@@ -325,8 +320,11 @@ static int _curr_weight_style;
 static int _curr_slant_style;
 static int _curr_flip_style;
 static int _curr_other_style;
-static int _curr_decorate_style;
-static int _curr_render_style;
+static int _curr_decoration_style;
+static int _curr_rendering_style;
+
+static int _font_rotation = 0;
+static int _font_size = 14;
 
 typedef struct _TOGGLE_ITEM {
     int     scancode;
@@ -344,11 +342,21 @@ static TOGGLE_ITEM _toggle_items[] = {
     { SCANCODE_F6,      &_curr_slant_style,     TABLESIZE(_slant_style_cases) },
     { SCANCODE_F7,      &_curr_flip_style,      TABLESIZE(_flip_style_cases) },
     { SCANCODE_F8,      &_curr_other_style,     TABLESIZE(_other_style_cases) },
-    { SCANCODE_F9,      &_curr_decorate_style,  TABLESIZE(_decorate_style_cases) },
-    { SCANCODE_F10,     &_curr_render_style,    TABLESIZE(_render_style_cases) },
+    { SCANCODE_F9,      &_curr_decoration_style,TABLESIZE(_decoration_style_cases) },
+    { SCANCODE_F10,     &_curr_rendering_style, TABLESIZE(_rendering_style_cases) },
 };
 
-static BOOL toggle_item (int scancode, DWORD keystatus, BOOL rdm)
+static void randomize_items(void)
+{
+    int i;
+
+    for (i = 0; i < TABLESIZE(_toggle_items); i++) {
+        TOGGLE_ITEM* item = _toggle_items + i;
+        *(item->current) = random() % item->upper;
+    }
+}
+
+static BOOL toggle_item(int scancode, DWORD keystatus, BOOL rdm)
 {
     int i;
     TOGGLE_ITEM* item = NULL;
@@ -388,9 +396,220 @@ static BOOL toggle_item (int scancode, DWORD keystatus, BOOL rdm)
     return FALSE;
 }
 
-static void output_test_case(HDC hdc)
+static void generate_font_families(char* families)
 {
+    if (_curr_mode == TM_MANUAL_SINGLE_MBC) {
+        strncpy(families, _family_cases[_curr_family], LEN_LOGFONT_NAME_FIELD);
+    }
+    else {
+        int nr = random() % MAXNR_DEVFONTS;
+        strncpy(families, _family_cases[_curr_family], LEN_LOGFONT_NAME_FIELD);
 
+        if (nr > 0) {
+            strcat(families, ",");
+            for (int i = 1; i < nr; i++) {
+                int other = random() % TABLESIZE(_family_cases);
+                if (LEN_LOGFONT_NAME_FIELD >
+                        (strlen(families) + strlen(_family_cases[other]))) {
+                    strcat(families, _family_cases[other]);
+                    if (i < nr - 1) {
+                        strcat(families, ",");
+                    }
+                }
+            }
+        }
+    }
+
+    families[LEN_LOGFONT_NAME_FIELD] = '\0';
+}
+
+static void dump_logfont_info(PLOGFONT lf)
+{
+    int i;
+
+    if (lf == NULL) {
+        printf("%s: Nil LOGFONT object\n",
+            __FUNCTION__);
+        return;
+    }
+
+    printf("%s: LOGFONT (%p) information:\n",
+        __FUNCTION__, lf);
+
+    printf("\ttype: %s\n", lf->type);
+    printf("\tfamily: %s\n", lf->family);
+    printf("\tcharset: %s\n", lf->charset);
+    printf("\tstyle: 0x%08X\n", lf->style);
+    printf("\tsize: %d\n", lf->size);
+    printf("\trotation: %d\n", lf->rotation);
+    printf("\tascent: %d\n", lf->ascent);
+    printf("\tdescent: %d\n", lf->descent);
+    printf("\tsize_request: %d\n", lf->size_request);
+
+    for (i = 0; i < MAXNR_DEVFONTS; i++) {
+        if (lf->devfonts[i]) {
+            printf("\tDEVFONT#%d:\n", i);
+            printf("\t\tname: %s:\n", lf->devfonts[i]->name);
+            printf("\t\tstyle: 0x%08X\n", lf->devfonts[i]->style);
+        }
+        else {
+            printf("\t\tDEVFONT#%d: Nil\n", i);
+        }
+    }
+}
+
+static BOOL check_equivalent_logfonts(PLOGFONT lf1, PLOGFONT lf2)
+{
+    BOOL equiv = TRUE;
+
+    if (strcmp(lf1->charset, lf2->charset) ||
+            lf1->size != lf2->size ||
+            lf1->rotation != lf2->rotation ||
+            lf1->ascent != lf2->ascent ||
+            lf1->descent != lf2->descent ||
+            lf1->size_request != lf2->size_request) {
+        _ERR_PRINTF("%s: failed (%p v.s %p)\n",
+            __FUNCTION__, lf1, lf2);
+        equiv = FALSE;
+    }
+    else {
+        for (int i = 0; i < MAXNR_DEVFONTS; i++) {
+            if (lf1->devfonts[i] && lf2->devfonts[i]) {
+                if (strcmp(lf1->devfonts[i]->name, lf2->devfonts[i]->name)) {
+                    _ERR_PRINTF("%s: failed due to fontname (%s v.s %s)\n",
+                        __FUNCTION__, lf1->devfonts[i]->name, lf2->devfonts[i]->name);
+                    equiv = FALSE;
+                    break;
+                }
+
+                if (lf1->devfonts[i]->font_ops != lf2->devfonts[i]->font_ops) {
+                    _ERR_PRINTF("%s: failed due to font_ops (%p v.s %p)\n",
+                        __FUNCTION__, lf1->devfonts[i]->font_ops, lf2->devfonts[i]->font_ops);
+                    equiv = FALSE;
+                    break;
+                }
+
+                if (lf1->devfonts[i]->charset_ops != lf2->devfonts[i]->charset_ops) {
+                    _ERR_PRINTF("%s: failed due to font_ops (%p v.s %p)\n",
+                        __FUNCTION__, lf1->devfonts[i]->charset_ops, lf2->devfonts[i]->charset_ops);
+                    equiv = FALSE;
+                    break;
+                }
+            }
+            else if ((lf1->devfonts[i] == NULL && lf2->devfonts[i] != NULL) ||
+                        (lf1->devfonts[i] != NULL && lf2->devfonts[i] == NULL)) {
+                _ERR_PRINTF("%s: failed due to devfonts (%p v.s %p)\n",
+                    __FUNCTION__, lf1->devfonts[i], lf2->devfonts[i]);
+                equiv = FALSE;
+                break;
+            }
+        }
+    }
+
+    return equiv;
+}
+
+static char _text_from_file[4096];
+
+static const char* get_text_case(const char* text)
+{
+    if (strncmp(text, "file:", 5) == 0) {
+        FILE *fp = NULL;
+
+        fp = fopen(text + 5, "rb");
+        if (fp) {
+            size_t size = fread(_text_from_file, 1, 4096, fp);
+            if (size > 0) {
+                _text_from_file[size - 1] = '\0';
+                return _text_from_file;
+            }
+            else {
+                _ERR_PRINTF("%s, failed to read from file: %s(%lu)\n",
+                    __FUNCTION__, text + 5, size);
+            }
+        }
+        else {
+            _ERR_PRINTF("%s, failed to open file: %s\n",
+                __FUNCTION__, text + 5);
+        }
+    }
+
+    return text;
+}
+
+static RECT _drawtext_rc = {10, 100, 600, 600};
+static void show_test_case(HDC hdc, const char* lf_name)
+{
+    TextOut(hdc, 10, 10, lf_name);
+
+    DrawText (hdc, get_text_case(_text_cases[_curr_text]), -1,
+            &_drawtext_rc, DT_LEFT);
+}
+
+static void run_test_case(HDC hdc)
+{
+    char lf_name[1024];
+    char lf_families[LEN_LOGFONT_FAMILY_FILED + 1];
+
+    PLOGFONT lf1, lf2, lf3 = NULL;
+
+    generate_font_families(lf_families);
+
+    printf("%s: calling CreateLogFontEx\n",
+        __FUNCTION__);
+    lf1 = CreateLogFontEx(
+            _type_cases[_curr_type],
+            lf_families,
+            _charset_cases[_curr_charset],
+            _weight_style_cases[_curr_weight_style].style_ch,
+            _slant_style_cases[_curr_slant_style].style_ch,
+            _flip_style_cases[_curr_flip_style].style_ch,
+            _other_style_cases[_curr_other_style].style_ch,
+            _decoration_style_cases[_curr_decoration_style].style_ch,
+            _rendering_style_cases[_curr_rendering_style].style_ch,
+            _font_size, _font_rotation);
+
+    dump_logfont_info(lf1);
+
+    snprintf(lf_name, 1023, "%s-%s-%c%c%c%c%c%c-*-%d-%s",
+            _type_cases[_curr_type],
+            lf_families,
+            _weight_style_cases[_curr_weight_style].style_ch,
+            _slant_style_cases[_curr_slant_style].style_ch,
+            _flip_style_cases[_curr_flip_style].style_ch,
+            _other_style_cases[_curr_other_style].style_ch,
+            _decoration_style_cases[_curr_decoration_style].style_ch,
+            _rendering_style_cases[_curr_rendering_style].style_ch,
+            _font_size,
+            _charset_cases[_curr_charset]);
+
+    printf("%s: calling CreateLogFontByName(%s)\n",
+        __FUNCTION__, lf_name);
+    lf2 = CreateLogFontByName(lf_name);
+    dump_logfont_info(lf2);
+
+    if (lf2 && _font_rotation) {
+        lf3 = CreateLogFontIndirectEx(lf2, _font_rotation);
+        dump_logfont_info(lf3);
+
+        if (!check_equivalent_logfonts(lf1, lf3))
+            exit(1);
+    }
+    else if (_font_rotation == 0) {
+        if (!check_equivalent_logfonts(lf1, lf2))
+            exit(1);
+    }
+
+    if (lf2) DestroyLogFont(lf2);
+    if (lf3) DestroyLogFont(lf3);
+
+    PLOGFONT lf_old;
+    lf_old = SelectFont(hdc, lf1);
+
+    show_test_case(hdc, lf_name);
+
+    SelectFont(hdc, lf_old);
+    if (lf1) DestroyLogFont(lf1);
 }
 
 static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -402,13 +621,41 @@ static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
     case MSG_PAINT: {
         HDC hdc;
         hdc = BeginPaint(hWnd);
-        output_test_case(hdc);
+        run_test_case(hdc);
         EndPaint(hWnd, hdc);
         return 0;
     }
 
     case MSG_KEYDOWN: {
-        if (toggle_item((int)wParam, (DWORD)lParam, _curr_mode == TM_RANDOM))
+        BOOL repaint = FALSE;
+        switch(wParam) {
+        case SCANCODE_CURSORBLOCKLEFT:
+            _font_rotation -= 10;
+            repaint = TRUE;
+            break;
+
+        case SCANCODE_CURSORBLOCKRIGHT:
+            _font_rotation += 10;
+            repaint = TRUE;
+            break;
+
+        case SCANCODE_CURSORBLOCKUP:
+            _font_size += 5;
+            repaint = TRUE;
+            break;
+
+        case SCANCODE_CURSORBLOCKDOWN:
+            _font_size -= 5;
+            repaint = TRUE;
+            break;
+
+        default:
+            if (toggle_item((int)wParam, (DWORD)lParam, FALSE))
+                repaint = TRUE;
+            break;
+        }
+
+        if (repaint)
             InvalidateRect (hWnd, NULL, TRUE);
         return 0;
     }
@@ -432,15 +679,15 @@ typedef struct _DEVFONTINFO {
 
 static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/6x12-iso8859-1.bin",
-        "rbf-fixed,sans serif,monospace-rrncnn-6-12-ISO8859-1" },
+        "rbf-fixed,SansSerif,monospace-rrncnn-6-12-ISO8859-1" },
     { FONTFILE_PATH "font/8x16-iso8859-1.bin",
-        "rbf-fixed,sans serif,monospace-rrncnn-8-16-ISO8859-1" },
+        "rbf-fixed,SansSerif,monospace-rrncnn-8-16-ISO8859-1" },
     { FONTFILE_PATH "font/song-12-gb2312.bin",
-        "rbf-song,宋体,sans serif,monospace-rrncnn-12-12-GB2312-0" },
+        "rbf-song,宋体,SansSerif,monospace-rrncnn-12-12-GB2312-0" },
     { FONTFILE_PATH "font/song-16-gb2312.bin",
-        "rbf-song,宋体,sans serif,monospace-rrncnn-16-16-GB2312-0" },
+        "rbf-song,宋体,SansSerif,monospace-rrncnn-16-16-GB2312-0" },
     { FONTFILE_PATH "font/song-24-gb2312.bin",
-        "rbf-song,宋体,sans serif,monospace-rrncnn-24-24-GB2312-0" },
+        "rbf-song,宋体,SansSerif,monospace-rrncnn-24-24-GB2312-0" },
     { FONTFILE_PATH "font/fmfsong-12-gb2312.bin",
         "rbf-fmfsong,fangsong,仿宋,serif,monospace-rrncnn-12-12-GB2312-0" },
     { FONTFILE_PATH "font/fmfsong-16-gb2312.bin",
@@ -448,41 +695,41 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/fmfsong-24-gb2312.bin",
         "rbf-fmfsong,fangsong,仿宋,serif,monospace-rrncnn-24-24-GB2312-0" },
     { FONTFILE_PATH "font/fmhei-16-gb2312.bin",
-        "rbf-fmhei,hei,黑体,sans serif,monospace-rrncnn-16-16-GB2312-0" },
+        "rbf-fmhei,hei,黑体,SansSerif,monospace-rrncnn-16-16-GB2312-0" },
     { FONTFILE_PATH "font/fmhei-20-gb2312.bin",
-        "rbf-fmhei,hei,黑体,sans serif,monospace-rrncnn-20-20-GB2312-0" },
+        "rbf-fmhei,hei,黑体,SansSerif,monospace-rrncnn-20-20-GB2312-0" },
     { FONTFILE_PATH "font/fmhei-24-gb2312.bin",
-        "rbf-fmhei,hei,黑体,sans serif,monospace-rrncnn-24-24-GB2312-0" },
+        "rbf-fmhei,hei,黑体,SansSerif,monospace-rrncnn-24-24-GB2312-0" },
     { FONTFILE_PATH "font/ming-12-big5.bin",
-        "rbf-ming,明体,sans serif,monospace-rrncnn-12-12-BIG5" },
+        "rbf-ming,明体,SansSerif,monospace-rrncnn-12-12-BIG5" },
     { FONTFILE_PATH "font/ming-16-big5.bin",
-        "rbf-ming,明体,sans serif,monospace-rrncnn-16-16-BIG5" },
+        "rbf-ming,明体,SansSerif,monospace-rrncnn-16-16-BIG5" },
     { FONTFILE_PATH "font/ming-24-big5.bin",
-        "rbf-ming,明体,sans serif,monospace-rrncnn-24-24-BIG5" },
+        "rbf-ming,明体,SansSerif,monospace-rrncnn-24-24-BIG5" },
     { FONTFILE_PATH "font/Courier-rr-8-13.vbf",
-        "vbf-Courier,sans serif-rrncnn-8-13-ISO8859-1" },
+        "vbf-Courier,SansSerif-rrncnn-8-13-ISO8859-1" },
     { FONTFILE_PATH "font/Courier-rr-10-15.vbf",
-        "vbf-Courier,sans serif-rrncnn-10-15-ISO8859-1" },
+        "vbf-Courier,SansSerif-rrncnn-10-15-ISO8859-1" },
     { FONTFILE_PATH "font/Helvetica-rr-11-12.vbf",
-        "vbf-Helvetica,sans serif-rrncnn-11-12-ISO8859-1" },
+        "vbf-Helvetica,SansSerif-rrncnn-11-12-ISO8859-1" },
     { FONTFILE_PATH "font/Helvetica-rr-15-16.vbf",
-        "vbf-Helvetica,sans serif-rrncnn-15-16-ISO8859-1" },
+        "vbf-Helvetica,SansSerif-rrncnn-15-16-ISO8859-1" },
     { FONTFILE_PATH "font/Times-rr-10-12.vbf",
          "vbf-Times,serif-rrncnn-10-12-ISO8859-1" },
     { FONTFILE_PATH "font/Times-rr-13-15.vbf",
          "vbf-Times,serif-rrncnn-13-15-ISO8859-1" },
     { FONTFILE_PATH "font/courier_120_50.upf",
-        "upf-Courier,sans serif-rrncnn-12-12-ISO8859-1" },
+        "upf-Courier,SansSerif-rrncnn-12-12-ISO8859-1" },
     { FONTFILE_PATH "font/courier_180_50.upf",
-        "upf-Courier,sans serif-rrncnn-18-18-ISO8859-1" },
+        "upf-Courier,SansSerif-rrncnn-18-18-ISO8859-1" },
     { FONTFILE_PATH "font/courier_240_50.upf",
-        "upf-Courier,sans serif-rrncnn-24-24-ISO8859-1" },
+        "upf-Courier,SansSerif-rrncnn-24-24-ISO8859-1" },
     { FONTFILE_PATH "font/helvetica_120_50.upf",
-        "upf-Helvetica,sans serif-rrncnn-12-12-ISO8859-1" },
+        "upf-Helvetica,SansSerif-rrncnn-12-12-ISO8859-1" },
     { FONTFILE_PATH "font/helvetica_180_50.upf",
-        "upf-Helvetica,sans serif-rrncnn-18-18-ISO8859-1" },
+        "upf-Helvetica,SansSerif-rrncnn-18-18-ISO8859-1" },
     { FONTFILE_PATH "font/helvetica_240_50.upf",
-        "upf-Helvetica,sans serif-rrncnn-24-24-ISO8859-1" },
+        "upf-Helvetica,SansSerif-rrncnn-24-24-ISO8859-1" },
     { FONTFILE_PATH "font/times_120_50.upf",
          "upf-Times,serif-rrncnn-12-12-ISO8859-1" },
     { FONTFILE_PATH "font/times_180_50.upf",
@@ -490,17 +737,17 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/times_240_50.upf",
          "upf-Times,serif-rrncnn-24-24-ISO8859-1" },
     { FONTFILE_PATH "font/fmsong-latin-12.upf",
-         "upf-fmsong,宋体,sans serif,monospace-rrncnn-12-12-GB2312-0,GBK,BIG5,UTF-8" },
+         "upf-fmsong,宋体,SansSerif,monospace-rrncnn-12-12-GB2312-0,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/fmsong-latin-16.upf",
-         "upf-fmsong,宋体,sans serif,monospace-rrncnn-16-16-GB2312-0,GBK,BIG5,UTF-8" },
+         "upf-fmsong,宋体,SansSerif,monospace-rrncnn-16-16-GB2312-0,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/fmfsong-latin-12.upf",
          "upf-fmfsong,仿宋,serif,monospace-rrncnn-12-12-GB2312-0,UTF-8" },
     { FONTFILE_PATH "font/fmfsong-latin-16.upf",
          "upf-fmfsong,仿宋,serif,monospace-rrncnn-16-16-GB2312-0,UTF-8" },
     { FONTFILE_PATH "font/fmhei-latin-16.upf",
-         "upf-fmhei,黑体,sans serif,monospace-rrncnn-16-16-GB2312-0,GBK,BIG5,UTF-8" },
+         "upf-fmhei,黑体,SansSerif,monospace-rrncnn-16-16-GB2312-0,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/fmhei-latin-20.upf",
-         "upf-fmhei,黑体,sans serif,monospace-rrncnn-20-20-GB2312-0,GBK,BIG5,UTF-8" },
+         "upf-fmhei,黑体,SansSerif,monospace-rrncnn-20-20-GB2312-0,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/fmkai-latin-12.upf",
          "upf-fmkai,楷体,monospace-rrncnn-12-12-GB2312-0,UTF-8" },
     { FONTFILE_PATH "font/fmkai-latin-16.upf",
@@ -510,33 +757,33 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/fixed-10-20-iso8859-8.vbf",
          "vbf-fixed-mrncnn-10-20-ISO8859-8" },
     { FONTFILE_PATH "font/gothic-6x12-jisx0201.bin",
-         "rbf-gothic,sans serif,monospace-rrncnn-12-12-JISX0201-1" },
+         "rbf-gothic,SansSerif,monospace-rrncnn-12-12-JISX0201-1" },
     { FONTFILE_PATH "font/batang-12-ksc5601.bin",
-         "rbf-batang,sans serif,monospace-rrncnn-12-12-EUC-KR" },
+         "rbf-batang,SansSerif,monospace-rrncnn-12-12-EUC-KR" },
     { FONTFILE_PATH "font/gothic-12-jiskan.bin",
-        "rbf-gothic,sans serif,monospace-rrncnn-12-12-JISX0208-1" },
+        "rbf-gothic,SansSerif,monospace-rrncnn-12-12-JISX0208-1" },
     { FONTFILE_PATH "font/fixed-16-jiskan.bin",
-        "rbf-fixed,sans serif,monospace-rrncnn-16-16-JISX0208-1" },
+        "rbf-fixed,SansSerif,monospace-rrncnn-16-16-JISX0208-1" },
     { FONTFILE_PATH "font/gothic-12-jiskan.bin",
-        "rbf-gothic,sans serif,monospace-rrncnn-12-12-JISX0208-1" },
+        "rbf-gothic,SansSerif,monospace-rrncnn-12-12-JISX0208-1" },
     { FONTFILE_PATH "font/mincho-12-jiskan.bin",
-        "rbf-mincho,明朝,sans serif,monospace-rrncnn-12-12-JISX0208-1" },
+        "rbf-mincho,明朝,SansSerif,monospace-rrncnn-12-12-JISX0208-1" },
     { FONTFILE_PATH "font/gothic-6x12rk.bin",
-        "rbf-gothic,sans serif,monospace-rrncnn-12-12-JISX0201-1" },
+        "rbf-gothic,SansSerif,monospace-rrncnn-12-12-JISX0201-1" },
     { FONTFILE_PATH "font/courier_140_50.qpf",
-        "qpf-courier,sans serif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
+        "qpf-courier,SansSerif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/courier_180_50.qpf",
-        "qpf-courier,sans serif-rrncnn-18-18-ISO8859-1,ISO8859-15" },
+        "qpf-courier,SansSerif-rrncnn-18-18-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/courier_240_50.qpf",
-        "qpf-courier,sans serif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
+        "qpf-courier,SansSerif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/lucida_140_50.qpf",
-        "qpf-lucida,sans serif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
+        "qpf-lucida,SansSerif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/lucida_180_50.qpf",
-        "qpf-lucida,sans serif-rrncnn-18-18-ISO8859-1,ISO8859-15" },
+        "qpf-lucida,SansSerif-rrncnn-18-18-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/lucida_190_50.qpf",
-        "qpf-lucida,sans serif-rrncnn-19-19-ISO8859-1,ISO8859-15" },
+        "qpf-lucida,SansSerif-rrncnn-19-19-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/lucida_240_50.qpf",
-        "qpf-lucida,sans serif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
+        "qpf-lucida,SansSerif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/times_140_50.qpf",
         "qpf-times,serif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/times_180_50.qpf",
@@ -544,13 +791,13 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/times_240_50.qpf",
         "qpf-times,serif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/helvetica_140_50.qpf",
-        "qpf-helvetica,sans serif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
+        "qpf-helvetica,SansSerif-rrncnn-14-14-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/helvetica_180_50.qpf",
-        "qpf-helvetica,sans serif-rrncnn-18-18-ISO8859-1,ISO8859-15" },
+        "qpf-helvetica,SansSerif-rrncnn-18-18-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/helvetica_240_50.qpf",
-        "qpf-helvetica,sans serif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
+        "qpf-helvetica,SansSerif-rrncnn-24-24-ISO8859-1,ISO8859-15" },
     { FONTFILE_PATH "font/unifont_160_50.upf",
-         "upf-unifont,sans serif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
+         "upf-unifont,SansSerif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
     { FONTFILE_PATH "font/fmfsong-16.qpf",
         "qpf-fmfsong,fangsong,仿宋,serif,monospace-rrncnn-16-16-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
     { FONTFILE_PATH "font/fmfsong-18.qpf",
@@ -558,11 +805,11 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/fmfsong-20.qpf",
         "qpf-fmfsong,fangsong,仿宋,serif,monospace-rrncnn-20-20-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
     { FONTFILE_PATH "font/fmsong-15.qpf",
-        "qpf-fmsong,song,宋体,sans serif,monospace-rrncnn-15-15-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
+        "qpf-fmsong,song,宋体,SansSerif,monospace-rrncnn-15-15-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
     { FONTFILE_PATH "font/fmsong-16.qpf",
-        "qpf-fmsong,song,宋体,sans serif,monospace-rrncnn-16-16-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
+        "qpf-fmsong,song,宋体,SansSerif,monospace-rrncnn-16-16-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
     { FONTFILE_PATH "font/fmsong-18.qpf",
-        "qpf-fmsong,song,宋体,sans serif,monospace-rrncnn-18-18-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
+        "qpf-fmsong,song,宋体,SansSerif,monospace-rrncnn-18-18-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
     { FONTFILE_PATH "font/fmkai-16.qpf",
         "qpf-fmkai,kai,楷体,monospace-rrncnn-16-16-ISO8859-1,ISO8859-15,GB2312,UTF-8,UTF-16LE,UTF-16BE" },
     { FONTFILE_PATH "font/fmkai-18.qpf",
@@ -574,19 +821,19 @@ static DEVFONTINFO _devfontinfo[] = {
     // download location:
     // https://github.com/adobe-fonts/
     { FONTFILE_PATH "font/SourceHanSans-ExtraLight.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-erncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-erncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Light.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-lrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-lrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Normal.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-nrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-nrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Regular.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-rrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-rrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Medium.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-mrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-mrncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Bold.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-brncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-brncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Heavy.ttc",
-        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,sans serif-crncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
+        "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-crncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
 
     { FONTFILE_PATH "font/SourceHanSerif-ExtraLight.ttc",
         "ttf-Source Han Serif,思源宋体,思源宋體,源ノ明朝,본명조,serif-erncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
@@ -604,27 +851,27 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-Source Han Serif,思源宋体,思源宋體,源ノ明朝,본명조,serif-crncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
 
     { FONTFILE_PATH "font/SourceSansPro-BlackIt.ttf",
-        "ttf-Source Sans Pro,sans serif-cincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-cincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-Black.ttf",
-        "ttf-Source Sans Pro,sans serif-crncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-crncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-BoldIt.ttf",
-        "ttf-Source Sans Pro,sans serif-bincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-bincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-Bold.ttf",
-        "ttf-Source Sans Pro,sans serif-brncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-brncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-ExtraLightIt.ttf",
-        "ttf-Source Sans Pro,sans serif-eincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-eincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-ExtraLight.ttf",
-        "ttf-Source Sans Pro,sans serif-erncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-erncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-It.ttf",
-        "ttf-Source Sans Pro,sans serif-rincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-rincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-LightIt.ttf",
-        "ttf-Source Sans Pro,sans serif-lincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-lincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-Light.ttf",
-        "ttf-Source Sans Pro,sans serif-lrncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-lrncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-SemiboldIt.ttf",
-        "ttf-Source Sans Pro,sans serif-dincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-dincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-Semibold.ttf",
-        "ttf-Source Sans Pro,sans serif-drncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-drncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
 
     { FONTFILE_PATH "font/SourceSerifPro-BlackIt.ttf",
         "ttf-Source Serif Pro,serif-cincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
@@ -653,7 +900,7 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-Source Code,monospace-rincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
 
     { FONTFILE_PATH "font/SourceSansPro-Regular.ttf",
-        "ttf-Source Sans Pro,sans serif-rrncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+        "ttf-Source Sans Pro,SansSerif-rrncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSerifPro-Regular.ttf",
         "ttf-Source Serif Pro,serif-rrncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceCodeVariable-Roman.ttf",
@@ -718,6 +965,12 @@ int MiniGUIMain (int args, const char* arg[])
     }
 
     srandom(time(NULL));
+    for (i = 1; i < args; i++) {
+        if (strcmp (arg[i], "-random") == 0) {
+            randomize_items();
+            break;
+        }
+    }
 
     InitCreateInfo (&CreateInfo);
 
