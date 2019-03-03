@@ -5,10 +5,9 @@
 **  The following APIs are covered:
 **
 **      LoadDevFontFromFile
-**      CreateBMPDevFont
 **      CreateLogFontEx
+**      CreateLogFontIndirectEx
 **      DestroyLogFont
-**      DestroyBMPFont
 **      DestroyDynamicDevFont
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
@@ -463,10 +462,10 @@ static BOOL check_equivalent_logfonts(PLOGFONT lf1, PLOGFONT lf2)
     BOOL equiv = TRUE;
 
     if (strcmp(lf1->charset, lf2->charset) ||
-            lf1->size != lf2->size ||
             lf1->rotation != lf2->rotation ||
+            /* lf1->size != lf2->size ||
             lf1->ascent != lf2->ascent ||
-            lf1->descent != lf2->descent ||
+            lf1->descent != lf2->descent || */
             lf1->size_request != lf2->size_request) {
         _ERR_PRINTF("%s: failed (%p v.s %p)\n",
             __FUNCTION__, lf1, lf2);
@@ -646,6 +645,8 @@ static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
         case SCANCODE_CURSORBLOCKDOWN:
             _font_size -= 5;
+            if (_font_size < 1)
+                _font_size = 1;
             repaint = TRUE;
             break;
 
