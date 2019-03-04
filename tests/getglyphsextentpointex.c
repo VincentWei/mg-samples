@@ -912,7 +912,7 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 1024;
-    pCreateInfo->by = 530;
+    pCreateInfo->by = 768;
     pCreateInfo->iBkColor = COLOR_lightwhite;
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;

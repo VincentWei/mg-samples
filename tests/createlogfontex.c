@@ -536,7 +536,7 @@ static const char* get_text_case(const char* text)
     return text;
 }
 
-static RECT _drawtext_rc = {10, 200, 800, 600};
+static RECT _drawtext_rc = {10, 100, 1000, 750};
 static void show_test_case(HDC hdc, const char* lf_name, PLOGFONT lf1, PLOGFONT lf2)
 {
     PLOGFONT lf_old;
@@ -924,7 +924,7 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 1024;
-    pCreateInfo->by = 530;
+    pCreateInfo->by = 768;
     pCreateInfo->iBkColor = COLOR_lightwhite;
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
