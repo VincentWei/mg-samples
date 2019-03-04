@@ -536,13 +536,19 @@ static const char* get_text_case(const char* text)
     return text;
 }
 
-static RECT _drawtext_rc = {10, 100, 600, 600};
-static void show_test_case(HDC hdc, const char* lf_name)
+static RECT _drawtext_rc = {10, 200, 800, 600};
+static void show_test_case(HDC hdc, const char* lf_name, PLOGFONT lf1, PLOGFONT lf2)
 {
+    PLOGFONT lf_old;
+
+    lf_old = SelectFont(hdc, lf1);
     TextOut(hdc, 10, 10, lf_name);
 
+    SelectFont(hdc, lf2);
     DrawText (hdc, get_text_case(_text_cases[_curr_text]), -1,
             &_drawtext_rc, DT_LEFT);
+
+    SelectFont(hdc, lf_old);
 }
 
 static void run_test_case(HDC hdc)
@@ -599,15 +605,11 @@ static void run_test_case(HDC hdc)
             exit(1);
     }
 
-    if (lf2) DestroyLogFont(lf2);
     if (lf3) DestroyLogFont(lf3);
 
-    PLOGFONT lf_old;
-    lf_old = SelectFont(hdc, lf1);
+    show_test_case(hdc, lf_name, lf1, lf2);
 
-    show_test_case(hdc, lf_name);
-
-    SelectFont(hdc, lf_old);
+    if (lf2) DestroyLogFont(lf2);
     if (lf1) DestroyLogFont(lf1);
 }
 
