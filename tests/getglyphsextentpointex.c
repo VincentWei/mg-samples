@@ -364,12 +364,12 @@ static void output_rules(HDC hdc)
 
 static int _curr_font = 1;
 static char* _font_cases [] = {
-    "ttf-Source Han Sans-rrnnns-*-12-UTF-8",
-    "ttf-Source Han Sans-rrnnns-*-14-UTF-8",
+    "ttf-Source Han Sans-lrnnns-*-12-UTF-8",
+    "ttf-Source Han Sans-trnnns-*-14-UTF-8",
     "ttf-Source Han Sans-rrnnns-*-16-UTF-8",
-    "ttf-Source Han Sans-rrnnns-*-20-UTF-8",
-    "ttf-Source Han Sans-rrnnns-*-26-UTF-8",
-    "ttf-Source Han Sans-rrnnns-*-36-UTF-8",
+    "ttf-Source Han Sans-nrnnns-*-20-UTF-8",
+    "ttf-Source Han Sans-mrnnns-*-26-UTF-8",
+    "ttf-Source Han Sans-lrnnns-*-36-UTF-8",
 };
 
 static int render_glyphs(HDC hdc, PLOGFONT lf,
@@ -836,6 +836,11 @@ static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
         case SCANCODE_F12:
             _curr_spaces++;
             _curr_spaces %= TABLESIZE(_spaces_cases);
+            break;
+
+        case SCANCODE_ENTER:
+            _curr_font++;
+            _curr_font %= TABLESIZE(_font_cases);
             break;
 
         case SCANCODE_CURSORBLOCKLEFT:
