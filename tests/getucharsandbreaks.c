@@ -1,10 +1,10 @@
 /*
 ** getglyphsbyrules.c:
 **
-**  Test code for GetGlyphsAndBreaks of MiniGUI 3.4.0
+**  Test code for GetUCharsAndBreaks of MiniGUI 3.4.0
 **  The following APIs are covered:
 **
-**      GetGlyphsAndBreaks
+**      GetUCharsAndBreaks
 **      UCharGetCategory
 **      UCharGetBreakType
 **
@@ -99,12 +99,12 @@ static int parse_one_case(const char* line, Uchar32* ucs, Uint8* bos)
 }
 
 typedef void (* CB_CHECK_RESULT) (const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n);
+        const Uchar32* my_ucs, const Uint16* my_bos, int my_n);
 
 static CB_CHECK_RESULT _cb_check_result;
 
 static void check_result_lb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
+        const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -136,7 +136,7 @@ static void check_result_lb(const Uchar32* ucs, const Uint8* bos, int n,
     }
 
     for (int i = 0; i < my_n; i++) {
-        printf (" %04X ", REAL_GLYPH(my_gvs[i]));
+        printf (" %04X ", my_ucs[i]);
 
         if (my_bos[i + 1] & BOV_LB_BREAK_FLAG) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
@@ -168,7 +168,7 @@ static void check_result_lb(const Uchar32* ucs, const Uint8* bos, int n,
 }
 
 static void check_result_gb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
+        const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -200,7 +200,7 @@ static void check_result_gb(const Uchar32* ucs, const Uint8* bos, int n,
     }
 
     for (int i = 0; i < my_n; i++) {
-        printf (" %04X ", REAL_GLYPH(my_gvs[i]));
+        printf (" %04X ", my_ucs[i]);
 
         if (my_bos[i + 1] & BOV_GB_CHAR_BREAK) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
@@ -232,7 +232,7 @@ static void check_result_gb(const Uchar32* ucs, const Uint8* bos, int n,
 }
 
 static void check_result_wb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
+        const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -264,7 +264,7 @@ static void check_result_wb(const Uchar32* ucs, const Uint8* bos, int n,
     }
 
     for (int i = 0; i < my_n; i++) {
-        printf (" %04X ", REAL_GLYPH(my_gvs[i]));
+        printf (" %04X ", my_ucs[i]);
 
         if (my_bos[i + 1] & BOV_WB_WORD_BOUNDARY) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
@@ -296,7 +296,7 @@ static void check_result_wb(const Uchar32* ucs, const Uint8* bos, int n,
 }
 
 static void check_result_sb(const Uchar32* ucs, const Uint8* bos, int n,
-        const Glyph32* my_gvs, const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
+        const Uchar32* my_ucs, const Uint16* my_bos, int my_n)
 {
     printf("TEST CASE: \n");
 
@@ -328,7 +328,7 @@ static void check_result_sb(const Uchar32* ucs, const Uint8* bos, int n,
     }
 
     for (int i = 0; i < my_n; i++) {
-        printf (" %04X ", REAL_GLYPH(my_gvs[i]));
+        printf (" %04X ", my_ucs[i]);
 
         if (my_bos[i + 1] & BOV_SB_SENTENCE_BOUNDARY) {
             printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
@@ -366,7 +366,6 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
     Uint8 bos[MAX_UCHARS + 1];
     int n;
 
-    Glyph32* my_gvs;
     Uchar32* my_ucs;
     Uint16* my_bos;
     int my_n;
@@ -407,22 +406,20 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
             return 1;
         }
 
-        my_gvs = NULL;
         my_ucs = NULL;
         my_bos = NULL;
-        cosumed = GetGlyphsAndBreaks(lf, utf8, len_utf8,
+        cosumed = GetUCharsAndBreaks(lf, utf8, len_utf8,
                 LANGCODE_en, UCHAR_SCRIPT_LATIN,
                 WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
-                &my_gvs, &my_ucs, &my_bos, &my_n);
+                &my_ucs, &my_bos, &my_n);
         if (cosumed > 0) {
-            _cb_check_result(ucs, bos, n, my_gvs, my_ucs, my_bos, my_n);
+            _cb_check_result(ucs, bos, n, my_ucs, my_bos, my_n);
 
-            if (my_gvs) free (my_gvs);
             if (my_ucs) free (my_ucs);
             if (my_bos) free (my_bos);
         }
         else {
-            _ERR_PRINTF("%s: GetGlyphsAndBreaks failed\n", __FUNCTION__);
+            _ERR_PRINTF("%s: GetUCharsAndBreaks failed\n", __FUNCTION__);
             return 1;
         }
     }
@@ -500,5 +497,5 @@ error:
 }
 
 #else
-#error "To test GetGlyphsAndBreaks, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test GetUCharsAndBreaks, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
