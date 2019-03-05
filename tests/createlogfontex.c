@@ -541,8 +541,6 @@ static void show_test_case(HDC hdc, const char* lf_name, PLOGFONT lf1, PLOGFONT 
 {
     PLOGFONT lf_old;
 
-    SetBkMode (hdc, BM_TRANSPARENT);
-
     lf_old = SelectFont(hdc, lf1);
     TextOut(hdc, 10, 10, lf_name);
 

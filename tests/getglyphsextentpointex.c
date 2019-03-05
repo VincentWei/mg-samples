@@ -372,12 +372,33 @@ static char* _font_cases [] = {
     "ttf-Source Han Sans-lrnnns-*-36-UTF-8",
 };
 
+static PLOGFONT _logfont_ur;
+static PLOGFONT _logfont_sw;
+
+static void create_logfonts(void)
+{
+    if (_logfont_ur) {
+        DestroyLogFont(_logfont_ur);
+        _logfont_ur = NULL;
+    }
+
+    if (_logfont_sw) {
+        DestroyLogFont(_logfont_sw);
+        _logfont_sw = NULL;
+    }
+
+    _logfont_ur = CreateLogFontByName(_font_cases[_curr_font]);
+    if (_logfont_ur == NULL) {
+        _ERR_PRINTF ("%s: Failed to create logfont\n", __FUNCTION__);
+        exit (1);
+    }
+}
+
 static int render_glyphs(HDC hdc, PLOGFONT lf,
     const Glyph32* gvs, const Uint16* bos, int n)
 {
     Uint32 render_flags;
     int x, y, max_extent;
-    PLOGFONT lf_sw = NULL;
 
     GLYPHEXTINFO* my_gei;
     GLYPHPOS* my_gps;
@@ -431,7 +452,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         consumed = GetGlyphsExtentPointEx (lf, gvs, n, bos,
             render_flags, x, y,
             _letter_spacing, _word_spacing, _tab_size, max_extent,
-            &line_size, my_gei, my_gps, &lf_sw);
+            &line_size, my_gei, my_gps, &_logfont_sw);
 
         if (consumed <= 0) {
             _ERR_PRINTF("%s: GetGlyphsExtentPointEx did not eat any glyph\n",
@@ -451,7 +472,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         }
 #endif
 
-        DrawGlyphStringEx(hdc, lf, lf_sw, gvs, consumed, my_gps);
+        DrawGlyphStringEx(hdc, lf, _logfont_sw, gvs, consumed, my_gps);
 
         switch (_writing_mode_cases[_curr_writing_mode].rule) {
         case GRF_WRITING_MODE_VERTICAL_RL:
@@ -563,13 +584,11 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
 
     if (my_gei) free(my_gei);
     if (my_gps) free(my_gps);
-    if (lf_sw) DestroyLogFont(lf_sw);
     return 0;
 
 error:
     if (my_gei) free(my_gei);
     if (my_gps) free(my_gps);
-    if (lf_sw) DestroyLogFont(lf_sw);
 
     return 1;
 }
@@ -689,11 +708,13 @@ static void render_text(HDC hdc)
     Glyph32* gvs;
     Uint16* bos;
 
-    lf = CreateLogFontByName (_font_cases[_curr_font]);
-    if (lf == NULL) {
-        _ERR_PRINTF ("%s: Failed to create logfont\n", __FUNCTION__);
+    if (_logfont_ur == NULL) {
+        _ERR_PRINTF("%s: LOGFONT is not available\n",
+            __FUNCTION__);
         return;
     }
+
+    lf = _logfont_ur;
 
     text = _text_cases[_curr_text];
     left_len_text = strlen(text);
@@ -749,7 +770,6 @@ static void render_text(HDC hdc)
 error:
     if (gvs) free (gvs);
     if (bos) free (bos);
-    DestroyLogFont(lf);
 }
 
 static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -841,6 +861,7 @@ static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
         case SCANCODE_ENTER:
             _curr_font++;
             _curr_font %= TABLESIZE(_font_cases);
+            create_logfonts();
             break;
 
         case SCANCODE_CURSORBLOCKLEFT:
@@ -970,6 +991,8 @@ int MiniGUIMain (int args, const char* arg[])
                 __FUNCTION__, _devfontinfo[i].fontname, _devfontinfo[i].filename);
         }
     }
+
+    create_logfonts();
 
     InitCreateInfo (&CreateInfo);
 
