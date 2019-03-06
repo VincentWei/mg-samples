@@ -449,6 +449,7 @@ static void dump_logfont_info(PLOGFONT lf)
         if (lf->devfonts[i]) {
             printf("\tDEVFONT#%d:\n", i);
             printf("\t\tname: %s:\n", lf->devfonts[i]->name);
+            printf("\t\tscale: %d\n", lf->scales[i]);
             printf("\t\tstyle: 0x%08X\n", lf->devfonts[i]->style);
         }
         else {
