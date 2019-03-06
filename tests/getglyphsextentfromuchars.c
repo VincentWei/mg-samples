@@ -1,11 +1,11 @@
 /*
 ** getglyphsextentpointex.c:
 **
-**  Test code for GetGlyphsExtentPointEx of MiniGUI 3.4.0.
+**  Test code for GetGlyphsExtentFromUChars of MiniGUI 3.4.0.
 **  The following APIs are covered:
 **
-**      GetGlyphsAndBreaks
-**      GetGlyphsExtentPointEx
+**      GetUCharsAndBreaks
+**      GetGlyphsExtentFromUChars
 **      DrawGlyphStringEx
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
@@ -395,18 +395,19 @@ static void create_logfonts(void)
 }
 
 static int render_glyphs(HDC hdc, PLOGFONT lf,
-    const Glyph32* gvs, const Uint16* bos, int n)
+    const Uchar32* ucs, const Uint16* bos, int n)
 {
     Uint32 render_flags;
     int x, y, max_extent;
 
-    GLYPHEXTINFO* my_gei;
-    GLYPHPOS* my_gps;
+    Glyph32* my_gvs = NULL;
+    GLYPHEXTINFO* my_gei = NULL;
+    GLYPHPOS* my_gps = NULL;
 
-
+    my_gvs = (Glyph32*)malloc(sizeof(Glyph32) * n);
     my_gei = (GLYPHEXTINFO*)malloc(sizeof(GLYPHEXTINFO) * n);
     my_gps = (GLYPHPOS*)malloc(sizeof(GLYPHPOS) * n);
-    if (my_gei == NULL || my_gps == NULL) {
+    if (my_gvs == NULL || my_gei == NULL || my_gps == NULL) {
         _ERR_PRINTF("%s: failed to allocate memory\n",
             __FUNCTION__);
         return -1;
@@ -449,18 +450,18 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         SIZE line_size;
         RECT rc_line;
 
-        consumed = GetGlyphsExtentPointEx (lf, gvs, n, bos,
+        consumed = GetGlyphsExtentFromUChars (lf, ucs, n, bos,
             render_flags, x, y,
             _letter_spacing, _word_spacing, _tab_size, max_extent,
-            &line_size, my_gei, my_gps, &_logfont_sw);
+            &line_size, my_gvs, my_gei, my_gps, &_logfont_sw);
 
         if (consumed <= 0) {
-            _ERR_PRINTF("%s: GetGlyphsExtentPointEx did not eat any glyph\n",
+            _ERR_PRINTF("%s: GetGlyphsExtentFromUChars did not eat any glyph\n",
                 __FUNCTION__);
             goto error;
         }
         else {
-            _MG_PRINTF("%s: GetGlyphsExtentPointEx returns %d glyphs\n",
+            _MG_PRINTF("%s: GetGlyphsExtentFromUChars returns %d glyphs\n",
                 __FUNCTION__, consumed);
         }
 
@@ -472,7 +473,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         }
 #endif
 
-        DrawGlyphStringEx(hdc, lf, _logfont_sw, gvs, consumed, my_gps);
+        DrawGlyphStringEx(hdc, lf, _logfont_sw, my_gvs, 0, my_gps, consumed);
 
         switch (_writing_mode_cases[_curr_writing_mode].rule) {
         case GRF_WRITING_MODE_VERTICAL_RL:
@@ -577,16 +578,18 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
                 rc_line.right, rc_line.bottom);
         }
 
-        gvs += consumed;
+        ucs += consumed;
         bos += consumed;
         n -= consumed;
     }
 
+    if (my_gvs) free(my_gvs);
     if (my_gei) free(my_gei);
     if (my_gps) free(my_gps);
     return 0;
 
 error:
+    if (my_gvs) free(my_gvs);
     if (my_gei) free(my_gei);
     if (my_gps) free(my_gps);
 
@@ -733,7 +736,7 @@ static void render_text(HDC hdc)
                 &ucs, &bos, &n);
         if (consumed > 0) {
 
-            _DBG_PRINTF("%s: GetGlyphsAndBreaks: bytes: %d, glyphs: %d\n",
+            _DBG_PRINTF("%s: GetUCharsAndBreaks: bytes: %d, glyphs: %d\n",
                 __FUNCTION__, consumed, n);
 
             if (n > 0) {
@@ -743,13 +746,13 @@ static void render_text(HDC hdc)
                     goto error;
             }
             else {
-                _ERR_PRINTF("%s: GetGlyphsAndBreaks did not generate any glyph\n",
+                _ERR_PRINTF("%s: GetUCharsAndBreaks did not generate any glyph\n",
                     __FUNCTION__);
                 goto error;
             }
         }
         else {
-            _ERR_PRINTF("%s: GetGlyphsAndBreaks failed\n", __FUNCTION__);
+            _ERR_PRINTF("%s: GetUCharsAndBreaks failed\n", __FUNCTION__);
             goto error;
         }
 
@@ -1022,5 +1025,5 @@ int MiniGUIMain (int args, const char* arg[])
 
 
 #else
-#error "To test GetGlyphsExtentPointEx, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test GetGlyphsExtentFromUChars, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
