@@ -3,12 +3,12 @@ EXTRA_DIST = res
 
 noinst_PROGRAMS = \
     getucharsandbreaks \
-    getglyphsextentfromuchars \
+    drawglyphstringex \
     createlogfontex
 
 COMMFILES = helpers.c helpers.h
 getucharsandbreaks_SOURCES = getucharsandbreaks.c $(COMMFILES)
-getglyphsextentfromuchars_SOURCES = getglyphsextentfromuchars.c $(COMMFILES)
+drawglyphstringex_SOURCES = drawglyphstringex.c $(COMMFILES)
 createlogfontex_SOURCES = createlogfontex.c $(COMMFILES)
 
 

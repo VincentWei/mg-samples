@@ -1,7 +1,7 @@
 /*
-** getglyphsextentpointex.c:
+** drawglyphstringex.c:
 **
-**  Test code for GetGlyphsExtentFromUChars of MiniGUI 3.4.0.
+**  Test code for DrawGlyphStringEx of MiniGUI 3.4.0.
 **  The following APIs are covered:
 **
 **      GetUCharsAndBreaks
@@ -473,7 +473,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         }
 #endif
 
-        DrawGlyphStringEx(hdc, lf, _logfont_sw, my_gvs, 0, my_gps, consumed);
+        DrawGlyphStringEx(hdc, lf, _logfont_sw, my_gvs, my_gps, consumed);
 
         switch (_writing_mode_cases[_curr_writing_mode].rule) {
         case GRF_WRITING_MODE_VERTICAL_RL:
@@ -1025,5 +1025,5 @@ int MiniGUIMain (int args, const char* arg[])
 
 
 #else
-#error "To test GetGlyphsExtentFromUChars, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test DrawGlyphStringEx, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
