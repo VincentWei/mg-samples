@@ -459,32 +459,32 @@ int MiniGUIMain (int argc, const char* argv[])
 
     _MG_PRINTF ("========= TEST GRAPHEME BREAKS\n");
     _cb_check_result = check_result_gb;
-    if (test_from_file(lf, "res/GraphemeBreakTest.txt", LBP_NORMAL))
+    if (test_from_file(lf, "ucd/auxiliary/GraphemeBreakTest.txt", LBP_NORMAL))
         exit (1);
     _MG_PRINTF ("========= END OF TEST FOR GRAPHEME BREAKS\n");
 
     _MG_PRINTF ("========= TEST WORD BREAKS\n");
     _cb_check_result = check_result_wb;
-    if (test_from_file(lf, "res/WordBreakTest.txt", LBP_NORMAL))
+    if (test_from_file(lf, "ucd/auxiliary/WordBreakTest.txt", LBP_NORMAL))
         exit (1);
     _MG_PRINTF ("========= END OF TEST FOR WORD BREAKS\n");
 
     _MG_PRINTF ("========= TEST SENTENCE BREAKS\n");
     _cb_check_result = check_result_sb;
-    if (test_from_file(lf, "res/SentenceBreakTest.txt", LBP_NORMAL))
+    if (test_from_file(lf, "ucd/auxiliary/SentenceBreakTest.txt", LBP_NORMAL))
         exit (1);
     _MG_PRINTF ("========= END OF TEST FOR SENTENCE BREAKS\n");
 
-    _MG_PRINTF ("========= TEST LINE BREAKS WITH LBP_STRICT\n");
     _cb_check_result = check_result_lb;
+    _MG_PRINTF ("========= TEST LINE BREAKS WITH LBP_NORMAL\n");
+    if (test_from_file(lf, "ucd/auxiliary/LineBreakTest.txt", LBP_NORMAL))
+        exit (1);
+    _MG_PRINTF ("========= END OF TEST FOR LINE BREAKS WITH LBP_NORMAL\n");
+
+    _MG_PRINTF ("========= TEST LINE BREAKS WITH LBP_STRICT\n");
     if (test_from_file(lf, "res/LineBreakTest-strict.txt", LBP_STRICT))
         exit (1);
     _MG_PRINTF ("========= END OF TEST FOR LINE BREAKS WITH LBP_STRICT\n");
-
-    _MG_PRINTF ("========= TEST LINE BREAKS WITH LBP_NORMAL\n");
-    if (test_from_file(lf, "res/LineBreakTest-normal.txt", LBP_NORMAL))
-        exit (1);
-    _MG_PRINTF ("========= END OF TEST FOR LINE BREAKS WITH LBP_NORMAL\n");
 
     DestroyLogFont(lf);
     exit(0);
