@@ -62,7 +62,7 @@ static int parse_one_case(const char* line, Uchar32* ucs, Uint8* bos)
         while (*current == ' ' ||  *current == '\t')
             current++;
 
-        if (*current == '#') {
+        if (*current == '#' || *current == '\n' || *current == '\r') {
             return nr_ucs;
         }
         else if (strncmp(current, TOKEN_HAVE_NO_BREAK_OPPORTUNITY,

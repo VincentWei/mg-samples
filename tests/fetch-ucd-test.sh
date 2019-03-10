@@ -1,6 +1,6 @@
 #!/bin/bash
 
-url='https://www.unicode.org/Public/12.0.0/ucd/'
+url='https://www.unicode.org/Public/UNIDATA/'
 files='BidiTest.txt BidiCharacterTest.txt auxiliary/WordBreakTest.txt auxiliary/GraphemeBreakTest.txt auxiliary/LineBreakTest.txt auxiliary/SentenceBreakTest.txt'
 
 if test ! -d ucd/auxiliary; then
