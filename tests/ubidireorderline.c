@@ -47,6 +47,7 @@
 
 struct test_case {
     int         nr_ucs; // number of characters.
+    int         len_indics; // The length of ovi
     int         pd;     // The paragraph direction:
                         //  - 0 represents left-to-right
                         //  - 1 represents right-to-left
@@ -60,6 +61,7 @@ struct test_case {
 static void init_test_case(struct test_case* tc)
 {
     tc->nr_ucs = 0;
+    tc->len_indics = 0;
     tc->ucs = NULL;
     tc->rel = NULL;
     tc->ovi = NULL;
@@ -83,6 +85,7 @@ static void destroy_test_case(struct test_case* tc)
     }
 
     tc->nr_ucs = 0;
+    tc->len_indics = 0;
 }
 
 static void test_case_push_back(struct test_case* tc, Uchar32 uc)
@@ -138,10 +141,12 @@ static int parse_one_case(const char* line, struct test_case* tc)
                 tc->rel[ch_idx] = CHAR_REMOVED;
                 ch_idx++;
             }
+#if 0
             else if (field_idx == 4) {
                 tc->ovi[ch_idx] = CHAR_REMOVED;
                 ch_idx++;
             }
+#endif
             else {
                 _ERR_PRINTF("%s: bad format: %s\n", __FUNCTION__, line);
                 return 0;
@@ -210,6 +215,7 @@ static int parse_one_case(const char* line, struct test_case* tc)
                     if (n == 1) {
                         tc->ovi[ch_idx] = tmp;
                         ch_idx++;
+                        tc->len_indics = ch_idx;
                     }
                     else {
                         _ERR_PRINTF("%s: bad format: %s\n", __FUNCTION__, line);
@@ -277,7 +283,7 @@ static void check_tc(const struct test_case* tc, const char* line)
     *tmp = ';';
     tmp++;
 
-    for (i = 0; i < tc->nr_ucs; i++) {
+    for (i = 0; i < tc->len_indics; i++) {
         if (tc->ovi[i] >= 0) {
             int l = sprintf(tmp, "%d", tc->ovi[i]);
             tmp += l;
@@ -377,8 +383,11 @@ static void do_test(PLOGFONT lf, const struct test_case* tc)
     for (i = 0; i < tc->nr_ucs; i++) {
         /* Note the optimization that a bracket is always
            of type neutral */
-        if (bidi_types[i] == BIDI_TYPE_ON)
+        if (bidi_types[i] == BIDI_TYPE_ON) {
             bracket_types[i] = UCharGetBracketType(tc->ucs[i]);
+            _ERR_PRINTF("%s: BracketType 0x%08X at index %d\n",
+                    __FUNCTION__, bracket_types[i], i);
+        }
         else
             bracket_types[i] = BIDI_BRACKET_NONE;
     }
@@ -438,11 +447,20 @@ static void do_test(PLOGFONT lf, const struct test_case* tc)
     check_levels(tc, levels);
 
     int j = 0;
+    int nr_reordered;
     for (i = 0; i < tc->nr_ucs; i++) {
         if (!BIDI_IS_EXPLICIT_OR_BN (bidi_types[indics[i]]))
             indics[j++] = indics[i];
     }
-    check_indics(tc, indics, j);
+    nr_reordered = j;
+
+    if (nr_reordered != tc->len_indics) {
+        _ERR_PRINTF("%s: the reordered string length does not matched: %d vs %d\n",
+                __FUNCTION__, tc->len_indics, nr_reordered);
+        exit(1);
+    }
+
+    check_indics(tc, indics, nr_reordered);
 
     free(indics);
     free(levels);
