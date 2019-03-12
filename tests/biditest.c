@@ -96,9 +96,9 @@ static void clear_for_new_sub_test_case(struct test_case* tc)
     if (tc->bidi_types) {
         free(tc->bidi_types);
         tc->bidi_types = NULL;
-        tc->nr_bidi_types = 0;
     }
 
+    tc->nr_bidi_types = 0;
     tc->bitset = 0;
 }
 
@@ -310,9 +310,9 @@ static int parse_subcase(struct test_case* tc, const char* line)
                 if (strncmp(current, bidi_name_to_id[i].bidi_name,
                         strlen(bidi_name_to_id[i].bidi_name)) == 0) {
                     bidi_type = bidi_name_to_id[i].bidi_type;
-
                     test_case_push_back_bidi_type(tc, bidi_type);
                     nr_read++;
+                    break;
                 }
             }
 
@@ -436,7 +436,7 @@ static void do_test(const struct test_case* tc)
     int i;
 
     levels = (BidiLevel*)malloc(sizeof(BidiLevel) * tc->nr_levels);
-    indics = (int*)malloc(sizeof(int) * tc->nr_levels);
+    indics = (int*)malloc(sizeof(int) * tc->nr_bidi_types);
 
     if (levels == NULL || indics == NULL) {
         _ERR_PRINTF("%s: Failed to allocate memory for levels and indics\n",
@@ -483,8 +483,9 @@ static void do_test(const struct test_case* tc)
     int j = 0;
     int nr_reordered;
     for (i = 0; i < tc->nr_bidi_types; i++) {
-        if (!BIDI_IS_EXPLICIT_OR_BN (tc->bidi_types[indics[i]]))
+        if (!BIDI_IS_EXPLICIT_OR_BN (tc->bidi_types[indics[i]])) {
             indics[j++] = indics[i];
+        }
     }
     nr_reordered = j;
 
