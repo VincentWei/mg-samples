@@ -293,7 +293,7 @@ static void check_tc(const struct test_case* tc, const char* line)
             tmp++;
         }
 
-        if (i < tc->nr_ucs - 1) {
+        if (i < tc->len_indics - 1) {
             *tmp = ' ';
             tmp++;
         }
@@ -362,8 +362,8 @@ static void do_test(PLOGFONT lf, const struct test_case* tc)
     BidiType* bidi_types;
     BidiBracketType* bracket_types;
     BidiLevel* levels;
+    BidiType base_dir;
     int* indics;
-    int base_dir;
     int i;
 
     bidi_types = (BidiType*)malloc(sizeof(BidiType) * tc->nr_ucs);
@@ -383,11 +383,8 @@ static void do_test(PLOGFONT lf, const struct test_case* tc)
     for (i = 0; i < tc->nr_ucs; i++) {
         /* Note the optimization that a bracket is always
            of type neutral */
-        if (bidi_types[i] == BIDI_TYPE_ON) {
+        if (bidi_types[i] == BIDI_TYPE_ON)
             bracket_types[i] = UCharGetBracketType(tc->ucs[i]);
-            _ERR_PRINTF("%s: BracketType 0x%08X at index %d\n",
-                    __FUNCTION__, bracket_types[i], i);
-        }
         else
             bracket_types[i] = BIDI_BRACKET_NONE;
     }
@@ -421,7 +418,7 @@ static void do_test(PLOGFONT lf, const struct test_case* tc)
         base_dir = 1;
         break;
     default:
-        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevels returns a bad resolved paragraph direction. (%d vs %d)\n",
+        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevels returns a bad resolved paragraph direction. (%d vs 0x%04x)\n",
                 __FUNCTION__, tc->pel, base_dir);
         exit(1);
         break;
