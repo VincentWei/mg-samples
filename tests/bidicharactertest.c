@@ -1,14 +1,11 @@
 /*
-** ubidireorderline.c
+** bidicharactertest.c
 **
-**  Test code for UBidiReorderLine of MiniGUI 3.4.0
+**  Test code for UBA implementation of MiniGUI 3.4.0
 **  The following APIs are covered:
 **
-**  For Unicode charset:
-**
-**      UBidiGetParagraphDir
 **      UStrGetBidiTypes
-**      UStrGetBracketTypes
+**      UCharGetBracketType
 **      UBidiGetParagraphEmbeddingLevels
 **      UBidiReorderLine
 **
@@ -38,7 +35,8 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-#if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0))
+#if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
+        && defined(_MGCHARSET_UNICODE)
 
 #include "helpers.h"
 
@@ -357,7 +355,7 @@ static void check_indics(const struct test_case* tc, int* indics, int check_len)
     }
 }
 
-static void do_test(PLOGFONT lf, const struct test_case* tc)
+static void do_test(const struct test_case* tc)
 {
     BidiType* bidi_types;
     BidiBracketType* bracket_types;
@@ -465,7 +463,7 @@ static void do_test(PLOGFONT lf, const struct test_case* tc)
     free(bidi_types);
 }
 
-static int test_from_file(PLOGFONT lf, const char* filename)
+static int bidi_character_test(const char* filename)
 {
     FILE* fp = NULL;
     int line = 0;
@@ -499,7 +497,7 @@ static int test_from_file(PLOGFONT lf, const char* filename)
         check_tc(&tc, buff);
 
         // true test here
-        do_test(lf, &tc);
+        do_test(&tc);
 
         destroy_test_case(&tc);
     }
@@ -508,145 +506,17 @@ static int test_from_file(PLOGFONT lf, const char* filename)
     return 0;
 }
 
-#ifdef _MGCHARSET_UNICODE
-static void test_for_unicode(void)
-{
-    PLOGFONT lf = NULL;
-
-    lf = CreateLogFontEx("ttf", "helvetica", "UTF-8",
-            FONT_WEIGHT_REGULAR,
-            FONT_SLANT_ROMAN,
-            FONT_FLIP_NONE,
-            FONT_OTHER_NONE,
-            FONT_DECORATE_NONE, FONT_RENDER_SUBPIXEL,
-            10, 0);
-
-    if (lf == NULL) {
-        _ERR_PRINTF("%s: Failed to create logfont\n",
-            __FUNCTION__);
-        goto error;
-    }
-
-    if (test_from_file(lf, "ucd/BidiCharacterTest.txt"))
-        goto error;
-
-    DestroyLogFont(lf);
-    return;
-
-error:
-    if (lf) DestroyLogFont(lf);
-    exit(1);
-}
-
-#else
-
-static test_for_unicode(void)
-{
-    _ERR_PRINTF("%s: The support for Unicode is not enabled!\n",
-        __FUNCTION__);
-}
-
-#endif /* _MGCHARSET_UNICODE */
-
-#ifdef _MGCHARSET_ARABIC
-static void test_for_arabic(void)
-{
-    PLOGFONT lf = NULL;
-
-    lf = CreateLogFontEx("*", "helvetica", "ISO8859-6",
-            FONT_WEIGHT_REGULAR,
-            FONT_SLANT_ROMAN,
-            FONT_FLIP_NONE,
-            FONT_OTHER_NONE,
-            FONT_DECORATE_NONE, FONT_RENDER_SUBPIXEL,
-            10, 0);
-
-    if (lf == NULL) {
-        _ERR_PRINTF("%s: Failed to create logfont for Arabic (ISO8859-6)\n",
-            __FUNCTION__);
-        goto error;
-    }
-
-    if (test_from_file(lf, "res/arabic.txt"))
-        goto error;
-
-    DestroyLogFont(lf);
-    return;
-
-error:
-    if (lf) DestroyLogFont(lf);
-    exit(1);
-}
-
-#else
-
-static test_for_arabic(void)
-{
-    _ERR_PRINTF("%s: The support for Unicode is not enabled!\n",
-        __FUNCTION__);
-}
-
-#endif /* _MGCHARSET_ARABIC */
-
-#ifdef _MGCHARSET_HEBREW
-static void test_for_hebrew(void)
-{
-    PLOGFONT lf = NULL;
-
-    lf = CreateLogFontEx("*", "helvetica", "ISO8859-8",
-            FONT_WEIGHT_REGULAR,
-            FONT_SLANT_ROMAN,
-            FONT_FLIP_NONE,
-            FONT_OTHER_NONE,
-            FONT_DECORATE_NONE, FONT_RENDER_SUBPIXEL,
-            10, 0);
-
-    if (lf == NULL) {
-        _ERR_PRINTF("%s: Failed to create logfont for Hebrew (ISO8859-8)\n",
-            __FUNCTION__);
-        goto error;
-    }
-
-    if (test_from_file(lf, "res/hebrew.txt"))
-        goto error;
-
-    DestroyLogFont(lf);
-    return;
-
-error:
-    if (lf) DestroyLogFont(lf);
-    exit(1);
-}
-
-#else
-
-static test_for_hebrew(void)
-{
-    _ERR_PRINTF("%s: The support for Unicode is not enabled!\n",
-        __FUNCTION__);
-}
-
-#endif /* _MGCHARSET_HEBREW */
-
 int MiniGUIMain (int argc, const char* argv[])
 {
-    _MG_PRINTF ("========= START TO TEST UNICODE BIDI PROCESSING\n");
-    test_for_unicode();
-    _MG_PRINTF ("========= END OF TEST UNICODE BIDI PROCESSING\n");
-
-    _MG_PRINTF ("========= START TO TEST HEBREW BIDI PROCESSING\n");
-    test_for_hebrew();
-    _MG_PRINTF ("========= END OF TEST HEBREW BIDI PROCESSING\n");
-
-    _MG_PRINTF ("========= START TO TEST ARABIC BIDI PROCESSING\n");
-    test_for_arabic();
-    _MG_PRINTF ("========= END OF TEST ARABIC BIDI PROCESSING\n");
+    _MG_PRINTF ("========= START TO TEST UBA (BidiCharacterTest.txt)\n");
+    bidi_character_test("ucd/BidiCharacterTest.txt");
+    _MG_PRINTF ("========= END OF TEST UBA (BidiCharacterTest.txt)\n");
 
     exit(0);
     return 0;
 }
 
 #else
-#error "To test BIDILogAChars2VisAChars, please use MiniGUI 3.4.0"
+#error "To test UBA implementation, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version */
 

@@ -6,12 +6,14 @@ noinst_PROGRAMS = \
     drawglyphstringex \
     createlogfontex \
     bidilogachars2visachars \
-    ubidireorderline
+    biditest \
+    bidicharactertest
 
 COMMFILES = helpers.c helpers.h
 getucharsandbreaks_SOURCES = getucharsandbreaks.c $(COMMFILES)
 drawglyphstringex_SOURCES = drawglyphstringex.c $(COMMFILES)
 createlogfontex_SOURCES = createlogfontex.c $(COMMFILES)
 bidilogachars2visachars_SOURCES = bidilogachars2visachars.c $(COMMFILES)
-ubidireorderline_SOURCES = ubidireorderline.c $(COMMFILES)
+biditest_SOURCES = biditest.c $(COMMFILES)
+bidicharactertest_SOURCES = bidicharactertest.c $(COMMFILES)
 
