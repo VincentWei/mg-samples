@@ -367,7 +367,7 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
     int n;
 
     Uint16* my_bos;
-    int consumed;
+    int bos_len;
     int line = 0;
 
     while (TRUE) {
@@ -393,11 +393,11 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         printf("\n");
 
         my_bos = NULL;
-        consumed = UStrGetBreaks(UCHAR_SCRIPT_LATIN,
+        bos_len = UStrGetBreaks(UCHAR_SCRIPT_LATIN,
                 CTR_CAPITALIZE, WBR_NORMAL, lbp,
                 ucs, n, &my_bos);
-        if (consumed > 0) {
-            _cb_check_result(ucs, bos, n, ucs, my_bos, consumed);
+        if (bos_len > 0) {
+            _cb_check_result(ucs, bos, n, ucs, my_bos, bos_len - 1);
 
             if (my_bos) free (my_bos);
         }
