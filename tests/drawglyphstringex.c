@@ -292,74 +292,74 @@ static RECT _rc_output = {400, 5, 1024 - 5, 500};
 static void output_rules(HDC hdc)
 {
     char buf[64];
-    int y = 5;
+    int _text_y = 5;
 
-    TextOut(hdc, 5,   y,     "LIMITED");
-    TextOut(hdc, 100, y, _limited?"YES":"NO");
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "LIMITED");
+    TextOut(hdc, 100, _text_y, _limited?"YES":"NO");
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "TEXT(F1)");
-    TextOutLen(hdc, 100, y, _text_cases[_curr_text], 10);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "TEXT(F1)");
+    TextOutLen(hdc, 100, _text_y, _text_cases[_curr_text], 10);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "WSR(F2)");
-    TextOut(hdc, 100, y, _wsr_cases[_curr_wsr].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "WSR(F2)");
+    TextOut(hdc, 100, _text_y, _wsr_cases[_curr_wsr].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "CTR(F3)");
-    TextOut(hdc, 100, y, _ctr_cases[_curr_ctr].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "CTR(F3)");
+    TextOut(hdc, 100, _text_y, _ctr_cases[_curr_ctr].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "WBR(F4)");
-    TextOut(hdc, 100, y, _wbr_cases[_curr_wbr].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "WBR(F4)");
+    TextOut(hdc, 100, _text_y, _wbr_cases[_curr_wbr].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "LBP(F5)");
-    TextOut(hdc, 100, y, _lbp_cases[_curr_lbp].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "LBP(F5)");
+    TextOut(hdc, 100, _text_y, _lbp_cases[_curr_lbp].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "WRT(F6)");
-    TextOut(hdc, 100, y, _writing_mode_cases[_curr_writing_mode].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "WRT(F6)");
+    TextOut(hdc, 100, _text_y, _writing_mode_cases[_curr_writing_mode].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "ORT(F7)");
-    TextOut(hdc, 100, y, _text_ort_cases[_curr_text_ort].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "ORT(F7)");
+    TextOut(hdc, 100, _text_y, _text_ort_cases[_curr_text_ort].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "OVF(F8)");
-    TextOut(hdc, 100, y, _overflow_wrap_cases[_curr_overflow_wrap].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "OVF(F8)");
+    TextOut(hdc, 100, _text_y, _overflow_wrap_cases[_curr_overflow_wrap].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "ALG(F9)");
-    TextOut(hdc, 100, y, _align_cases[_curr_align].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "ALG(F9)");
+    TextOut(hdc, 100, _text_y, _align_cases[_curr_align].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "JST(F10)");
-    TextOut(hdc, 100, y, _text_justify_cases[_curr_text_justify].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "JST(F10)");
+    TextOut(hdc, 100, _text_y, _text_justify_cases[_curr_text_justify].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "HNG(F11)");
-    TextOut(hdc, 100, y, _hanging_punc_cases[_curr_hanging_punc].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "HNG(F11)");
+    TextOut(hdc, 100, _text_y, _hanging_punc_cases[_curr_hanging_punc].desc);
+    _text_y += 20;
 
-    TextOut(hdc, 5,   y,     "SPC(F12)");
-    TextOut(hdc, 100, y, _spaces_cases[_curr_spaces].desc);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "SPC(F12)");
+    TextOut(hdc, 100, _text_y, _spaces_cases[_curr_spaces].desc);
+    _text_y += 20;
 
     snprintf(buf, 63, "%d", _letter_spacing);
-    TextOut(hdc, 5,   y,     "LTRSPC");
-    TextOut(hdc, 100, y, buf);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "LTRSPC");
+    TextOut(hdc, 100, _text_y, buf);
+    _text_y += 20;
 
     snprintf(buf, 63, "%d", _word_spacing);
-    TextOut(hdc, 5,   y,     "WORDSPC");
-    TextOut(hdc, 100, y, buf);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "WORDSPC");
+    TextOut(hdc, 100, _text_y, buf);
+    _text_y += 20;
 
     snprintf(buf, 63, "%d", _tab_size);
-    TextOut(hdc, 5,   y,     "TABSIZE");
-    TextOut(hdc, 100, y, buf);
-    y += 20;
+    TextOut(hdc, 5,   _text_y,     "TABSIZE");
+    TextOut(hdc, 100, _text_y, buf);
+    _text_y += 20;
 }
 
 static int _curr_font = 1;
@@ -394,11 +394,13 @@ static void create_logfonts(void)
     }
 }
 
+static int _text_x, _text_y;
+
 static int render_glyphs(HDC hdc, PLOGFONT lf,
     const Uchar32* ucs, const Uint16* bos, int n)
 {
     Uint32 render_flags;
-    int x, y, max_extent;
+    int max_extent;
 
     Glyph32* my_gvs = NULL;
     GLYPHEXTINFO* my_gei = NULL;
@@ -422,16 +424,6 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
             _hanging_punc_cases[_curr_hanging_punc].rule |
             _spaces_cases[_curr_spaces].rule;
 
-    if (_writing_mode_cases[_curr_writing_mode].rule
-            == GRF_WRITING_MODE_VERTICAL_RL) {
-        x = _rc_output.right;
-        y = _rc_output.top;
-    }
-    else {
-        x = _rc_output.left;
-        y = _rc_output.top;
-    }
-
     if (_limited) {
         if (_writing_mode_cases[_curr_writing_mode].rule
                 == GRF_WRITING_MODE_HORIZONTAL_TB) {
@@ -451,7 +443,7 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
         RECT rc_line;
 
         consumed = GetGlyphsExtentFromUChars (lf, ucs, n, bos,
-            render_flags, x, y,
+            render_flags, _text_x, _text_y,
             _letter_spacing, _word_spacing, _tab_size, max_extent,
             &line_size, my_gvs, my_gei, my_gps, &_logfont_sw);
 
@@ -468,8 +460,8 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
 #if 0
         int i;
         for (i = 0; i < consumed; i++) {
-            _DBG_PRINTF("%s: position of glyph (%x): (%d, %d)\n",
-                __FUNCTION__, gvs[i], my_gps[i].x, my_gps[i].y);
+            _DBG_PRINTF("%s: position of glyph (%_text_x): (%d, %d)\n",
+                __FUNCTION__, gvs[i], my_gps[i]._text_x, my_gps[i]._text_y);
         }
 #endif
 
@@ -481,30 +473,30 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
             case GRF_ALIGN_START:
             case GRF_ALIGN_LEFT:
             default:
-                rc_line.top = y;
+                rc_line.top = _text_y;
                 rc_line.bottom = rc_line.top + line_size.cy;
                 break;
 
             case GRF_ALIGN_END:
             case GRF_ALIGN_RIGHT:
-                rc_line.top = y + max_extent - line_size.cy;
+                rc_line.top = _text_y + max_extent - line_size.cy;
                 rc_line.bottom = rc_line.top + line_size.cy;
                 break;
 
             case GRF_ALIGN_CENTER:
-                rc_line.top = y + max_extent/2 - line_size.cy/2;
+                rc_line.top = _text_y + max_extent/2 - line_size.cy/2;
                 rc_line.bottom = rc_line.top + line_size.cy;
                 break;
 
             case GRF_ALIGN_JUSTIFY:
-                rc_line.top = y;
+                rc_line.top = _text_y;
                 rc_line.bottom = rc_line.top + max_extent;
                 break;
             }
-            rc_line.left = x - line_size.cx;
-            rc_line.right = x;
+            rc_line.left = _text_x - line_size.cx;
+            rc_line.right = _text_x;
 
-            x -= line_size.cx;
+            _text_x -= line_size.cx;
             break;
 
         case GRF_WRITING_MODE_VERTICAL_LR:
@@ -512,30 +504,30 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
             case GRF_ALIGN_START:
             case GRF_ALIGN_LEFT:
             default:
-                rc_line.top = y;
+                rc_line.top = _text_y;
                 rc_line.bottom = rc_line.top + line_size.cy;
                 break;
 
             case GRF_ALIGN_END:
             case GRF_ALIGN_RIGHT:
-                rc_line.top = y + max_extent - line_size.cy;
+                rc_line.top = _text_y + max_extent - line_size.cy;
                 rc_line.bottom = rc_line.top + line_size.cy;
                 break;
 
             case GRF_ALIGN_CENTER:
-                rc_line.top = y + max_extent/2 - line_size.cy/2;
+                rc_line.top = _text_y + max_extent/2 - line_size.cy/2;
                 rc_line.bottom = rc_line.top + line_size.cy;
                 break;
 
             case GRF_ALIGN_JUSTIFY:
-                rc_line.top = y;
+                rc_line.top = _text_y;
                 rc_line.bottom = rc_line.top + max_extent;
                 break;
             }
-            rc_line.left = x;
-            rc_line.right = x + line_size.cx;
+            rc_line.left = _text_x;
+            rc_line.right = _text_x + line_size.cx;
 
-            x += line_size.cx;
+            _text_x += line_size.cx;
             break;
 
         case GRF_WRITING_MODE_HORIZONTAL_TB:
@@ -544,30 +536,30 @@ static int render_glyphs(HDC hdc, PLOGFONT lf,
             case GRF_ALIGN_START:
             case GRF_ALIGN_LEFT:
             default:
-                rc_line.left = x;
+                rc_line.left = _text_x;
                 rc_line.right = rc_line.left + line_size.cx;
                 break;
 
             case GRF_ALIGN_END:
             case GRF_ALIGN_RIGHT:
-                rc_line.left = x + max_extent - line_size.cx;
+                rc_line.left = _text_x + max_extent - line_size.cx;
                 rc_line.right = rc_line.left + line_size.cx;
                 break;
 
             case GRF_ALIGN_CENTER:
-                rc_line.left = x + max_extent/2 - line_size.cx/2;
+                rc_line.left = _text_x + max_extent/2 - line_size.cx/2;
                 rc_line.right = rc_line.left + line_size.cx;
                 break;
 
             case GRF_ALIGN_JUSTIFY:
-                rc_line.left = x;
+                rc_line.left = _text_x;
                 rc_line.right = rc_line.left + max_extent;
                 break;
             }
-            rc_line.top = y;
-            rc_line.bottom = y + line_size.cy;
+            rc_line.top = _text_y;
+            rc_line.bottom = _text_y + line_size.cy;
 
-            y += line_size.cy;
+            _text_y += line_size.cy;
             break;
         }
 
@@ -719,6 +711,16 @@ static void render_text(HDC hdc)
 
     lf = _logfont_ur;
 
+    if (_writing_mode_cases[_curr_writing_mode].rule
+            == GRF_WRITING_MODE_VERTICAL_RL) {
+        _text_x = _rc_output.right;
+        _text_y = _rc_output.top;
+    }
+    else {
+        _text_x = _rc_output.left;
+        _text_y = _rc_output.top;
+    }
+
     text = _text_cases[_curr_text];
     left_len_text = strlen(text);
     while (left_len_text > 0) {
@@ -726,33 +728,43 @@ static void render_text(HDC hdc)
         int n;
 
         ucs = NULL;
-        bos = NULL;
-        consumed = GetUCharsAndBreaks(lf, text, left_len_text,
-                LANGCODE_en, UCHAR_SCRIPT_LATIN,
+        consumed = GetUCharsUntilParagraphBoundary(lf, text, left_len_text,
                 (Uint8)_wsr_cases[_curr_wsr].rule,
-                (Uint8)_ctr_cases[_curr_ctr].rule,
-                (Uint8)_wbr_cases[_curr_wbr].rule,
-                (Uint8)_lbp_cases[_curr_lbp].rule,
-                &ucs, &bos, &n);
+                &ucs, &n);
         if (consumed > 0) {
 
-            _DBG_PRINTF("%s: GetUCharsAndBreaks: bytes: %d, glyphs: %d\n",
+            _DBG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
                 __FUNCTION__, consumed, n);
 
             if (n > 0) {
-                dump_glyphs_and_breaks(lf, text, ucs, bos, n);
+                int len_bos;
+                bos = NULL;
+                len_bos = UStrGetBreaks (UCHAR_SCRIPT_LATIN,
+                    (Uint8)_ctr_cases[_curr_ctr].rule,
+                    (Uint8)_wbr_cases[_curr_wbr].rule,
+                    (Uint8)_lbp_cases[_curr_lbp].rule,
+                    ucs, n, &bos);
 
-                if (render_glyphs(hdc, lf, ucs, bos + 1, n))
+                if (len_bos > 0) {
+                    dump_glyphs_and_breaks(lf, text, ucs, bos, n);
+
+                    if (render_glyphs(hdc, lf, ucs, bos + 1, n))
+                        goto error;
+                }
+                else {
+                    _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
+                        __FUNCTION__);
                     goto error;
+                }
             }
             else {
-                _ERR_PRINTF("%s: GetUCharsAndBreaks did not generate any glyph\n",
+                _ERR_PRINTF("%s: GetUCharsUntilParagraphBoundary did not generate any uchar\n",
                     __FUNCTION__);
                 goto error;
             }
         }
         else {
-            _ERR_PRINTF("%s: GetUCharsAndBreaks failed\n", __FUNCTION__);
+            _ERR_PRINTF("%s: GetUCharsUntilParagraphBoundary failed\n", __FUNCTION__);
             goto error;
         }
 
