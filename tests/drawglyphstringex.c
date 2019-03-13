@@ -4,7 +4,8 @@
 **  Test code for DrawGlyphStringEx of MiniGUI 3.4.0.
 **  The following APIs are covered:
 **
-**      GetUCharsAndBreaks
+**      GetUCharsUntilParagraphBoundary
+**      UStrGetBreaks
 **      GetGlyphsExtentFromUChars
 **      DrawGlyphStringEx
 **

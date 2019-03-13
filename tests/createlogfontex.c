@@ -115,15 +115,15 @@ static const char* _text_cases[] = {
     "\n"
     "Amazon’s low (to non-existent) tax rate has been chided by politicians ranging from Senator Bernie Sanders to President Donald Trump.\n",
 
-    "file:res/iso8859-1.txt",
-    "file:res/iso8859-6.txt",
-    "file:res/iso8859-8.txt",
-    "file:res/iso8859-15.txt",
-    "file:res/gb2312.txt",
-    "file:res/gbk.txt",
-    "file:res/big5.txt",
-    "file:res/euc-kr.txt",
-    "file:res/jisx0208-1.txt",
+    "file:res/en-iso8859-1.txt",
+    "file:res/ar-iso8859-6.txt",
+    "file:res/fa-iso8859-8.txt",
+    "file:res/en-iso8859-15.txt",
+    "file:res/zh-gb2312.txt",
+    "file:res/zh-gbk.txt",
+    "file:res/zh-big5.txt",
+    "file:res/ko-euc-kr.txt",
+    "file:res/ja-jisx0208-1.txt",
 };
 
 static const char* _type_cases [] = {

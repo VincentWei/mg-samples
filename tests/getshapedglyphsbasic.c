@@ -1,21 +1,25 @@
 /*
-** bidilogachars2visachars.c
+** getshapedglyphsbasic.c
 **
-**  Test code for BIDILogAChars2VisAChars of MiniGUI 3.4.0
+**  Test code for GetShapedGlyphsBasic of MiniGUI 3.4.0
 **  The following APIs are covered:
 **
 **  For Unicode charset:
 **
-**      UChars2AChars
-**      GetACharBIDIType
-**      BIDILogAChars2VisACharsEx
-**      BIDIGetLogicalEmbedLevelsEx
-**      BIDIGetVisualEmbedLevelsEx
-**
-**  For ISO8859-6 and ISO8859-8 charset:
-**
-**      BIDIGetTextLogicalAChars
-**      BIDIGetTextVisualAChars
+**      CreateLogFontForCharOps
+**      GetLangScriptFromName
+**      NormalizeScriptType
+**      GetUCharsUntilParagraphBoundary
+**      GetShapedGlyphsBasic
+**          UStrGetBidiTypes
+**          UStrGetBracketTypes
+**          UBidiGetParagraphEmbeddingLevels
+**          UStrGetJoiningTypes
+**          UBidiJoinArabic
+**          UBidiShape
+**          UBidiReorderLine
+**          UStrGetBreaks
+**          GetGlyphValue
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
