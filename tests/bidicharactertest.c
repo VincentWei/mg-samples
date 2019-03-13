@@ -423,7 +423,7 @@ static void do_test(const struct test_case* tc)
         break;
     case 2:
     default:
-        base_dir = BIDI_PGDIR_WLRT;
+        base_dir = BIDI_PGDIR_WLTR;
         break;
     }
 

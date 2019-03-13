@@ -445,7 +445,7 @@ static void do_test(const struct test_case* tc)
     }
 
     if (tc->bitset & 0x01) {
-        base_dir = BIDI_PGDIR_ON;
+        base_dir = BIDI_PGDIR_WLTR;
     }
     else if (tc->bitset & 0x02) {
         base_dir = BIDI_PGDIR_LTR;
@@ -524,7 +524,6 @@ static int bidi_test(const char* filename)
 
         line++;
         printf("==== LINE %d ====\n", line);
-        printf("\t%s\n", buff);
 
         if (parse_one_line(buff, &tc) && tc.nr_bidi_types > 0) {
             printf("CASE: \n%s", buff);
