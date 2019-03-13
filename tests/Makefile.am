@@ -2,7 +2,7 @@ LDFLAGS=-lefence
 EXTRA_DIST = README.md fetch-ucd-test.sh res
 
 noinst_PROGRAMS = \
-    getucharsandbreaks \
+    ustrgetbreaks \
     drawglyphstringex \
     createlogfontex \
     bidilogachars2visachars \
@@ -10,7 +10,7 @@ noinst_PROGRAMS = \
     bidicharactertest
 
 COMMFILES = helpers.c helpers.h
-getucharsandbreaks_SOURCES = getucharsandbreaks.c $(COMMFILES)
+ustrgetbreaks_SOURCES = ustrgetbreaks.c $(COMMFILES)
 drawglyphstringex_SOURCES = drawglyphstringex.c $(COMMFILES)
 createlogfontex_SOURCES = createlogfontex.c $(COMMFILES)
 bidilogachars2visachars_SOURCES = bidilogachars2visachars.c $(COMMFILES)

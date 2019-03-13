@@ -1,10 +1,10 @@
 /*
-** getglyphsbyrules.c:
+** ustrgetbreaks.c:
 **
-**  Test code for GetUCharsAndBreaks of MiniGUI 3.4.0
+**  Test code for UStrGetBreaks of MiniGUI 3.4.0
 **  The following APIs are covered:
 **
-**      GetUCharsAndBreaks
+**      UStrGetBreaks
 **      UCharGetCategory
 **      UCharGetBreakType
 **
@@ -366,10 +366,8 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
     Uint8 bos[MAX_UCHARS + 1];
     int n;
 
-    Uchar32* my_ucs;
     Uint16* my_bos;
-    int my_n;
-    int cosumed;
+    int consumed;
     int line = 0;
 
     while (TRUE) {
@@ -386,36 +384,21 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
             continue;
         }
 
-        char utf8[MAX_UCHARS*6 + 1];
-        int len_utf8 = 0;
-
         printf("CHARS: ");
         for (int i = 0; i < n; i++) {
             printf("%04X(%s, %s) ", ucs[i],
                 get_general_category_name(UCharGetCategory(ucs[i])),
                 get_break_type_name(UCharGetBreakType(ucs[i])));
-            len_utf8 += uc32_to_utf8(ucs[i], utf8 + len_utf8);
         }
         printf("\n");
 
-        if (len_utf8 < MAX_UCHARS*6) {
-            utf8[len_utf8] = '\0';
-        }
-        else {
-            _ERR_PRINTF("%s: UTF8 string overflowed: %s\n", __FUNCTION__, buff);
-            return 1;
-        }
-
-        my_ucs = NULL;
         my_bos = NULL;
-        cosumed = GetUCharsAndBreaks(lf, utf8, len_utf8,
-                LANGCODE_en, UCHAR_SCRIPT_LATIN,
-                WSR_PRE_WRAP, CTR_CAPITALIZE, WBR_NORMAL, lbp,
-                &my_ucs, &my_bos, &my_n);
-        if (cosumed > 0) {
-            _cb_check_result(ucs, bos, n, my_ucs, my_bos, my_n);
+        consumed = UStrGetBreaks(UCHAR_SCRIPT_LATIN,
+                CTR_CAPITALIZE, WBR_NORMAL, lbp,
+                ucs, n, &my_bos);
+        if (consumed > 0) {
+            _cb_check_result(ucs, bos, n, ucs, my_bos, consumed);
 
-            if (my_ucs) free (my_ucs);
             if (my_bos) free (my_bos);
         }
         else {
