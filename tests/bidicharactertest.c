@@ -355,6 +355,28 @@ static void check_indics(const struct test_case* tc, int* indics, int check_len)
     }
 }
 
+static void check_reorder(const struct test_case* tc, const Uchar32* visual_ucs,
+        int* indics, int nr_reordered)
+{
+    for (int i = 0; i < nr_reordered; i++) {
+        if (tc->ucs[indics[i]] != visual_ucs[i]) {
+            _ERR_PRINTF("%s failed:0x%06x vs 0x%06x at index %d\n",
+                    __FUNCTION__, tc->ucs[indics[i]], visual_ucs[i], i);
+            goto failed;
+        }
+    }
+
+    return;
+
+failed:
+    for (int i = 0; i < tc->nr_ucs; i++) {
+        _ERR_PRINTF("%04x ", visual_ucs[i]);
+    }
+
+    _ERR_PRINTF("\n");
+    exit(1);
+}
+
 static void do_test(const struct test_case* tc)
 {
     BidiType* bidi_types;
@@ -364,17 +386,22 @@ static void do_test(const struct test_case* tc)
     int* indics;
     int i;
 
+    Uchar32* visual_ucs;
+
     bidi_types = (BidiType*)malloc(sizeof(BidiType) * tc->nr_ucs);
     bracket_types = (BidiBracketType*)malloc(sizeof(BidiBracketType) * tc->nr_ucs);
     levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
     indics = (int*)malloc(sizeof(int) * tc->nr_ucs);
+    visual_ucs = (Uchar32*)malloc(sizeof(Uchar32) * tc->nr_ucs);
 
     if (bidi_types == NULL || bracket_types == NULL ||
-            levels == NULL || indics == NULL) {
-        _ERR_PRINTF("%s: Failed to allocate memory for types, levels, and indics\n",
+            levels == NULL || indics == NULL || visual_ucs == NULL) {
+        _ERR_PRINTF("%s: Failed to allocate memory for types, levels, indics, and visual_ucs\n",
                 __FUNCTION__);
         exit(1);
     }
+
+    memcpy (visual_ucs, tc->ucs, tc->nr_ucs * sizeof (Uchar32));
 
     UStrGetBidiTypes(tc->ucs, tc->nr_ucs, bidi_types);
 
@@ -396,7 +423,7 @@ static void do_test(const struct test_case* tc)
         break;
     case 2:
     default:
-        base_dir = BIDI_PGDIR_ON;
+        base_dir = BIDI_PGDIR_WLRT;
         break;
     }
 
@@ -433,7 +460,7 @@ static void do_test(const struct test_case* tc)
     }
 
     if (UBidiReorderLine(0, bidi_types, tc->nr_ucs,
-                0, base_dir, levels, NULL, indics, NULL, NULL) == 0) {
+                0, base_dir, levels, visual_ucs, indics, NULL, NULL) == 0) {
         _ERR_PRINTF("%s: Failed to call UBidiReorderLine\n",
                 __FUNCTION__);
         exit(1);
@@ -444,8 +471,11 @@ static void do_test(const struct test_case* tc)
     int j = 0;
     int nr_reordered;
     for (i = 0; i < tc->nr_ucs; i++) {
-        if (!BIDI_IS_EXPLICIT_OR_BN (bidi_types[indics[i]]))
-            indics[j++] = indics[i];
+        if (!BIDI_IS_EXPLICIT_OR_BN (bidi_types[indics[i]])) {
+            indics[j] = indics[i];
+            visual_ucs[j] = visual_ucs[i];
+            j++;
+        }
     }
     nr_reordered = j;
 
@@ -457,6 +487,9 @@ static void do_test(const struct test_case* tc)
 
     check_indics(tc, indics, nr_reordered);
 
+    check_reorder(tc, visual_ucs, indics, nr_reordered);
+
+    free(visual_ucs);
     free(indics);
     free(levels);
     free(bracket_types);
