@@ -393,7 +393,7 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
         printf("\n");
 
         my_bos = NULL;
-        bos_len = UStrGetBreaks(UCHAR_SCRIPT_LATIN,
+        bos_len = UStrGetBreaks(SCRIPT_LATIN,
                 CTR_CAPITALIZE, WBR_NORMAL, lbp,
                 ucs, n, &my_bos);
         if (bos_len > 0) {

@@ -740,7 +740,7 @@ static void render_text(HDC hdc)
             if (n > 0) {
                 int len_bos;
                 bos = NULL;
-                len_bos = UStrGetBreaks (UCHAR_SCRIPT_LATIN,
+                len_bos = UStrGetBreaks (SCRIPT_LATIN,
                     (Uint8)_ctr_cases[_curr_ctr].rule,
                     (Uint8)_wbr_cases[_curr_wbr].rule,
                     (Uint8)_lbp_cases[_curr_lbp].rule,
