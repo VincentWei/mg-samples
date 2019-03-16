@@ -325,7 +325,7 @@ static void check_levels(const struct test_case* tc, const BidiLevel* levels)
 {
     for (int i = 0; i < tc->nr_ucs; i++) {
         int level = (int)levels[i];
-        if (tc->rel[i] != -1 && level != tc->rel[i]) {
+        if (level != tc->rel[i]) {
             _ERR_PRINTF("%s failed: %d vs %d at index %d\n",
                     __FUNCTION__, tc->rel[i], level, i);
             goto failed;
@@ -464,6 +464,12 @@ static void do_test(const struct test_case* tc)
         _ERR_PRINTF("%s: Failed to call UBidiReorderLine\n",
                 __FUNCTION__);
         exit(1);
+    }
+
+    for (i = 0; i < tc->nr_ucs; i++) {
+        if (BIDI_IS_EXPLICIT_OR_BN (bidi_types[i])) {
+            levels[i] = -1;
+        }
     }
 
     check_levels(tc, levels);
