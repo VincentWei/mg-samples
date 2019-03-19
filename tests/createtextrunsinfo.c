@@ -5,6 +5,7 @@
 **  The following APIs are covered:
 **
 **      CreateTextRunsInfo
+**      UBidiGetParagraphEmbeddingLevelsAlt
 **      DestroyTextRunsInfo
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
