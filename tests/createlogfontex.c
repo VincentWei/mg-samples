@@ -555,7 +555,7 @@ static void show_test_case(HDC hdc, const char* lf_name, PLOGFONT lf1, PLOGFONT 
 static void run_test_case(HDC hdc)
 {
     char lf_name[1024];
-    char lf_families[LEN_LOGFONT_FAMILY_FILED + 1];
+    char lf_families[LEN_LOGFONT_FAMILY_FIELD + 1];
 
     PLOGFONT lf1, lf2, lf3 = NULL;
 

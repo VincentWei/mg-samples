@@ -383,7 +383,7 @@ void* GetNextTextRunInfo(TEXTRUNSINFO* runinfo,
         BidiLevel* embedding_level, GlyphRunDir* run_dir,
         GlyphOrient* orient);
 
-static void do_test(LOGFONT* lf, const struct test_case* tc)
+static void do_test(const struct test_case* tc)
 {
     BidiLevel* levels;
     BidiLevel* check_levels;
@@ -455,8 +455,8 @@ static void do_test(LOGFONT* lf, const struct test_case* tc)
 
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
-            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_SOUTH, GLYPH_ORIENT_POLICY_NATURAL,
-            lf, 0);
+            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
 
     {
         void* ctxt = NULL;
@@ -480,7 +480,7 @@ static void do_test(LOGFONT* lf, const struct test_case* tc)
             }
 
             printf("==== Text Run %d ====\n", run);
-            printf("LOGFONT         : %p (%d)\n", logfont, logfont->rotation);
+            printf("LOGFONT         : %p\n", logfont);
             printf("START           : %d\n", start_index);
             printf("LENGTH          : %d\n", length);
             printf("LANGCODE        : %s\n", LanguageCodeToISO639s1(lang_code));
@@ -526,7 +526,7 @@ static void do_test(LOGFONT* lf, const struct test_case* tc)
     free(check_levels);
 }
 
-static int bidi_character_test(LOGFONT* lf, const char* filename)
+static int bidi_character_test(const char* filename)
 {
     FILE* fp = NULL;
     int line = 0;
@@ -560,7 +560,7 @@ static int bidi_character_test(LOGFONT* lf, const char* filename)
         check_tc(&tc, buff);
 
         // true test here
-        do_test(lf, &tc);
+        do_test(&tc);
 
         destroy_test_case(&tc);
     }
@@ -571,32 +571,12 @@ static int bidi_character_test(LOGFONT* lf, const char* filename)
 
 int MiniGUIMain (int argc, const char* argv[])
 {
-    PLOGFONT lf = NULL;
-    lf = CreateLogFontEx("ttf", "helvetica", "UTF-8",
-            FONT_WEIGHT_REGULAR,
-            FONT_SLANT_ROMAN,
-            FONT_FLIP_NONE,
-            FONT_OTHER_NONE,
-            FONT_DECORATE_NONE, FONT_RENDER_SUBPIXEL,
-            10, 0);
-    if (lf == NULL) {
-        _DBG_PRINTF("%s: Failed to create logfont\n",
-                __FUNCTION__);
-        goto error;
-    }
-
     _MG_PRINTF ("========= START TO TEST UBA (BidiCharacterTest.txt)\n");
-    bidi_character_test(lf, "ucd/BidiCharacterTest.txt");
+    bidi_character_test("ucd/BidiCharacterTest.txt");
     _MG_PRINTF ("========= END OF TEST UBA (BidiCharacterTest.txt)\n");
 
-    DestroyLogFont(lf);
     exit(0);
     return 0;
-
-error:
-    if (lf) DestroyLogFont(lf);
-    exit(1);
-    return 1;
 }
 
 #else
