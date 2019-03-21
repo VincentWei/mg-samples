@@ -458,7 +458,7 @@ static void do_test(const struct test_case* tc)
             GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
 
-    {
+    if (runinfo) {
         void* ctxt = NULL;
         PLOGFONT logfont;
         int start_index;
@@ -475,7 +475,7 @@ static void do_test(const struct test_case* tc)
                 &length, &lang_code, &script, &embedding_level, &run_dir, &orient))) {
 
             if (lang_code == LANGCODE_unknown) {
-                _ERR_PRINTF("Got a bad language code\n");
+                _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
                 exit(1);
             }
 
@@ -498,6 +498,8 @@ static void do_test(const struct test_case* tc)
             printf("DIRECTION       : %d\n", run_dir);
             printf("ORIENTATION     : %d\n", orient);
 
+            //if (logfont == NULL) getchar();
+
             run++;
 
             for (int i = 0; i < length; i++) {
@@ -506,6 +508,10 @@ static void do_test(const struct test_case* tc)
 
             n += length;
         }
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
     }
 
     if (memcmp (levels, check_levels, sizeof(BidiLevel) * tc->nr_ucs)) {
