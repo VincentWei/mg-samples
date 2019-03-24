@@ -378,10 +378,10 @@ failed:
 
 void* GetNextTextRunInfo(TEXTRUNSINFO* runinfo,
         void* prev,
-        LOGFONT** logfont, int* start_index, int* length,
+        const char** fontname, int* start_index, int* length,
         LanguageCode* lang_code, ScriptType* script,
         BidiLevel* embedding_level, GlyphRunDir* run_dir,
-        GlyphOrient* orient);
+        GlyphOrient* orient, Uint8* flags);
 
 static void do_test(const struct test_case* tc)
 {
@@ -460,7 +460,7 @@ static void do_test(const struct test_case* tc)
 
     if (runinfo) {
         void* ctxt = NULL;
-        PLOGFONT logfont;
+        const char* fontname;
         int start_index;
         int length;
         LanguageCode lang_code;
@@ -468,11 +468,12 @@ static void do_test(const struct test_case* tc)
         BidiLevel embedding_level;
         GlyphRunDir run_dir;
         GlyphOrient orient;
+        Uint8 flags;
 
         int run = 0;
         int n = 0;
-        while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &logfont, &start_index,
-                &length, &lang_code, &script, &embedding_level, &run_dir, &orient))) {
+        while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &fontname, &start_index,
+                &length, &lang_code, &script, &embedding_level, &run_dir, &orient, &flags))) {
 
             if (lang_code == LANGCODE_unknown) {
                 _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
@@ -480,7 +481,7 @@ static void do_test(const struct test_case* tc)
             }
 
             printf("==== Text Run %d ====\n", run);
-            printf("LOGFONT         : %p\n", logfont);
+            printf("FONTNAME        : %s\n", fontname?fontname:"DEFAULT");
             printf("START           : %d\n", start_index);
             printf("LENGTH          : %d\n", length);
             printf("LANGCODE        : %s\n", LanguageCodeToISO639s1(lang_code));
@@ -497,6 +498,7 @@ static void do_test(const struct test_case* tc)
             printf("EMBEDDING LEVEL : %d\n", embedding_level);
             printf("DIRECTION       : %d\n", run_dir);
             printf("ORIENTATION     : %d\n", orient);
+            printf("FLAGS           : %02x\n", flags);
 
             //if (logfont == NULL) getchar();
 
