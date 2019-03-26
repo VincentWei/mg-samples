@@ -380,16 +380,17 @@ failed:
     exit(1);
 }
 
-BOOL print_glyph (GHANDLE ctxt,
-        LOGFONT* lf, RGBCOLOR color, Glyph32 gv, const GLYPHPOS* pos)
+BOOL print_glyph (GHANDLE ctxt, LOGFONT* lf,
+        Uchar32 uc, Glyph32 gv, const GLYPHPOS* pos, RGBCOLOR color)
 {
     printf("==== Glyph Info ====\n");
     printf("LOGFONT        : %p\n", lf);
+    printf("UNICODE CODE   : 0x%08X\n", uc);
     printf("GLYPH VALUE    : 0x%08X\n", gv);
-    printf("COLOR          : RGB%02X%02X%02X,\n",
-            GetRValue(color), GetGValue(color), GetBValue(color));
     printf("POSITION       : position: (%d, %d); offset: (%d, %d),\n",
             pos->x, pos->y, pos->x_off, pos->y_off);
+    printf("COLOR          : RGB%02X%02X%02X,\n",
+            GetRValue(color), GetGValue(color), GetBValue(color));
 
     return TRUE;
 }
