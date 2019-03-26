@@ -491,7 +491,10 @@ static void do_test(const struct test_case* tc)
         }
 
         layout = CreateLayoutInfo(runinfo, 0, bos + 1, FALSE, 0, 0, 10, NULL, 0);
-        while ((line = LayoutNextLine(layout, line, x, y, 100, FALSE, &sz,
+
+        int max_extent = random() % 800;
+
+        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, &sz,
                 print_glyph, NULL))) {
 
                 printf("==== Line Info ====\n");
@@ -559,6 +562,8 @@ static int bidi_character_test(const char* filename)
 
 int MiniGUIMain (int argc, const char* argv[])
 {
+    srandom(time(NULL));
+
     _MG_PRINTF ("========= START TO TEST UBA (BidiCharacterTest.txt)\n");
     bidi_character_test("ucd/BidiCharacterTest.txt");
     _MG_PRINTF ("========= END OF TEST UBA (BidiCharacterTest.txt)\n");
