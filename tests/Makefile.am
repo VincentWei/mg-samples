@@ -8,7 +8,8 @@ noinst_PROGRAMS = \
     getshapedglyphsbasic \
     biditest \
     bidicharactertest \
-    createtextrunsinfo
+    createtextrunsinfo \
+    createlayoutinfo
 
 COMMFILES = helpers.c helpers.h
 ustrgetbreaks_SOURCES = ustrgetbreaks.c $(COMMFILES)
@@ -18,4 +19,5 @@ getshapedglyphsbasic_SOURCES = getshapedglyphsbasic.c $(COMMFILES)
 biditest_SOURCES = biditest.c $(COMMFILES)
 bidicharactertest_SOURCES = bidicharactertest.c $(COMMFILES)
 createtextrunsinfo_SOURCES = createtextrunsinfo.c $(COMMFILES)
+createlayoutinfo_SOURCES = createlayoutinfo.c $(COMMFILES)
 

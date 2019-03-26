@@ -402,7 +402,7 @@ static int do_test(PLOGFONT lf, FILE* fp, Uint8 lbp)
             if (my_bos) free (my_bos);
         }
         else {
-            _ERR_PRINTF("%s: GetUCharsAndBreaks failed\n", __FUNCTION__);
+            _ERR_PRINTF("%s: UStrGetBreaks failed\n", __FUNCTION__);
             return 1;
         }
     }
