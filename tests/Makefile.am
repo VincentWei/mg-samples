@@ -1,5 +1,5 @@
 LDFLAGS=-lefence
-EXTRA_DIST = README.md fetch-ucd-test.sh res
+EXTRA_DIST = README.md fetch-ucd-test.sh run-auto-test.sh res
 
 noinst_PROGRAMS = \
     ustrgetbreaks \
