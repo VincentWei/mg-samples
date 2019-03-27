@@ -1,9 +1,7 @@
 #!/bin/bash
 
-echo "start"
-if test ! $? -eq 0; then
-    exit 1
-fi
+export MG_GAL_ENGINE=dummy
+export MG_IAL_ENGINE=dummy
 
 ./ustrgetbreaks
 if test ! $? -eq 0; then
@@ -40,4 +38,5 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
+echo "ALL TEXT CASES PASSED!"
 exit 0
