@@ -468,7 +468,8 @@ static void do_test(const struct test_case* tc)
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
+            NULL);
 
     if (runinfo) {
         LAYOUTINFO* layout;
@@ -593,7 +594,8 @@ static void do_test_persist(const struct test_case* tc)
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
+            NULL);
 
     if (runinfo) {
         LAYOUTINFO* layout;
@@ -866,7 +868,8 @@ static void do_test_reorder(const struct test_case* tc)
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
+            NULL);
 
     if (runinfo) {
 
