@@ -511,6 +511,15 @@ static void do_test(const struct test_case* tc)
     free(check_levels);
 }
 
+static int _nr_glyphs;
+
+BOOL count_glyphs (GHANDLE ctxt, LOGFONT* lf,
+        Uchar32 uc, Glyph32 gv, const GLYPHPOS* pos, RGBCOLOR color)
+{
+    _nr_glyphs++;
+    return TRUE;
+}
+
 static void do_test_persist(const struct test_case* tc)
 {
     BidiLevel* levels;
@@ -608,14 +617,35 @@ static void do_test_persist(const struct test_case* tc)
 
         layout = CreateLayoutInfo(runinfo, 0, bos + 1, TRUE, 0, 0, 10, NULL, 0);
 
+        int i = 0;
         int max_extent = random() % 800;
+        _nr_glyphs = 0;
         while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
-                NULL, NULL))) {
+                count_glyphs, NULL))) {
+            printf("==== Line Info for LayoutNextLine (%p) ====\n", line);
+            printf("LINE NO.:           : %d\n", i);
+            printf("MAX EXTENT     : %d\n", max_extent);
+            printf("NR OF GLYPHS   : %d\n", _nr_glyphs);
+
+            _nr_glyphs = 0;
+            max_extent = random() % 800;
         }
 
         line = NULL;
         while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
                 print_glyph, NULL))) {
+
+            int line_no, nr_chars, nr_glyphs;
+            if (!GetLayoutLineInfo(line, &line_no, &max_extent, &nr_chars, &nr_glyphs,
+                NULL, NULL, NULL, NULL, NULL)) {
+                _ERR_PRINTF("%s: GetLayoutLineInfo returns FALSE\n", __FUNCTION__);
+                exit(1);
+            }
+
+            printf("==== Line Info from GetLayoutLineInfo (%p) ====\n", line);
+            printf("LINE NO.:           : %d\n", line_no);
+            printf("MAX EXTENT     : %d\n", max_extent);
+            printf("NR OF GLYPHS   : %d\n", nr_glyphs);
         }
 
         DestroyLayoutInfo(layout);

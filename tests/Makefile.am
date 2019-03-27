@@ -5,7 +5,6 @@ noinst_PROGRAMS = \
     ustrgetbreaks \
     drawglyphstringex \
     createlogfontex \
-    getshapedglyphsbasic \
     biditest \
     bidicharactertest \
     createtextrunsinfo \
@@ -15,7 +14,6 @@ COMMFILES = helpers.c helpers.h
 ustrgetbreaks_SOURCES = ustrgetbreaks.c $(COMMFILES)
 drawglyphstringex_SOURCES = drawglyphstringex.c $(COMMFILES)
 createlogfontex_SOURCES = createlogfontex.c $(COMMFILES)
-getshapedglyphsbasic_SOURCES = getshapedglyphsbasic.c $(COMMFILES)
 biditest_SOURCES = biditest.c $(COMMFILES)
 bidicharactertest_SOURCES = bidicharactertest.c $(COMMFILES)
 createtextrunsinfo_SOURCES = createtextrunsinfo.c $(COMMFILES)
