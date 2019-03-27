@@ -380,7 +380,7 @@ failed:
     exit(1);
 }
 
-BOOL print_glyph (GHANDLE ctxt, LOGFONT* lf,
+static BOOL print_glyph (GHANDLE ctxt, LOGFONT* lf,
         Uchar32 uc, Glyph32 gv, const GLYPHPOS* pos, RGBCOLOR color)
 {
     printf("==== Glyph Info ====\n");
@@ -389,7 +389,7 @@ BOOL print_glyph (GHANDLE ctxt, LOGFONT* lf,
     printf("GLYPH VALUE    : 0x%08X\n", gv);
     printf("POSITION       : position: (%d, %d); offset: (%d, %d),\n",
             pos->x, pos->y, pos->x_off, pos->y_off);
-    printf("COLOR          : RGB%02X%02X%02X,\n",
+    printf("COLOR          : RGB%02X%02X%02X\n",
             GetRValue(color), GetGValue(color), GetBValue(color));
 
     return TRUE;
@@ -513,7 +513,7 @@ static void do_test(const struct test_case* tc)
 
 static int _nr_glyphs;
 
-BOOL count_glyphs (GHANDLE ctxt, LOGFONT* lf,
+static BOOL count_glyphs (GHANDLE ctxt, LOGFONT* lf,
         Uchar32 uc, Glyph32 gv, const GLYPHPOS* pos, RGBCOLOR color)
 {
     _nr_glyphs++;
@@ -662,17 +662,148 @@ static void do_test_persist(const struct test_case* tc)
     free(check_levels);
 }
 
+#define MAX_CHARS   1024
+
+static Uchar32 _reordered_uchars[MAX_CHARS];
+static int _nr_reordered_uchars;
+
+static BOOL collect_reordered_uchars(GHANDLE ctxt, LOGFONT* lf,
+        Uchar32 uc, Glyph32 gv, const GLYPHPOS* pos, RGBCOLOR color)
+{
+    const struct test_case* tc = (const struct test_case*)ctxt;
+
+    if (BIDI_IS_EXPLICIT_OR_BN (UCharGetBidiType(uc))) {
+        // skip
+    }
+    else {
+        _reordered_uchars[_nr_reordered_uchars] = uc;
+        _nr_reordered_uchars++;
+    }
+
+    return TRUE;
+}
+
+static void check_reordered_uchars(const struct test_case* tc)
+{
+    int i;
+
+    if (tc->len_indics != _nr_reordered_uchars) {
+        _ERR_PRINTF("%s: numbers of valid characters not matched (%d vs %d)\n",
+                __FUNCTION__, tc->len_indics, _nr_reordered_uchars);
+        goto error;
+    }
+
+    for (i = 0; i < tc->len_indics; i++) {
+        Uchar32 uc = tc->ucs[tc->ovi[i]];
+
+        if (uc != _reordered_uchars[i]) {
+            _ERR_PRINTF("%s: Failed when checking the reordered uchars (%04X vs %04X)\n",
+                    __FUNCTION__, uc, _reordered_uchars[i]);
+            goto error;
+        }
+    }
+
+    return;
+
+error:
+    _MG_PRINTF("CORRECT REORDERED CHARS (%d):\n", tc->len_indics);
+    for (i = 0; i < tc->len_indics; i++) {
+        Uchar32 uc = tc->ucs[tc->ovi[i]];
+        _MG_PRINTF("0x%06X ", uc);
+    }
+    _MG_PRINTF("\n");
+
+    _ERR_PRINTF("REORDERED CHARS WE GOT (%d):\n", _nr_reordered_uchars);
+    for (i = 0; i < _nr_reordered_uchars; i++) {
+        Uchar32 uc = _reordered_uchars[i];
+        _ERR_PRINTF("0x%06X ", uc);
+    }
+    _ERR_PRINTF("\n");
+
+    exit(1);
+}
+
+static void check_text_runs(TEXTRUNSINFO* runinfo, const struct test_case* tc,
+    BidiLevel* levels)
+{
+    void* ctxt = NULL;
+    const char* fontname;
+    int start_index;
+    int length;
+    LanguageCode lang_code;
+    ScriptType script;
+    BidiLevel embedding_level;
+    GlyphRunDir run_dir;
+    GlyphOrient orient;
+    Uint8 flags;
+    BidiLevel* check_levels;
+
+    check_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+
+    int run = 0;
+    int n = 0;
+    while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &fontname, &start_index,
+            &length, &lang_code, &script, &embedding_level, &run_dir, &orient, &flags))) {
+
+        if (lang_code == LANGCODE_unknown) {
+            _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
+            exit(1);
+        }
+
+        printf("==== Text Run %d ====\n", run);
+        printf("FONTNAME        : %s\n", fontname?fontname:"DEFAULT");
+        printf("START           : %d\n", start_index);
+        printf("LENGTH          : %d\n", length);
+        printf("LANGCODE        : %s\n", LanguageCodeToISO639s1(lang_code));
+
+        char script_name[5] = {};
+        Uint32 script_iso = ScriptTypeToISO15924(script);
+        char* iso_name = (char*)&script_iso;
+        script_name[0] = iso_name[3];
+        script_name[1] = iso_name[2];
+        script_name[2] = iso_name[1];
+        script_name[3] = iso_name[0];
+
+        printf("SCRIPT          : %s\n", script_name);
+        printf("EMBEDDING LEVEL : %d\n", embedding_level);
+        printf("DIRECTION       : %d\n", run_dir);
+        printf("ORIENTATION     : %d\n", orient);
+        printf("FLAGS           : %02x\n", flags);
+
+        //if (logfont == NULL) getchar();
+
+        run++;
+
+        for (int i = 0; i < length; i++) {
+            check_levels[n + i] = embedding_level;
+        }
+
+        n += length;
+    }
+
+    if (memcmp (levels, check_levels, sizeof(BidiLevel) * tc->nr_ucs)) {
+        _ERR_PRINTF("%s: embedding levels not matched\n",
+                __FUNCTION__);
+
+        for (int i = 0; i < tc->nr_ucs; i++) {
+            _ERR_PRINTF("%d ", check_levels[i]);
+        }
+
+        _ERR_PRINTF("\n");
+        exit(1);
+    }
+
+    free(check_levels);
+}
+
 static void do_test_reorder(const struct test_case* tc)
 {
     BidiLevel* levels;
-    BidiLevel* check_levels;
     BidiType base_dir;
     int i;
 
     levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
-    check_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
-
-    if (levels == NULL || check_levels == NULL) {
+    if (levels == NULL) {
         _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
                 __FUNCTION__);
         exit(1);
@@ -738,6 +869,9 @@ static void do_test_reorder(const struct test_case* tc)
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
 
     if (runinfo) {
+
+        check_text_runs(runinfo, tc, levels);
+
         LAYOUTINFO* layout;
         LAYOUTLINE* line = NULL;
         int x = 0, y = 0, bos_len;
@@ -761,8 +895,13 @@ static void do_test_reorder(const struct test_case* tc)
 
         int max_extent = random() % 800;
 
+        _nr_reordered_uchars = 0;
         while ((line = LayoutNextLine(layout, line, x, y, -1, FALSE, NULL,
-                print_glyph, NULL))) {
+                collect_reordered_uchars, (GHANDLE)tc))) {
+
+            check_reordered_uchars(tc);
+
+            _nr_reordered_uchars = 0;
         }
 
         DestroyLayoutInfo(layout);
@@ -776,7 +915,6 @@ static void do_test_reorder(const struct test_case* tc)
     DestroyTextRunsInfo(runinfo);
 
     free(levels);
-    free(check_levels);
 }
 
 #define TEST_MODE_PERSIST   1
@@ -845,11 +983,11 @@ int MiniGUIMain (int argc, const char* argv[])
 
     srandom(time(NULL));
 
-    _MG_PRINTF ("========= START TO TEST UBA (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= START TO TEST CreateLayoutInfo (BidiCharacterTest.txt)\n");
     start_time = get_curr_time();
     bidi_character_test("ucd/BidiCharacterTest.txt", test_mode);
     end_time = get_curr_time();
-    _MG_PRINTF ("========= END OF TEST UBA (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= END OF TEST CreateLayoutInfo (BidiCharacterTest.txt)\n");
 
     _MG_PRINTF ("Totol elapsed time: %.2f\n", end_time - start_time);
 

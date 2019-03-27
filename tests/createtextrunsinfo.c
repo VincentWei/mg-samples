@@ -324,7 +324,7 @@ static void check_levels(const struct test_case* tc, const BidiLevel* levels)
 {
     for (int i = 0; i < tc->nr_ucs; i++) {
         int level = (int)levels[i];
-        if (level != tc->rel[i]) {
+        if (tc->rel[i] > 0 && level != tc->rel[i]) {
             _ERR_PRINTF("%s failed: %d vs %d at index %d\n",
                     __FUNCTION__, tc->rel[i], level, i);
             goto failed;
@@ -376,24 +376,17 @@ failed:
     exit(1);
 }
 
-void* GetNextTextRunInfo(TEXTRUNSINFO* runinfo,
-        void* prev,
-        const char** fontname, int* start_index, int* length,
-        LanguageCode* lang_code, ScriptType* script,
-        BidiLevel* embedding_level, GlyphRunDir* run_dir,
-        GlyphOrient* orient, Uint8* flags);
-
 static void do_test(const struct test_case* tc)
 {
     BidiLevel* levels;
-    BidiLevel* check_levels;
+    BidiLevel* got_levels;
     BidiType base_dir;
     int i;
 
     levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
-    check_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+    got_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
 
-    if (levels == NULL || check_levels == NULL) {
+    if (levels == NULL || got_levels == NULL) {
         _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
                 __FUNCTION__);
         exit(1);
@@ -505,7 +498,7 @@ static void do_test(const struct test_case* tc)
             run++;
 
             for (int i = 0; i < length; i++) {
-                check_levels[n + i] = embedding_level;
+                got_levels[n + i] = embedding_level;
             }
 
             n += length;
@@ -516,22 +509,26 @@ static void do_test(const struct test_case* tc)
         exit(1);
     }
 
-    if (memcmp (levels, check_levels, sizeof(BidiLevel) * tc->nr_ucs)) {
+    check_levels(tc, got_levels);
+
+#if 0
+    if (memcmp (levels, got_levels, sizeof(BidiLevel) * tc->nr_ucs)) {
         _ERR_PRINTF("%s: embedding levels not matched\n",
                 __FUNCTION__);
 
         for (int i = 0; i < tc->nr_ucs; i++) {
-            _ERR_PRINTF("%d ", check_levels[i]);
+            _ERR_PRINTF("%d ", got_levels[i]);
         }
 
         _ERR_PRINTF("\n");
         exit(1);
     }
+#endif
 
     DestroyTextRunsInfo(runinfo);
 
     free(levels);
-    free(check_levels);
+    free(got_levels);
 }
 
 static int bidi_character_test(const char* filename)
@@ -579,9 +576,9 @@ static int bidi_character_test(const char* filename)
 
 int MiniGUIMain (int argc, const char* argv[])
 {
-    _MG_PRINTF ("========= START TO TEST UBA (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= START TO TEST CreateTextRunsInfo (BidiCharacterTest.txt)\n");
     bidi_character_test("ucd/BidiCharacterTest.txt");
-    _MG_PRINTF ("========= END OF TEST UBA (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= END OF TEST CreateTextRunsInfo (BidiCharacterTest.txt)\n");
 
     exit(0);
     return 0;

@@ -73,7 +73,7 @@ int uc32_to_utf8(Uchar32 c, char* outbuf)
 
 double get_curr_time(void)
 {
-    float seconds;
+    double seconds;
     struct timeval tv;
 
     gettimeofday(&tv, NULL);
