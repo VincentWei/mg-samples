@@ -25,6 +25,9 @@ extern "C" {
 #endif  /* __cplusplus */
 
 int uc32_to_utf8(Uchar32 c, char* outbuf);
+
+double get_curr_time(void);
+
 const char* get_general_category_name(UCharGeneralCategory gc);
 const char* get_break_type_name(UCharBreakType bt);
 

@@ -21,13 +21,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <sys/time.h>
 
 #include <minigui/common.h>
 #include <minigui/minigui.h>
 #include <minigui/gdi.h>
-
-#if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
-        && defined(_MGCHARSET_UNICODE)
 
 #include "helpers.h"
 
@@ -72,6 +70,21 @@ int uc32_to_utf8(Uchar32 c, char* outbuf)
 
     return len;
 }
+
+double get_curr_time(void)
+{
+    float seconds;
+    struct timeval tv;
+
+    gettimeofday(&tv, NULL);
+    seconds = (double)tv.tv_sec;
+    seconds += tv.tv_usec/1000000.0;
+
+    return seconds;
+}
+
+#if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
+        && defined(_MGCHARSET_UNICODE)
 
 static const char* _gc_names[] = {
     "UCHAR_CATEGORY_CONTROL",

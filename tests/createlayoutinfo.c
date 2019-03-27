@@ -234,7 +234,7 @@ static int parse_one_case(const char* line, struct test_case* tc)
     return tc->nr_ucs;
 }
 
-static void check_tc(const struct test_case* tc, const char* line)
+static inline void check_tc(const struct test_case* tc, const char* line)
 {
     int i;
     char buff[MAX_LINE_LEN + 1];
@@ -474,7 +474,243 @@ static void do_test(const struct test_case* tc)
         LAYOUTINFO* layout;
         LAYOUTLINE* line = NULL;
         int x = 0, y = 0, bos_len;
-        SIZE sz;
+        BreakOppo* bos = NULL;
+
+        bos_len = UStrGetBreaks(SCRIPT_LATIN,
+                CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
+                tc->ucs, tc->nr_ucs, &bos);
+        if (bos_len <= 0) {
+            _ERR_PRINTF("%s: UStrGetBreaks failed\n", __FUNCTION__);
+            exit(1);
+        }
+
+        if (!InitBasicShapingEngine(runinfo)) {
+            _ERR_PRINTF("%s: InitBasicShapingEngine returns FALSE\n",
+                    __FUNCTION__);
+            exit(1);
+        }
+
+        layout = CreateLayoutInfo(runinfo, 0, bos + 1, FALSE, 0, 0, 10, NULL, 0);
+
+        int max_extent = random() % 800;
+        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
+                print_glyph, NULL))) {
+        }
+
+        DestroyLayoutInfo(layout);
+        free (bos);
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
+    }
+
+    DestroyTextRunsInfo(runinfo);
+
+    free(levels);
+    free(check_levels);
+}
+
+static void do_test_persist(const struct test_case* tc)
+{
+    BidiLevel* levels;
+    BidiLevel* check_levels;
+    BidiType base_dir;
+    int i;
+
+    levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+    check_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+
+    if (levels == NULL || check_levels == NULL) {
+        _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    if (UBidiGetParagraphEmbeddingLevelsAlt(tc->ucs, tc->nr_ucs,
+                &base_dir, levels) == 0) {
+        _ERR_PRINTF("%s: Failed to call UBidiGetParagraphEmbeddingLevelsAlt\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    int pel;
+    switch (base_dir) {
+    case BIDI_PGDIR_LTR:
+        pel = 0;
+        break;
+    case BIDI_PGDIR_RTL:
+        pel = 1;
+        break;
+    default:
+        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevelsAlt returns a bad resolved paragraph direction. (%d vs 0x%04x)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+        break;
+    }
+
+    if (pel != tc->pel) {
+        _ERR_PRINTF("%s: The resolved paragraph embedding level does not matched (%d vs %d)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    TEXTRUNSINFO* runinfo;
+    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
+
+    if (runinfo) {
+        LAYOUTINFO* layout;
+        LAYOUTLINE* line = NULL;
+        int x = 0, y = 0, bos_len;
+        BreakOppo* bos = NULL;
+
+        bos_len = UStrGetBreaks(SCRIPT_LATIN,
+                CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
+                tc->ucs, tc->nr_ucs, &bos);
+        if (bos_len <= 0) {
+            _ERR_PRINTF("%s: UStrGetBreaks failed\n", __FUNCTION__);
+            exit(1);
+        }
+
+        if (!InitBasicShapingEngine(runinfo)) {
+            _ERR_PRINTF("%s: InitBasicShapingEngine returns FALSE\n",
+                    __FUNCTION__);
+            exit(1);
+        }
+
+        layout = CreateLayoutInfo(runinfo, 0, bos + 1, TRUE, 0, 0, 10, NULL, 0);
+
+        int max_extent = random() % 800;
+        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
+                NULL, NULL))) {
+        }
+
+        line = NULL;
+        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
+                print_glyph, NULL))) {
+        }
+
+        DestroyLayoutInfo(layout);
+        free (bos);
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
+    }
+
+    DestroyTextRunsInfo(runinfo);
+
+    free(levels);
+    free(check_levels);
+}
+
+static void do_test_reorder(const struct test_case* tc)
+{
+    BidiLevel* levels;
+    BidiLevel* check_levels;
+    BidiType base_dir;
+    int i;
+
+    levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+    check_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+
+    if (levels == NULL || check_levels == NULL) {
+        _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    if (UBidiGetParagraphEmbeddingLevelsAlt(tc->ucs, tc->nr_ucs,
+                &base_dir, levels) == 0) {
+        _ERR_PRINTF("%s: Failed to call UBidiGetParagraphEmbeddingLevelsAlt\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    int pel;
+    switch (base_dir) {
+    case BIDI_PGDIR_LTR:
+        pel = 0;
+        break;
+    case BIDI_PGDIR_RTL:
+        pel = 1;
+        break;
+    default:
+        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevelsAlt returns a bad resolved paragraph direction. (%d vs 0x%04x)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+        break;
+    }
+
+    if (pel != tc->pel) {
+        _ERR_PRINTF("%s: The resolved paragraph embedding level does not matched (%d vs %d)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    TEXTRUNSINFO* runinfo;
+    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0));
+
+    if (runinfo) {
+        LAYOUTINFO* layout;
+        LAYOUTLINE* line = NULL;
+        int x = 0, y = 0, bos_len;
         BreakOppo* bos = NULL;
 
         bos_len = UStrGetBreaks(SCRIPT_LATIN,
@@ -495,13 +731,8 @@ static void do_test(const struct test_case* tc)
 
         int max_extent = random() % 800;
 
-        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, &sz,
+        while ((line = LayoutNextLine(layout, line, x, y, -1, FALSE, NULL,
                 print_glyph, NULL))) {
-
-                printf("==== Line Info ====\n");
-                printf("SIZE           : %d, %x\n", sz.cx, sz.cy);
-
-                y += sz.cy;
         }
 
         DestroyLayoutInfo(layout);
@@ -518,7 +749,10 @@ static void do_test(const struct test_case* tc)
     free(check_levels);
 }
 
-static int bidi_character_test(const char* filename)
+#define TEST_MODE_PERSIST   1
+#define TEST_MODE_REORDER   2
+
+static int bidi_character_test(const char* filename, int test_mode)
 {
     FILE* fp = NULL;
     int line = 0;
@@ -549,10 +783,20 @@ static int bidi_character_test(const char* filename)
             continue;
         }
 
-        check_tc(&tc, buff);
+        // check_tc(&tc, buff);
 
         // true test here
-        do_test(&tc);
+        switch (test_mode) {
+        case TEST_MODE_PERSIST:
+            do_test_persist(&tc);
+            break;
+        case TEST_MODE_REORDER:
+            do_test_reorder(&tc);
+            break;
+        default:
+            do_test(&tc);
+            break;
+        }
 
         destroy_test_case(&tc);
     }
@@ -563,11 +807,21 @@ static int bidi_character_test(const char* filename)
 
 int MiniGUIMain (int argc, const char* argv[])
 {
+    double start_time, end_time;
+    int test_mode = 0;
+
+    if (argc > 1)
+        test_mode = atoi(argv[1]);
+
     srandom(time(NULL));
 
     _MG_PRINTF ("========= START TO TEST UBA (BidiCharacterTest.txt)\n");
-    bidi_character_test("ucd/BidiCharacterTest.txt");
+    start_time = get_curr_time();
+    bidi_character_test("ucd/BidiCharacterTest.txt", test_mode);
+    end_time = get_curr_time();
     _MG_PRINTF ("========= END OF TEST UBA (BidiCharacterTest.txt)\n");
+
+    _MG_PRINTF ("Totol elapsed time: %.2f\n", end_time - start_time);
 
     exit(0);
     return 0;
