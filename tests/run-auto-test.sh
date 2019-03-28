@@ -38,5 +38,10 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
+./createlayoutinfo 3
+if test ! $? -eq 0; then
+    exit 1
+fi
+
 echo "ALL TEXT CASES PASSED!"
 exit 0

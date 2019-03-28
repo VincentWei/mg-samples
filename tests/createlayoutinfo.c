@@ -492,7 +492,7 @@ static void do_test(const struct test_case* tc)
 
         layout = CreateLayoutInfo(runinfo, 0, bos + 1, FALSE, 0, 0, 10, NULL, 0);
 
-        int max_extent = random() % 800;
+        int max_extent = random() % 100;
         while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
                 print_glyph, NULL))) {
         }
@@ -619,7 +619,7 @@ static void do_test_persist(const struct test_case* tc)
         layout = CreateLayoutInfo(runinfo, 0, bos + 1, TRUE, 0, 0, 10, NULL, 0);
 
         int i = 0;
-        int max_extent = random() % 800;
+        int max_extent = random() % 100;
         _nr_glyphs = 0;
         while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
                 count_glyphs, NULL))) {
@@ -629,7 +629,7 @@ static void do_test_persist(const struct test_case* tc)
             printf("NR OF GLYPHS   : %d\n", _nr_glyphs);
 
             _nr_glyphs = 0;
-            max_extent = random() % 800;
+            max_extent = random() % 100;
         }
 
         line = NULL;
@@ -895,7 +895,7 @@ static void do_test_reorder(const struct test_case* tc)
 
         layout = CreateLayoutInfo(runinfo, 0, bos + 1, FALSE, 0, 0, 10, NULL, 0);
 
-        int max_extent = random() % 800;
+        int max_extent = random() % 100;
 
         _nr_reordered_uchars = 0;
         while ((line = LayoutNextLine(layout, line, x, y, -1, FALSE, NULL,
@@ -919,8 +919,196 @@ static void do_test_reorder(const struct test_case* tc)
     free(levels);
 }
 
+static int _index_ellipsis = -1;
+static int _line_width = 0;
+static BOOL find_ellipsis (GHANDLE ctxt, const TEXTRUNSINFO* info, int uc_index,
+        Uchar32 uc, LOGFONT* lf, Glyph32 gv, const GLYPHPOS* pos)
+{
+    if (pos->ellipsis) {
+        _index_ellipsis = uc_index;
+    }
+
+    _line_width += pos->advance;
+    return TRUE;
+}
+
+static void do_test_ellipsis(const struct test_case* tc)
+{
+    BidiLevel* levels;
+    BidiType base_dir;
+    int i;
+
+    levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+    if (levels == NULL) {
+        _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    if (UBidiGetParagraphEmbeddingLevelsAlt(tc->ucs, tc->nr_ucs,
+                &base_dir, levels) == 0) {
+        _ERR_PRINTF("%s: Failed to call UBidiGetParagraphEmbeddingLevelsAlt\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    int pel;
+    switch (base_dir) {
+    case BIDI_PGDIR_LTR:
+        pel = 0;
+        break;
+    case BIDI_PGDIR_RTL:
+        pel = 1;
+        break;
+    default:
+        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevelsAlt returns a bad resolved paragraph direction. (%d vs 0x%04x)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+        break;
+    }
+
+    if (pel != tc->pel) {
+        _ERR_PRINTF("%s: The resolved paragraph embedding level does not matched (%d vs %d)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    TEXTRUNSINFO* runinfo;
+    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
+            NULL);
+
+    if (runinfo) {
+
+        check_text_runs(runinfo, tc, levels);
+
+        LAYOUTINFO* layout;
+        LAYOUTLINE* line = NULL;
+        int bos_len;
+        BreakOppo* bos = NULL;
+
+        bos_len = UStrGetBreaks(SCRIPT_LATIN,
+                CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
+                tc->ucs, tc->nr_ucs, &bos);
+        if (bos_len <= 0) {
+            _ERR_PRINTF("%s: UStrGetBreaks failed\n", __FUNCTION__);
+            exit(1);
+        }
+
+        if (!InitBasicShapingEngine(runinfo)) {
+            _ERR_PRINTF("%s: InitBasicShapingEngine returns FALSE\n",
+                    __FUNCTION__);
+            exit(1);
+        }
+
+        int nr_lines = 0;
+        _index_ellipsis = -1;
+        _line_width = 0;
+        int max_extent = random() % 50;
+        layout = CreateLayoutInfo(runinfo, GRF_OVERFLOW_ELLIPSIZE_START, bos + 1, FALSE, 0, 0, 10, NULL, 0);
+        while ((line = LayoutNextLine(layout, line, 0, 0, max_extent, TRUE, NULL,
+                find_ellipsis, (GHANDLE)tc))) {
+            nr_lines++;
+        }
+        DestroyLayoutInfo(layout);
+
+        if (nr_lines > 1) {
+            _ERR_PRINTF("%s: not an ellipsized single line.\n", __FUNCTION__);
+            exit(1);
+        }
+
+        if (_index_ellipsis < 0 && _line_width > max_extent) {
+            _ERR_PRINTF("%s: did not find any ellipsis but line_width (%d) > max_extent (%d).\n",
+                __FUNCTION__, _line_width, max_extent);
+            exit(1);
+        }
+
+        nr_lines = 0;
+        _index_ellipsis = -1;
+        _line_width = 0;
+
+        max_extent = random() % 50;
+        layout = CreateLayoutInfo(runinfo, GRF_OVERFLOW_ELLIPSIZE_MIDDLE, bos + 1, FALSE, 0, 0, 10, NULL, 0);
+        while ((line = LayoutNextLine(layout, line, 0, 0, max_extent, TRUE, NULL,
+                find_ellipsis, (GHANDLE)tc))) {
+        }
+        DestroyLayoutInfo(layout);
+
+        if (nr_lines > 1) {
+            _ERR_PRINTF("%s: not an ellipsized single line.\n", __FUNCTION__);
+            exit(1);
+        }
+
+        if (_index_ellipsis < 0 && _line_width > max_extent) {
+            _ERR_PRINTF("%s: did not find any ellipsis but line_width (%d) > max_extent (%d).\n",
+                __FUNCTION__, _line_width, max_extent);
+            exit(1);
+        }
+
+        nr_lines = 0;
+        _index_ellipsis = -1;
+        _line_width = 0;
+
+        max_extent = random() % 50;
+        layout = CreateLayoutInfo(runinfo, GRF_OVERFLOW_ELLIPSIZE_END, bos + 1, FALSE, 0, 0, 10, NULL, 0);
+        while ((line = LayoutNextLine(layout, line, 0, 0, max_extent, TRUE, NULL,
+                find_ellipsis, (GHANDLE)tc))) {
+        }
+        DestroyLayoutInfo(layout);
+
+        if (nr_lines > 1) {
+            _ERR_PRINTF("%s: not an ellipsized single line.\n", __FUNCTION__);
+            exit(1);
+        }
+
+        if (_index_ellipsis < 0 && _line_width > max_extent) {
+            _ERR_PRINTF("%s: did not find any ellipsis but line_width (%d) > max_extent (%d).\n",
+                __FUNCTION__, _line_width, max_extent);
+            exit(1);
+        }
+
+        free (bos);
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
+    }
+
+    DestroyTextRunsInfo(runinfo);
+
+    free(levels);
+}
+
 #define TEST_MODE_PERSIST   1
 #define TEST_MODE_REORDER   2
+#define TEST_MODE_ELLIPSIS  3
 
 static int bidi_character_test(const char* filename, int test_mode)
 {
@@ -962,6 +1150,9 @@ static int bidi_character_test(const char* filename, int test_mode)
             break;
         case TEST_MODE_REORDER:
             do_test_reorder(&tc);
+            break;
+        case TEST_MODE_ELLIPSIS:
+            do_test_ellipsis(&tc);
             break;
         default:
             do_test(&tc);
