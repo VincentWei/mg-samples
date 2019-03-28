@@ -448,9 +448,8 @@ static void do_test(const struct test_case* tc)
 
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
-            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
-            NULL);
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
         void* ctxt = NULL;
@@ -460,14 +459,12 @@ static void do_test(const struct test_case* tc)
         LanguageCode lang_code;
         ScriptType script;
         BidiLevel embedding_level;
-        GlyphRunDir run_dir;
-        GlyphOrient orient;
         Uint8 flags;
 
         int run = 0;
         int n = 0;
         while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &fontname, &start_index,
-                &length, &lang_code, &script, &embedding_level, &run_dir, &orient, &flags))) {
+                &length, &lang_code, &script, &embedding_level, &flags))) {
 
             if (lang_code == LANGCODE_unknown) {
                 _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
@@ -490,8 +487,6 @@ static void do_test(const struct test_case* tc)
 
             printf("SCRIPT          : %s\n", script_name);
             printf("EMBEDDING LEVEL : %d\n", embedding_level);
-            printf("DIRECTION       : %d\n", run_dir);
-            printf("ORIENTATION     : %d\n", orient);
             printf("FLAGS           : %02x\n", flags);
 
             //if (logfont == NULL) getchar();
@@ -532,7 +527,398 @@ static void do_test(const struct test_case* tc)
     free(got_levels);
 }
 
-static int bidi_character_test(const char* filename)
+static const char* fonts[] = {
+    "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-12-UTF-8",
+    "ttf-monospace-rrncns-U-20-UTF-8",
+    "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-13-UTF-8",
+    "ttf-monospace-rrncns-U-16-UTF-8",
+    "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+};
+
+static BOOL check_change_font(TEXTRUNSINFO* runinfo, const struct test_case* tc)
+{
+    int nr_loops = random() % tc->nr_ucs;
+    int start_index;
+    int len;
+    const char* fontname;
+
+    for (int i = 0; i < nr_loops; i++) {
+        start_index = random() % tc->nr_ucs;
+        len = random() % tc->nr_ucs;
+        fontname = fonts[i % 5];
+
+        if (SetFontNameInTextRuns(runinfo, start_index, len, fontname)) {
+            _MG_PRINTF("%s, set fontname %d +%d: %s\n",
+                __FUNCTION__, start_index, len, fontname);
+
+            const char* my_name = GetFontNameInTextRuns(runinfo, start_index);
+            if (strcmp(my_name, fontname)) {
+                _ERR_PRINTF("%s, fontname not matched: %s vs %s; index: %d\n",
+                    __FUNCTION__, fontname, my_name, start_index);
+                return FALSE;
+            }
+        }
+    }
+
+    return TRUE;
+}
+
+static void do_test_change_font(const struct test_case* tc)
+{
+    BidiLevel* levels;
+    BidiLevel* got_levels;
+    BidiType base_dir;
+    int i;
+
+    levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+    got_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+
+    if (levels == NULL || got_levels == NULL) {
+        _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    if (UBidiGetParagraphEmbeddingLevelsAlt(tc->ucs, tc->nr_ucs,
+                &base_dir, levels) == 0) {
+        _ERR_PRINTF("%s: Failed to call UBidiGetParagraphEmbeddingLevelsAlt\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    int pel;
+    switch (base_dir) {
+    case BIDI_PGDIR_LTR:
+        pel = 0;
+        break;
+    case BIDI_PGDIR_RTL:
+        pel = 1;
+        break;
+    default:
+        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevelsAlt returns a bad resolved paragraph direction. (%d vs 0x%04x)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+        break;
+    }
+
+    if (pel != tc->pel) {
+        _ERR_PRINTF("%s: The resolved paragraph embedding level does not matched (%d vs %d)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    TEXTRUNSINFO* runinfo;
+    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
+
+    if (runinfo) {
+
+        BOOL result = check_change_font(runinfo, tc);
+
+        void* ctxt = NULL;
+        const char* fontname;
+        int start_index;
+        int length;
+        LanguageCode lang_code;
+        ScriptType script;
+        BidiLevel embedding_level;
+        Uint8 flags;
+
+        int run = 0;
+        int n = 0;
+        while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &fontname, &start_index,
+                &length, &lang_code, &script, &embedding_level, &flags))) {
+
+            if (lang_code == LANGCODE_unknown) {
+                _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
+                exit(1);
+            }
+
+            printf("==== Text Run %d ====\n", run);
+            printf("FONTNAME        : %s\n", fontname?fontname:"DEFAULT");
+            printf("START           : %d\n", start_index);
+            printf("LENGTH          : %d\n", length);
+            printf("LANGCODE        : %s\n", LanguageCodeToISO639s1(lang_code));
+
+            char script_name[5] = {};
+            Uint32 script_iso = ScriptTypeToISO15924(script);
+            char* iso_name = (char*)&script_iso;
+            script_name[0] = iso_name[3];
+            script_name[1] = iso_name[2];
+            script_name[2] = iso_name[1];
+            script_name[3] = iso_name[0];
+
+            printf("SCRIPT          : %s\n", script_name);
+            printf("EMBEDDING LEVEL : %d\n", embedding_level);
+            printf("FLAGS           : %02x\n", flags);
+
+            //if (logfont == NULL) getchar();
+
+            run++;
+
+            for (int i = 0; i < length; i++) {
+                got_levels[n + i] = embedding_level;
+            }
+
+            n += length;
+        }
+
+        if (!result) {
+            exit(1);
+        }
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
+    }
+
+    check_levels(tc, got_levels);
+
+#if 0
+    if (memcmp (levels, got_levels, sizeof(BidiLevel) * tc->nr_ucs)) {
+        _ERR_PRINTF("%s: embedding levels not matched\n",
+                __FUNCTION__);
+
+        for (int i = 0; i < tc->nr_ucs; i++) {
+            _ERR_PRINTF("%d ", got_levels[i]);
+        }
+
+        _ERR_PRINTF("\n");
+        exit(1);
+    }
+#endif
+
+    DestroyTextRunsInfo(runinfo);
+
+    free(levels);
+    free(got_levels);
+}
+
+static BOOL check_change_color(TEXTRUNSINFO* runinfo, const struct test_case* tc)
+{
+    int nr_loops = random() % tc->nr_ucs;
+    int start_index;
+    int len;
+    RGBCOLOR fg_color, bg_color, my_color;
+
+    for (int i = 0; i < nr_loops; i++) {
+        start_index = random() % tc->nr_ucs;
+        len = random() % tc->nr_ucs;
+        fg_color = MakeRGB(random() % 256, random() % 256, random() % 256);
+        bg_color = MakeRGB(random() % 256, random() % 256, random() % 256);
+
+        if (SetTextColorInTextRuns(runinfo, start_index, len, fg_color)) {
+            my_color = GetTextColorInTextRuns(runinfo, start_index);
+            if (my_color != fg_color) {
+                _ERR_PRINTF("%s, foreground color not matched: 0x%08x vs 0x%08x\n",
+                    __FUNCTION__, fg_color, my_color);
+                return FALSE;
+            }
+        }
+
+        if (SetBackgroundColorInTextRuns(runinfo, start_index, len, bg_color)) {
+            my_color = GetBackgroundColorInTextRuns(runinfo, start_index);
+            if (my_color != bg_color) {
+                _ERR_PRINTF("%s, foreground color not matched: 0x%08x vs 0x%08x\n",
+                    __FUNCTION__, bg_color, my_color);
+                return FALSE;
+            }
+        }
+    }
+
+    return TRUE;
+}
+
+static void do_test_change_color(const struct test_case* tc)
+{
+    BidiLevel* levels;
+    BidiLevel* got_levels;
+    BidiType base_dir;
+    int i;
+
+    levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+    got_levels = (BidiLevel*)malloc (sizeof(BidiLevel) * tc->nr_ucs);
+
+    if (levels == NULL || got_levels == NULL) {
+        _ERR_PRINTF("%s: Failed to allocate memory for embedding levels\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    if (UBidiGetParagraphEmbeddingLevelsAlt(tc->ucs, tc->nr_ucs,
+                &base_dir, levels) == 0) {
+        _ERR_PRINTF("%s: Failed to call UBidiGetParagraphEmbeddingLevelsAlt\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    int pel;
+    switch (base_dir) {
+    case BIDI_PGDIR_LTR:
+        pel = 0;
+        break;
+    case BIDI_PGDIR_RTL:
+        pel = 1;
+        break;
+    default:
+        _ERR_PRINTF("%s: UBidiGetParagraphEmbeddingLevelsAlt returns a bad resolved paragraph direction. (%d vs 0x%04x)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+        break;
+    }
+
+    if (pel != tc->pel) {
+        _ERR_PRINTF("%s: The resolved paragraph embedding level does not matched (%d vs %d)\n",
+                __FUNCTION__, tc->pel, pel);
+        exit(1);
+    }
+
+    switch (tc->pd) {
+    case 0:
+        base_dir = BIDI_PGDIR_LTR;
+        break;
+    case 1:
+        base_dir = BIDI_PGDIR_RTL;
+        break;
+    case 2:
+    default:
+        base_dir = BIDI_PGDIR_WLTR;
+        break;
+    }
+
+    TEXTRUNSINFO* runinfo;
+    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
+
+    if (runinfo) {
+
+        BOOL result = check_change_color(runinfo, tc);
+
+        void* ctxt = NULL;
+        const char* fontname;
+        int start_index;
+        int length;
+        LanguageCode lang_code;
+        ScriptType script;
+        BidiLevel embedding_level;
+        Uint8 flags;
+
+        int run = 0;
+        int n = 0;
+        while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &fontname, &start_index,
+                &length, &lang_code, &script, &embedding_level, &flags))) {
+
+            if (lang_code == LANGCODE_unknown) {
+                _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
+                exit(1);
+            }
+
+            printf("==== Text Run %d ====\n", run);
+            printf("FONTNAME        : %s\n", fontname?fontname:"DEFAULT");
+            printf("START           : %d\n", start_index);
+            printf("LENGTH          : %d\n", length);
+            printf("LANGCODE        : %s\n", LanguageCodeToISO639s1(lang_code));
+
+            char script_name[5] = {};
+            Uint32 script_iso = ScriptTypeToISO15924(script);
+            char* iso_name = (char*)&script_iso;
+            script_name[0] = iso_name[3];
+            script_name[1] = iso_name[2];
+            script_name[2] = iso_name[1];
+            script_name[3] = iso_name[0];
+
+            printf("SCRIPT          : %s\n", script_name);
+            printf("EMBEDDING LEVEL : %d\n", embedding_level);
+            printf("FLAGS           : %02x\n", flags);
+
+            //if (logfont == NULL) getchar();
+
+            run++;
+
+            for (int i = 0; i < length; i++) {
+                got_levels[n + i] = embedding_level;
+            }
+
+            n += length;
+        }
+
+        if (!result) {
+            exit(1);
+        }
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
+    }
+
+    check_levels(tc, got_levels);
+
+#if 0
+    if (memcmp (levels, got_levels, sizeof(BidiLevel) * tc->nr_ucs)) {
+        _ERR_PRINTF("%s: embedding levels not matched\n",
+                __FUNCTION__);
+
+        for (int i = 0; i < tc->nr_ucs; i++) {
+            _ERR_PRINTF("%d ", got_levels[i]);
+        }
+
+        _ERR_PRINTF("\n");
+        exit(1);
+    }
+#endif
+
+    DestroyTextRunsInfo(runinfo);
+
+    free(levels);
+    free(got_levels);
+}
+
+#define TEST_MODE_DEFAULT       0
+#define TEST_MODE_CHANGE_FONT   1
+#define TEST_MODE_CHANGE_COLOR  2
+
+static int bidi_character_test(const char* filename, int test_mode)
 {
     FILE* fp = NULL;
     int line = 0;
@@ -565,8 +951,19 @@ static int bidi_character_test(const char* filename)
 
         check_tc(&tc, buff);
 
-        // true test here
-        do_test(&tc);
+        switch (test_mode) {
+        case TEST_MODE_CHANGE_FONT:
+            do_test_change_font(&tc);
+            break;
+
+        case TEST_MODE_CHANGE_COLOR:
+            do_test_change_color(&tc);
+            break;
+
+        default:
+            do_test(&tc);
+            break;
+        }
 
         destroy_test_case(&tc);
     }
@@ -577,9 +974,22 @@ static int bidi_character_test(const char* filename)
 
 int MiniGUIMain (int argc, const char* argv[])
 {
+    double start_time, end_time;
+    int test_mode = 0;
+
+    if (argc > 1)
+        test_mode = atoi(argv[1]);
+
+    srandom(time(NULL));
+
     _MG_PRINTF ("========= START TO TEST CreateTextRunsInfo (BidiCharacterTest.txt)\n");
-    bidi_character_test("ucd/BidiCharacterTest.txt");
+
+    start_time = get_curr_time();
+    bidi_character_test("ucd/BidiCharacterTest.txt", test_mode);
+    end_time = get_curr_time();
+
     _MG_PRINTF ("========= END OF TEST CreateTextRunsInfo (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("Totol elapsed time: %.2f\n", end_time - start_time);
 
     exit(0);
     return 0;

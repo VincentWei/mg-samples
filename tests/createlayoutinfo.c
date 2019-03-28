@@ -466,9 +466,8 @@ static void do_test(const struct test_case* tc)
 
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
-            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
-            NULL);
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
         LAYOUTINFO* layout;
@@ -592,9 +591,8 @@ static void do_test_persist(const struct test_case* tc)
 
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
-            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
-            NULL);
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
         LAYOUTINFO* layout;
@@ -734,8 +732,6 @@ static void check_text_runs(TEXTRUNSINFO* runinfo, const struct test_case* tc,
     LanguageCode lang_code;
     ScriptType script;
     BidiLevel embedding_level;
-    GlyphRunDir run_dir;
-    GlyphOrient orient;
     Uint8 flags;
     BidiLevel* check_levels;
 
@@ -744,7 +740,7 @@ static void check_text_runs(TEXTRUNSINFO* runinfo, const struct test_case* tc,
     int run = 0;
     int n = 0;
     while ((ctxt = GetNextTextRunInfo(runinfo, ctxt, &fontname, &start_index,
-            &length, &lang_code, &script, &embedding_level, &run_dir, &orient, &flags))) {
+            &length, &lang_code, &script, &embedding_level, &flags))) {
 
         if (lang_code == LANGCODE_unknown) {
             _ERR_PRINTF("%s: Got a bad language code\n", __FUNCTION__);
@@ -767,8 +763,6 @@ static void check_text_runs(TEXTRUNSINFO* runinfo, const struct test_case* tc,
 
         printf("SCRIPT          : %s\n", script_name);
         printf("EMBEDDING LEVEL : %d\n", embedding_level);
-        printf("DIRECTION       : %d\n", run_dir);
-        printf("ORIENTATION     : %d\n", orient);
         printf("FLAGS           : %02x\n", flags);
 
         //if (logfont == NULL) getchar();
@@ -866,9 +860,8 @@ static void do_test_reorder(const struct test_case* tc)
 
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
-            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
-            NULL);
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
 
@@ -1001,9 +994,8 @@ static void do_test_ellipsis(const struct test_case* tc)
 
     TEXTRUNSINFO* runinfo;
     runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
-            GLYPH_RUN_DIR_LTR, GLYPH_ORIENT_UPRIGHT, GLYPH_ORIENT_POLICY_NATURAL,
-            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8", MakeRGB(0, 0, 0),
-            NULL);
+            "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
+            MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
 
