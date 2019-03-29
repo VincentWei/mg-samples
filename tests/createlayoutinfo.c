@@ -380,13 +380,13 @@ failed:
     exit(1);
 }
 
-static BOOL print_glyph (GHANDLE ctxt, const TEXTRUNSINFO* info, int uc_index,
-        Uchar32 uc, LOGFONT* lf, Glyph32 gv, const GLYPHPOS* pos)
+static BOOL print_glyph (GHANDLE ctxt, Glyph32 gv,
+        const GLYPHPOS* pos, const RENDERDATA* data)
 {
     printf("==== Glyph Info ====\n");
-    printf("CHAR INDEX     : %d\n", uc_index);
-    printf("UNICODE CODE   : 0x%08X\n", uc);
-    printf("LOGFONT        : %p\n", lf);
+    printf("CHAR INDEX     : %d\n", data->uc_index);
+    printf("UNICODE CODE   : 0x%08X\n", data->uc);
+    printf("LOGFONT        : %p\n", data->logfont);
     printf("GLYPH VALUE    : 0x%08X\n", gv);
     printf("POSITION       : position: (%d, %d); offset: (%d, %d),\n",
             pos->x, pos->y, pos->x_off, pos->y_off);
@@ -513,8 +513,8 @@ static void do_test(const struct test_case* tc)
 
 static int _nr_glyphs;
 
-static BOOL count_glyphs (GHANDLE ctxt, const TEXTRUNSINFO* info, int uc_index,
-        Uchar32 uc, LOGFONT* lf, Glyph32 gv, const GLYPHPOS* pos)
+static BOOL count_glyphs (GHANDLE ctxt, Glyph32 gv,
+        const GLYPHPOS* pos, const RENDERDATA* data)
 {
     _nr_glyphs++;
     return TRUE;
@@ -668,16 +668,16 @@ static void do_test_persist(const struct test_case* tc)
 static Uchar32 _reordered_uchars[MAX_CHARS];
 static int _nr_reordered_uchars;
 
-static BOOL collect_reordered_uchars(GHANDLE ctxt, const TEXTRUNSINFO* info, int uc_index,
-        Uchar32 uc, LOGFONT* lf, Glyph32 gv, const GLYPHPOS* pos)
+static BOOL collect_reordered_uchars(GHANDLE ctxt, Glyph32 gv,
+        const GLYPHPOS* pos, const RENDERDATA* data)
 {
     const struct test_case* tc = (const struct test_case*)ctxt;
 
-    if (BIDI_IS_EXPLICIT_OR_BN (UCharGetBidiType(uc))) {
+    if (BIDI_IS_EXPLICIT_OR_BN (UCharGetBidiType(data->uc))) {
         // skip
     }
     else {
-        _reordered_uchars[_nr_reordered_uchars] = uc;
+        _reordered_uchars[_nr_reordered_uchars] = data->uc;
         _nr_reordered_uchars++;
     }
 
@@ -917,11 +917,11 @@ static void do_test_reorder(const struct test_case* tc)
 
 static int _index_ellipsis = -1;
 static int _line_width = 0;
-static BOOL find_ellipsis (GHANDLE ctxt, const TEXTRUNSINFO* info, int uc_index,
-        Uchar32 uc, LOGFONT* lf, Glyph32 gv, const GLYPHPOS* pos)
+static BOOL find_ellipsis(GHANDLE ctxt, Glyph32 gv,
+        const GLYPHPOS* pos, const RENDERDATA* data)
 {
     if (pos->ellipsis) {
-        _index_ellipsis = uc_index;
+        _index_ellipsis = data->uc_index;
     }
 
     _line_width += pos->advance;
