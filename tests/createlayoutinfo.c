@@ -489,11 +489,12 @@ static void do_test(const struct test_case* tc)
             exit(1);
         }
 
-        layout = CreateLayoutInfo(runinfo, 0, bos + 1, FALSE, 0, 0, 10, NULL, 0);
+        layout = CreateLayoutInfo(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, FALSE,
+            0, 0, 0, 0, 10, NULL, 0);
 
         int max_extent = random() % 100;
-        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
-                print_glyph, NULL))) {
+        while ((line = LayoutNextLine(layout, line, max_extent, FALSE, NULL,
+                print_glyph, NULL, x, y))) {
         }
 
         DestroyLayoutInfo(layout);
@@ -614,13 +615,14 @@ static void do_test_persist(const struct test_case* tc)
             exit(1);
         }
 
-        layout = CreateLayoutInfo(runinfo, 0, bos + 1, TRUE, 0, 0, 10, NULL, 0);
+        layout = CreateLayoutInfo(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, TRUE,
+            0, 0, 0, 0, 10, NULL, 0);
 
         int i = 0;
         int max_extent = random() % 100;
         _nr_glyphs = 0;
-        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
-                count_glyphs, NULL))) {
+        while ((line = LayoutNextLine(layout, line, max_extent, FALSE, NULL,
+                count_glyphs, NULL, x, y))) {
             printf("==== Line Info for LayoutNextLine (%p) ====\n", line);
             printf("LINE NO.:           : %d\n", i);
             printf("MAX EXTENT     : %d\n", max_extent);
@@ -631,8 +633,8 @@ static void do_test_persist(const struct test_case* tc)
         }
 
         line = NULL;
-        while ((line = LayoutNextLine(layout, line, x, y, max_extent, FALSE, NULL,
-                print_glyph, NULL))) {
+        while ((line = LayoutNextLine(layout, line, max_extent, FALSE, NULL,
+                print_glyph, NULL, x, y))) {
 
             int line_no, nr_chars, nr_glyphs;
             if (!GetLayoutLineInfo(line, &line_no, &max_extent, &nr_chars, &nr_glyphs,
@@ -886,13 +888,14 @@ static void do_test_reorder(const struct test_case* tc)
             exit(1);
         }
 
-        layout = CreateLayoutInfo(runinfo, 0, bos + 1, FALSE, 0, 0, 10, NULL, 0);
+        layout = CreateLayoutInfo(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, FALSE,
+            0, 0, 0, 0, 10, NULL, 0);
 
         int max_extent = random() % 100;
 
         _nr_reordered_uchars = 0;
-        while ((line = LayoutNextLine(layout, line, x, y, -1, FALSE, NULL,
-                collect_reordered_uchars, (GHANDLE)tc))) {
+        while ((line = LayoutNextLine(layout, line, -1, FALSE, NULL,
+                collect_reordered_uchars, (GHANDLE)tc, x, y))) {
 
             check_reordered_uchars(tc);
 
@@ -1024,9 +1027,11 @@ static void do_test_ellipsis(const struct test_case* tc)
         _index_ellipsis = -1;
         _line_width = 0;
         int max_extent = random() % 50;
-        layout = CreateLayoutInfo(runinfo, GRF_OVERFLOW_ELLIPSIZE_START, bos + 1, FALSE, 0, 0, 10, NULL, 0);
-        while ((line = LayoutNextLine(layout, line, 0, 0, max_extent, TRUE, NULL,
-                find_ellipsis, (GHANDLE)tc))) {
+        layout = CreateLayoutInfo(runinfo,
+                GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_START, bos + 1, FALSE,
+                0, 0, 0, 0, 10, NULL, 0);
+        while ((line = LayoutNextLine(layout, line, max_extent, TRUE, NULL,
+                find_ellipsis, (GHANDLE)tc, 0, 0))) {
             nr_lines++;
         }
         DestroyLayoutInfo(layout);
@@ -1047,9 +1052,11 @@ static void do_test_ellipsis(const struct test_case* tc)
         _line_width = 0;
 
         max_extent = random() % 50;
-        layout = CreateLayoutInfo(runinfo, GRF_OVERFLOW_ELLIPSIZE_MIDDLE, bos + 1, FALSE, 0, 0, 10, NULL, 0);
-        while ((line = LayoutNextLine(layout, line, 0, 0, max_extent, TRUE, NULL,
-                find_ellipsis, (GHANDLE)tc))) {
+        layout = CreateLayoutInfo(runinfo,
+                GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_MIDDLE, bos + 1, FALSE,
+                0, 0, 0, 0, 10, NULL, 0);
+        while ((line = LayoutNextLine(layout, line, max_extent, TRUE, NULL,
+                find_ellipsis, (GHANDLE)tc, 0, 0))) {
         }
         DestroyLayoutInfo(layout);
 
@@ -1069,9 +1076,11 @@ static void do_test_ellipsis(const struct test_case* tc)
         _line_width = 0;
 
         max_extent = random() % 50;
-        layout = CreateLayoutInfo(runinfo, GRF_OVERFLOW_ELLIPSIZE_END, bos + 1, FALSE, 0, 0, 10, NULL, 0);
-        while ((line = LayoutNextLine(layout, line, 0, 0, max_extent, TRUE, NULL,
-                find_ellipsis, (GHANDLE)tc))) {
+        layout = CreateLayoutInfo(runinfo,
+                GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_END, bos + 1, FALSE,
+                0, 0, 0, 0, 10, NULL, 0);
+        while ((line = LayoutNextLine(layout, line, max_extent, TRUE, NULL,
+                find_ellipsis, (GHANDLE)tc, 0, 0))) {
         }
         DestroyLayoutInfo(layout);
 

@@ -6,6 +6,12 @@
 **
 **      CreateTextRunsInfo
 **      UBidiGetParagraphEmbeddingLevelsAlt
+**      SetFontNameInTextRuns
+**      SetTextColorInTextRuns
+**      SetBackgroundColorInTextRuns
+**      GetFontNameInTextRuns
+**      GetTextColorInTextRuns
+**      GetBackgroundColorInTextRuns
 **      DestroyTextRunsInfo
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
