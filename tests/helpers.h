@@ -26,6 +26,9 @@ extern "C" {
 
 int uc32_to_utf8(Uchar32 c, char* outbuf);
 
+const char* get_text_case(const char* text, char* read_buff, size_t n);
+BOOL get_charset_from_filename(const char* pattern, char* buff);
+
 double get_curr_time(void);
 
 const char* get_general_category_name(UCharGeneralCategory gc);

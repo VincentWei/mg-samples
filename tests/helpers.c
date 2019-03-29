@@ -83,6 +83,60 @@ double get_curr_time(void)
     return seconds;
 }
 
+const char* get_text_case(const char* text, char* read_buff, size_t n)
+{
+    if (strncmp(text, "file:", 5) == 0) {
+        FILE *fp = NULL;
+
+        fp = fopen(text + 5, "rb");
+        if (fp) {
+            size_t size = fread(read_buff, 1, n, fp);
+            if (size > 0) {
+                read_buff[size - 1] = '\0';
+                fclose(fp);
+                return read_buff;
+            }
+            else {
+                fclose(fp);
+                _WRN_PRINTF("%s, failed to read from file: %s(%lu)\n",
+                    __FUNCTION__, text + 5, size);
+            }
+        }
+        else {
+            _WRN_PRINTF("%s, failed to open file: %s\n",
+                __FUNCTION__, text + 5);
+        }
+    }
+
+    return text;
+}
+
+/*
+ * extract charset name from the filename pattern like:
+    "file:res/en-iso8859-1.txt"
+*/
+BOOL get_charset_from_filename(const char* pattern, char* buff)
+{
+    const char *name_end;
+    const char *name_start;
+
+    if ((name_end = strrchr(pattern, '.')) == NULL)
+        name_end = pattern + strlen(pattern);
+
+    if ((name_start = strrchr(pattern, '/')) == NULL)
+        name_start = pattern + 5; // 'file:'
+
+    // skip language code 'en-'
+    name_start += 3;
+
+    if (name_end <= name_start)
+        return FALSE;
+
+    strncpy(buff, name_start, name_end - name_start);
+    buff[name_end - name_start] = '\0';
+    return TRUE;
+}
+
 #if (_MINIGUI_VERSION_CODE >= _VERSION_CODE(3,4,0)) \
         && defined(_MGCHARSET_UNICODE)
 

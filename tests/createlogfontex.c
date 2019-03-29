@@ -511,7 +511,7 @@ static BOOL check_equivalent_logfonts(PLOGFONT lf1, PLOGFONT lf2)
 
 static char _text_from_file[4096];
 
-static const char* get_text_case(const char* text)
+static const char* my_get_text_case(const char* text)
 {
     if (strncmp(text, "file:", 5) == 0) {
         FILE *fp = NULL;
@@ -546,7 +546,7 @@ static void show_test_case(HDC hdc, const char* lf_name, PLOGFONT lf1, PLOGFONT 
     TextOut(hdc, 10, 10, lf_name);
 
     SelectFont(hdc, lf2);
-    DrawText (hdc, get_text_case(_text_cases[_curr_text]), -1,
+    DrawText (hdc, my_get_text_case(_text_cases[_curr_text]), -1,
             &_drawtext_rc, DT_LEFT);
 
     SelectFont(hdc, lf_old);
