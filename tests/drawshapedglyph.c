@@ -113,7 +113,7 @@ static const char* _text_cases[] = {
     "Amazon’s low (to non-existent) tax rate has been chided by politicians ranging from Senator Bernie Sanders to President Donald Trump.\n",
 
     "file:res/ar-iso8859-6.txt",
-    "file:res/fa-iso8859-8.txt",
+    "file:res/he-iso8859-8.txt",
     "file:res/en-iso8859-15.txt",
     "file:res/zh-gb2312-0.txt",
     "file:res/zh-gbk.txt",
@@ -358,8 +358,8 @@ static TOGGLE_ITEM _toggle_items[] = {
     { SCANCODE_F5,      &_curr_lbp,                 TABLESIZE(_lbp_cases) },
     { SCANCODE_F6,      &_curr_writing_mode,        TABLESIZE(_writing_mode_cases) },
     { SCANCODE_F7,      &_curr_text_ort,            TABLESIZE(_text_ort_cases) },
-    { SCANCODE_F8,      &_curr_indent,              TABLESIZE(_indent_cases) },
-    { SCANCODE_F9,      &_curr_line_extent,         TABLESIZE(_line_extent_cases) },
+    { SCANCODE_F8,      &_curr_line_extent,         TABLESIZE(_line_extent_cases) },
+    { SCANCODE_F9,      &_curr_indent,              TABLESIZE(_indent_cases) },
     { SCANCODE_F10,     &_curr_overflow_wrap,       TABLESIZE(_overflow_wrap_cases) },
     { SCANCODE_F11,     &_curr_overflow_ellipsize,  TABLESIZE(_overflow_ellipsize_cases) },
     { SCANCODE_F12,     &_curr_align,               TABLESIZE(_align_cases) },
@@ -455,23 +455,35 @@ static void output_rules(HDC hdc)
     TextOut(hdc, 100, _text_y, _text_ort_cases[_curr_text_ort].desc);
     _text_y += 20;
 
-    TextOut(hdc, 5,   _text_y,     "OVF(F8)");
+    TextOut(hdc, 5,   _text_y,     "EXT(F8)");
+    TextOut(hdc, 100, _text_y, _line_extent_cases[_curr_line_extent].desc);
+    _text_y += 20;
+
+    TextOut(hdc, 5,   _text_y,     "IDT(F9)");
+    TextOut(hdc, 100, _text_y, _indent_cases[_curr_indent].desc);
+    _text_y += 20;
+
+    TextOut(hdc, 5,   _text_y,     "OVF(F10)");
     TextOut(hdc, 100, _text_y, _overflow_wrap_cases[_curr_overflow_wrap].desc);
     _text_y += 20;
 
-    TextOut(hdc, 5,   _text_y,     "ALG(F9)");
+    TextOut(hdc, 5,   _text_y,     "OVF(F11)");
+    TextOut(hdc, 100, _text_y, _overflow_ellipsize_cases[_curr_overflow_ellipsize].desc);
+    _text_y += 20;
+
+    TextOut(hdc, 5,   _text_y,     "ALG(F12)");
     TextOut(hdc, 100, _text_y, _align_cases[_curr_align].desc);
     _text_y += 20;
 
-    TextOut(hdc, 5,   _text_y,     "JST(F10)");
+    TextOut(hdc, 5,   _text_y,     "JST(1)");
     TextOut(hdc, 100, _text_y, _text_justify_cases[_curr_text_justify].desc);
     _text_y += 20;
 
-    TextOut(hdc, 5,   _text_y,     "HNG(F11)");
+    TextOut(hdc, 5,   _text_y,     "HNG(2)");
     TextOut(hdc, 100, _text_y, _hanging_punc_cases[_curr_hanging_punc].desc);
     _text_y += 20;
 
-    TextOut(hdc, 5,   _text_y,     "SPC(F12)");
+    TextOut(hdc, 5,   _text_y,     "SPC(3)");
     TextOut(hdc, 100, _text_y, _spaces_cases[_curr_spaces].desc);
     _text_y += 20;
 
@@ -570,22 +582,39 @@ static void do_dump(const Uchar32* ucs, const Uint16* bos, int n,
     }
 }
 
+static char _utf8_str [5000];
+
 static void dump_glyphs_and_breaks(const char* text,
         const Uchar32* ucs, const Uint16* bos, int n)
 {
+    char* tmp = _utf8_str;
+
     int i;
 
     printf("START OF DUMPING GLYPHS AND BREAKS\n");
     printf("==================================\n");
-    puts(text);
     printf("\n");
 
+    memset(_utf8_str, 0, 5000);
     for (i = 0; i < n; i++) {
+        int len;
+
         Uchar32 uc = ucs[i];
+
+        if ((tmp - _utf8_str) < 4990) {
+            len = uc32_to_utf8(uc, tmp);
+            tmp += len;
+        }
+
         printf("%04X(%s, %s)\n", uc,
             get_general_category_name(UCharGetCategory(uc)),
             get_break_type_name(UCharGetBreakType(uc)));
     }
+    printf("\n");
+
+    printf("TEXT IN UTF-8\n");
+    printf("==================================\n");
+    puts(_utf8_str);
     printf("\n");
 
     printf("\tBOV_LB_BREAK_FLAG\n");
