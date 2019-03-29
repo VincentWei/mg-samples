@@ -21,9 +21,15 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
-./createtextrunsinfo
+./createlogfontex 3600
 if test ! $? -eq 0; then
-    echo "createtextrunsinfo not passed"
+    echo "createlogfontex 3600 not passed"
+    exit 1
+fi
+
+./drawglyphstring 3600
+if test ! $? -eq 0; then
+    echo "drawglyphstring 3600 not passed"
     exit 1
 fi
 

@@ -20,8 +20,6 @@
 #ifndef _MG_TESTS_HELPERS
     #define _MG_TESTS_HELPERS
 
-#define MAX_AUTO_TEST_RUNS      1000
-
 #ifdef __cplusplus
 extern "C" {
 #endif  /* __cplusplus */

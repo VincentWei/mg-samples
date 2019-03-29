@@ -614,7 +614,7 @@ static void run_test_case(HDC hdc)
     if (lf1) DestroyLogFont(lf1);
 }
 
-static int _auto_test_mode = 0;
+static int _auto_test_runs = 0;
 static int _nr_test_runs = 0;
 
 static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -624,8 +624,8 @@ static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
         break;
 
     case MSG_IDLE:
-        if (_auto_test_mode) {
-            if (_nr_test_runs > MAX_AUTO_TEST_RUNS)
+        if (_auto_test_runs > 0) {
+            if (_nr_test_runs >= _auto_test_runs)
                 exit(0);
 
             _nr_test_runs++;
@@ -952,7 +952,7 @@ int MiniGUIMain (int argc, const char* argv[])
 
     srandom(time(NULL));
     if (argc > 1)
-        _auto_test_mode = atoi(argv[1]);
+        _auto_test_runs = atoi(argv[1]);
 
 #ifdef _MGRM_PROCESSES
     const char* layer = NULL;
