@@ -738,6 +738,8 @@ static void render_text(HDC hdc)
         text += consumed;
     }
 
+    DestroyLogFont(lf);
+
 error:
     if (ucs) free (ucs);
     if (bos) free (bos);
