@@ -521,9 +521,11 @@ static const char* my_get_text_case(const char* text)
             size_t size = fread(_text_from_file, 1, 4096, fp);
             if (size > 0) {
                 _text_from_file[size - 1] = '\0';
+                fclose(fp);
                 return _text_from_file;
             }
             else {
+                fclose(fp);
                 _ERR_PRINTF("%s, failed to read from file: %s(%lu)\n",
                     __FUNCTION__, text + 5, size);
             }
