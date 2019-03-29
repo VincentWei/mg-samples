@@ -614,10 +614,24 @@ static void run_test_case(HDC hdc)
     if (lf1) DestroyLogFont(lf1);
 }
 
+static int _auto_test_mode = 0;
+static int _nr_test_runs = 0;
+
 static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
+        break;
+
+    case MSG_IDLE:
+        if (_auto_test_mode) {
+            if (_nr_test_runs > MAX_AUTO_TEST_RUNS)
+                exit(0);
+
+            _nr_test_runs++;
+            randomize_items();
+            InvalidateRect(hWnd, NULL, TRUE);
+        }
         break;
 
     case MSG_PAINT: {
@@ -929,12 +943,16 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->hHosting = HWND_DESKTOP;
 }
 
-int MiniGUIMain (int args, const char* arg[])
+int MiniGUIMain (int argc, const char* argv[])
 {
     int i;
     MSG Msg;
     MAINWINCREATE CreateInfo;
     HWND hMainWnd;
+
+    srandom(time(NULL));
+    if (argc > 1)
+        _auto_test_mode = atoi(argv[1]);
 
 #ifdef _MGRM_PROCESSES
     const char* layer = NULL;
@@ -965,14 +983,6 @@ int MiniGUIMain (int args, const char* arg[])
         if (_devfontinfo[i].devfont == NULL) {
             _ERR_PRINTF("%s: Failed to load devfont(%s) from %s\n",
                 __FUNCTION__, _devfontinfo[i].fontname, _devfontinfo[i].filename);
-        }
-    }
-
-    srandom(time(NULL));
-    for (i = 1; i < args; i++) {
-        if (strcmp (arg[i], "-random") == 0) {
-            randomize_items();
-            break;
         }
     }
 

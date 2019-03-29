@@ -376,6 +376,8 @@ static void randomize_items(void)
         TOGGLE_ITEM* item = _toggle_items + i;
         *(item->current) = random() % item->upper;
     }
+
+    _limited = !_limited;
 }
 
 static BOOL toggle_item(int scancode, DWORD keystatus, BOOL rdm)
@@ -772,10 +774,25 @@ error:
     if (bos) free (bos);
 }
 
-static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static int _auto_test_mode = 0;
+static int _nr_test_runs = 0;
+
+static
+LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
+        break;
+
+    case MSG_IDLE:
+        if (_auto_test_mode) {
+            if (_nr_test_runs > MAX_AUTO_TEST_RUNS)
+                exit(0);
+
+            _nr_test_runs++;
+            randomize_items();
+            InvalidateRect(hWnd, NULL, TRUE);
+        }
         break;
 
     case MSG_PAINT: {
@@ -907,12 +924,16 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
 };
 
-int MiniGUIMain (int args, const char* arg[])
+int MiniGUIMain (int argc, const char* argv[])
 {
     int i;
     MSG Msg;
     MAINWINCREATE CreateInfo;
     HWND hMainWnd;
+
+    srandom(time(NULL));
+    if (argc > 1)
+        _auto_test_mode = atoi(argv[1]);
 
 #ifdef _MGRM_PROCESSES
     int i;

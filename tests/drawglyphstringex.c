@@ -290,6 +290,79 @@ static int _word_spacing = 0;
 static int _tab_size = 100;
 static RECT _rc_output = {400, 5, 1024 - 5, 500};
 
+typedef struct _TOGGLE_ITEM {
+    int     scancode;
+    int*    current;
+    int     upper;
+} TOGGLE_ITEM;
+
+static TOGGLE_ITEM _toggle_items[] = {
+    { SCANCODE_F1,  &_curr_text,            TABLESIZE(_text_cases) },
+    { SCANCODE_F2,  &_curr_wsr,             TABLESIZE(_wsr_cases) },
+    { SCANCODE_F3,  &_curr_ctr,             TABLESIZE(_ctr_cases) },
+    { SCANCODE_F4,  &_curr_wbr,             TABLESIZE(_wbr_cases) },
+    { SCANCODE_F5,  &_curr_lbp,             TABLESIZE(_lbp_cases) },
+    { SCANCODE_F6,  &_curr_writing_mode,    TABLESIZE(_writing_mode_cases) },
+    { SCANCODE_F7,  &_curr_text_ort,        TABLESIZE(_text_ort_cases) },
+    { SCANCODE_F8,  &_curr_overflow_wrap,   TABLESIZE(_overflow_wrap_cases) },
+    { SCANCODE_F9,  &_curr_align,           TABLESIZE(_align_cases) },
+    { SCANCODE_F10, &_curr_text_justify,    TABLESIZE(_text_justify_cases) },
+    { SCANCODE_F11, &_curr_hanging_punc,    TABLESIZE(_hanging_punc_cases) },
+    { SCANCODE_F12, &_curr_spaces,          TABLESIZE(_spaces_cases) },
+};
+
+static void randomize_items(void)
+{
+    int i;
+
+    for (i = 0; i < TABLESIZE(_toggle_items); i++) {
+        TOGGLE_ITEM* item = _toggle_items + i;
+        *(item->current) = random() % item->upper;
+    }
+
+    _limited = !_limited;
+}
+
+static BOOL toggle_item(int scancode, DWORD keystatus, BOOL rdm)
+{
+    int i;
+    TOGGLE_ITEM* item = NULL;
+
+    for (i = 0; i < TABLESIZE(_toggle_items); i++) {
+        if (_toggle_items[i].scancode == scancode) {
+            item = _toggle_items + i;
+            break;
+        }
+    }
+
+    if (item) {
+        int current;
+
+        if (rdm) {
+            current = random() % item->upper;
+        }
+        else {
+            current = *(item->current);
+            if (keystatus & KS_SHIFT) {
+                current--;
+                if (current < 0)
+                    current = item->upper - 1;
+            }
+            else {
+                current++;
+                current %= item->upper;
+            }
+        }
+
+        if (*(item->current) != current) {
+            *(item->current) = current;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static void output_rules(HDC hdc)
 {
     char buf[64];
@@ -803,10 +876,25 @@ error:
     if (bos) free (bos);
 }
 
-static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static int _auto_test_mode = 0;
+static int _nr_test_runs = 0;
+
+static
+LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
+        break;
+
+    case MSG_IDLE:
+        if (_auto_test_mode) {
+            if (_nr_test_runs > MAX_AUTO_TEST_RUNS)
+                exit(0);
+
+            _nr_test_runs++;
+            randomize_items();
+            InvalidateRect(hWnd, NULL, TRUE);
+        }
         break;
 
     case MSG_PAINT: {
@@ -824,122 +912,78 @@ static LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
     }
 
     case MSG_KEYDOWN: {
+        BOOL repaint = FALSE;
         switch (wParam) {
         case SCANCODE_SPACE:
             _limited = !_limited;
-            break;
-
-        case SCANCODE_F1:
-            _curr_text++;
-            _curr_text %= TABLESIZE(_text_cases);
-            break;
-
-        case SCANCODE_F2:
-            _curr_wsr++;
-            _curr_wsr %= TABLESIZE(_wsr_cases);
-            break;
-
-        case SCANCODE_F3:
-            _curr_ctr++;
-            _curr_ctr %= TABLESIZE(_ctr_cases);
-            break;
-
-        case SCANCODE_F4:
-            _curr_wbr++;
-            _curr_wbr %= TABLESIZE(_wbr_cases);
-            break;
-
-        case SCANCODE_F5:
-            _curr_lbp++;
-            _curr_lbp %= TABLESIZE(_lbp_cases);
-            break;
-
-        case SCANCODE_F6:
-            _curr_writing_mode++;
-            _curr_writing_mode %= TABLESIZE(_writing_mode_cases);
-            break;
-
-        case SCANCODE_F7:
-            _curr_text_ort++;
-            _curr_text_ort %= TABLESIZE(_text_ort_cases);
-            break;
-
-        case SCANCODE_F8:
-            _curr_overflow_wrap++;
-            _curr_overflow_wrap %= TABLESIZE(_overflow_wrap_cases);
-            break;
-
-        case SCANCODE_F9:
-            _curr_align++;
-            _curr_align %= TABLESIZE(_align_cases);
-            break;
-
-        case SCANCODE_F10:
-            _curr_text_justify++;
-            _curr_text_justify %= TABLESIZE(_text_justify_cases);
-            break;
-
-        case SCANCODE_F11:
-            _curr_hanging_punc++;
-            _curr_hanging_punc %= TABLESIZE(_hanging_punc_cases);
-            break;
-
-        case SCANCODE_F12:
-            _curr_spaces++;
-            _curr_spaces %= TABLESIZE(_spaces_cases);
+            repaint = TRUE;
             break;
 
         case SCANCODE_ENTER:
             _curr_font++;
             _curr_font %= TABLESIZE(_font_cases);
             create_logfonts();
+            repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKLEFT:
             _rc_output.right -= 5;
+            repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKRIGHT:
             _rc_output.right += 5;
+            repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKUP:
             _rc_output.bottom -= 20;
+            repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKDOWN:
             _rc_output.bottom += 20;
+            repaint = TRUE;
             break;
 
         case SCANCODE_INSERT:
             _letter_spacing += 1;
+            repaint = TRUE;
             break;
 
         case SCANCODE_REMOVE:
             _letter_spacing -= 1;
+            repaint = TRUE;
             break;
 
         case SCANCODE_HOME:
             _word_spacing += 2;
+            repaint = TRUE;
             break;
 
         case SCANCODE_END:
             _word_spacing -= 2;
+            repaint = TRUE;
             break;
 
         case SCANCODE_PAGEUP:
             _tab_size += 2;
+            repaint = TRUE;
             break;
 
         case SCANCODE_PAGEDOWN:
             _tab_size -= 2;
+            repaint = TRUE;
             break;
 
         default:
-            return 0;
+            if (toggle_item((int)wParam, (DWORD)lParam, FALSE))
+                repaint = TRUE;
+            break;
         }
 
-        InvalidateRect (hWnd, NULL, TRUE);
+        if (repaint)
+            InvalidateRect (hWnd, NULL, TRUE);
         return 0;
     }
 
@@ -983,12 +1027,16 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
 };
 
-int MiniGUIMain (int args, const char* arg[])
+int MiniGUIMain (int argc, const char* argv[])
 {
     int i;
     MSG Msg;
     MAINWINCREATE CreateInfo;
     HWND hMainWnd;
+
+    srandom(time(NULL));
+    if (argc > 1)
+        _auto_test_mode = atoi(argv[1]);
 
 #ifdef _MGRM_PROCESSES
     int i;
