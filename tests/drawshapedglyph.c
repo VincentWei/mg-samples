@@ -587,18 +587,15 @@ static char _utf8_str [5000];
 static void dump_glyphs_and_breaks(const char* text,
         const Uchar32* ucs, const Uint16* bos, int n)
 {
-    char* tmp = _utf8_str;
-
     int i;
+    char* tmp = _utf8_str;
 
     printf("START OF DUMPING GLYPHS AND BREAKS\n");
     printf("==================================\n");
-    printf("\n");
 
     memset(_utf8_str, 0, 5000);
     for (i = 0; i < n; i++) {
         int len;
-
         Uchar32 uc = ucs[i];
 
         if ((tmp - _utf8_str) < 4990) {
@@ -614,6 +611,7 @@ static void dump_glyphs_and_breaks(const char* text,
 
     printf("TEXT IN UTF-8\n");
     printf("==================================\n");
+    printf("\n");
     puts(_utf8_str);
     printf("\n");
 

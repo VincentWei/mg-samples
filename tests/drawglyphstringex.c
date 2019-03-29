@@ -622,22 +622,37 @@ static void do_dump(LOGFONT* lf, const Uchar32* ucs, const Uint16* bos, int n,
     }
 }
 
+static char _utf8_str [5000];
+
 static void dump_glyphs_and_breaks(LOGFONT* lf, const char* text,
         const Uchar32* ucs, const Uint16* bos, int n)
 {
     int i;
+    char* tmp = _utf8_str;
 
     printf("START OF DUMPING GLYPHS AND BREAKS\n");
     printf("==================================\n");
-    puts(text);
-    printf("\n");
 
+    memset(_utf8_str, 0, 5000);
     for (i = 0; i < n; i++) {
+        int len;
         Uchar32 uc = ucs[i];
+
+        if ((tmp - _utf8_str) < 4990) {
+            len = uc32_to_utf8(uc, tmp);
+            tmp += len;
+        }
+
         printf("%04X(%s, %s)\n", uc,
             get_general_category_name(UCharGetCategory(uc)),
             get_break_type_name(UCharGetBreakType(uc)));
     }
+    printf("\n");
+
+    printf("TEXT IN UTF-8\n");
+    printf("==================================\n");
+    printf("\n");
+    puts(_utf8_str);
     printf("\n");
 
     printf("\tBOV_LB_BREAK_FLAG\n");

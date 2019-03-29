@@ -117,9 +117,9 @@ static const char* _text_cases[] = {
 
     "file:res/en-iso8859-1.txt",
     "file:res/ar-iso8859-6.txt",
-    "file:res/fa-iso8859-8.txt",
+    "file:res/he-iso8859-8.txt",
     "file:res/en-iso8859-15.txt",
-    "file:res/zh-gb2312.txt",
+    "file:res/zh-gb2312-0.txt",
     "file:res/zh-gbk.txt",
     "file:res/zh-big5.txt",
     "file:res/ko-euc-kr.txt",
