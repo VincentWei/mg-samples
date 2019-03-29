@@ -63,5 +63,5 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
-echo "ALL TEXT CASES PASSED!"
+echo "ALL TEST CASES PASSED!"
 exit 0
