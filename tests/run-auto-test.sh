@@ -27,9 +27,9 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
-./drawglyphstring 3600
+./drawglyphstringex 3600
 if test ! $? -eq 0; then
-    echo "drawglyphstring 3600 not passed"
+    echo "drawglyphstringex 3600 not passed"
     exit 1
 fi
 
