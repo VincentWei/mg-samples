@@ -559,12 +559,14 @@ static void create_layout(ParagraphInfo* p)
             _spaces_cases[_curr_spaces].rule;
 
     if (_limited) {
-        if (_writing_mode_cases[_curr_writing_mode].rule
-                == GRF_WRITING_MODE_HORIZONTAL_TB) {
+        switch (_writing_mode_cases[_curr_writing_mode].rule) {
+        case GRF_WRITING_MODE_HORIZONTAL_TB:
+        case GRF_WRITING_MODE_HORIZONTAL_BT:
             max_extent = RECTW(_rc_output);
-        }
-        else {
+            break;
+        default:
             max_extent = RECTH(_rc_output);
+            break;
         }
     }
     else {
@@ -814,14 +816,32 @@ static int _text_x, _text_y;
 
 static void render_paragraphs(HDC hdc)
 {
-    if (_writing_mode_cases[_curr_writing_mode].rule
-            == GRF_WRITING_MODE_VERTICAL_RL) {
+    Uint32 old_ta;
+
+    switch (_writing_mode_cases[_curr_writing_mode].rule) {
+    case GRF_WRITING_MODE_HORIZONTAL_BT:
+        _MG_PRINTF("Set text align to TA_LEFT | TA_BOTTOM\n");
+        old_ta = SetTextAlign(hdc, TA_LEFT | TA_BOTTOM | TA_NOUPDATECP);
+        _text_x = _rc_output.left;
+        _text_y = _rc_output.bottom;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_RL:
+        _MG_PRINTF("Set text align to TA_RIGHT | TA_TOP\n");
+        old_ta = SetTextAlign(hdc, TA_RIGHT | TA_TOP | TA_NOUPDATECP);
         _text_x = _rc_output.right;
         _text_y = _rc_output.top;
-    }
-    else {
+        break;
+
+    case GRF_WRITING_MODE_HORIZONTAL_TB:
+    case GRF_WRITING_MODE_VERTICAL_LR:
+    default:
+        _MG_PRINTF("Set text align to TA_LEFT | TA_TOP\n");
+        old_ta = SetTextAlign(hdc, TA_LEFT | TA_TOP | TA_NOUPDATECP);
         _text_x = _rc_output.left;
         _text_y = _rc_output.top;
+        break;
+
     }
 
     SetMapMode(hdc, MM_ANISOTROPIC);
@@ -844,13 +864,49 @@ static void render_paragraphs(HDC hdc)
 
             // TODO forward text_x and text_y
             j++;
-            pt.y += 20;
+
+            switch (_writing_mode_cases[_curr_writing_mode].rule) {
+            case GRF_WRITING_MODE_HORIZONTAL_TB:
+                pt.y += 20;
+                break;
+
+            case GRF_WRITING_MODE_HORIZONTAL_BT:
+                pt.y -= 20;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_RL:
+                pt.x -= 20;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_LR:
+                pt.x += 20;
+                break;
+            }
 
             SetViewportOrg(hdc, &pt);
         }
 
-        pt.y += 10;
+        switch (_writing_mode_cases[_curr_writing_mode].rule) {
+        case GRF_WRITING_MODE_HORIZONTAL_TB:
+            pt.y += 10;
+            break;
+
+        case GRF_WRITING_MODE_HORIZONTAL_BT:
+            pt.y -= 10;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_RL:
+            pt.x -= 10;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_LR:
+            pt.x += 10;
+            break;
+        }
+
     }
+
+    SetTextAlign(hdc, old_ta);
 }
 
 static int _auto_test_runs = 0;
@@ -862,10 +918,6 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message) {
     case MSG_CREATE:
         create_paragraphs();
-        break;
-
-    case MSG_DESTROY:
-        destroy_paragraphs();
         break;
 
     case MSG_IDLE:
@@ -972,6 +1024,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     case MSG_CLOSE:
+        destroy_paragraphs();
         DestroyMainWindow (hWnd);
         PostQuitMessage (hWnd);
         return 0;

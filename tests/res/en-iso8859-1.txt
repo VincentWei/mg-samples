@@ -1,1 +1,1 @@
-hello,good morning! this is ISO8859-1 charset.
+Hello, good morning! This text is Latin and encoded originally in ISO8859-1 charset.
