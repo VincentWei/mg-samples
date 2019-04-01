@@ -472,7 +472,7 @@ static void do_test(const struct test_case* tc)
     if (runinfo) {
         LAYOUTINFO* layout;
         LAYOUTLINE* line = NULL;
-        int x = 0, y = 0, bos_len;
+        int bos_len;
         BreakOppo* bos = NULL;
 
         bos_len = UStrGetBreaks(SCRIPT_LATIN,
@@ -494,7 +494,7 @@ static void do_test(const struct test_case* tc)
 
         int max_extent = random() % 100;
         while ((line = LayoutNextLine(layout, line, max_extent, FALSE,
-                print_glyph, NULL, x, y))) {
+                print_glyph, NULL))) {
         }
 
         DestroyLayoutInfo(layout);
@@ -598,7 +598,7 @@ static void do_test_persist(const struct test_case* tc)
     if (runinfo) {
         LAYOUTINFO* layout;
         LAYOUTLINE* line = NULL;
-        int x = 0, y = 0, bos_len;
+        int bos_len;
         BreakOppo* bos = NULL;
 
         bos_len = UStrGetBreaks(SCRIPT_LATIN,
@@ -622,7 +622,7 @@ static void do_test_persist(const struct test_case* tc)
         int max_extent = random() % 100;
         _nr_glyphs = 0;
         while ((line = LayoutNextLine(layout, line, max_extent, FALSE,
-                count_glyphs, NULL, x, y))) {
+                count_glyphs, NULL))) {
             printf("==== Line Info for LayoutNextLine (%p) ====\n", line);
             printf("LINE NO.:           : %d\n", i);
             printf("MAX EXTENT     : %d\n", max_extent);
@@ -634,7 +634,7 @@ static void do_test_persist(const struct test_case* tc)
 
         line = NULL;
         while ((line = LayoutNextLine(layout, line, max_extent, FALSE,
-                print_glyph, NULL, x, y))) {
+                print_glyph, NULL))) {
 
             int line_no, nr_chars, nr_glyphs;
             if (!GetLayoutLineInfo(line, &line_no, &max_extent, &nr_chars, &nr_glyphs,
@@ -871,7 +871,7 @@ static void do_test_reorder(const struct test_case* tc)
 
         LAYOUTINFO* layout;
         LAYOUTLINE* line = NULL;
-        int x = 0, y = 0, bos_len;
+        int bos_len;
         BreakOppo* bos = NULL;
 
         bos_len = UStrGetBreaks(SCRIPT_LATIN,
@@ -895,7 +895,7 @@ static void do_test_reorder(const struct test_case* tc)
 
         _nr_reordered_uchars = 0;
         while ((line = LayoutNextLine(layout, line, -1, FALSE,
-                collect_reordered_uchars, (GHANDLE)tc, x, y))) {
+                collect_reordered_uchars, (GHANDLE)tc))) {
 
             check_reordered_uchars(tc);
 
@@ -1031,7 +1031,7 @@ static void do_test_ellipsis(const struct test_case* tc)
                 GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_START, bos + 1, FALSE,
                 0, 0, 0, 0, 10, NULL, 0);
         while ((line = LayoutNextLine(layout, line, max_extent, TRUE,
-                find_ellipsis, (GHANDLE)tc, 0, 0))) {
+                find_ellipsis, (GHANDLE)tc))) {
             nr_lines++;
         }
         DestroyLayoutInfo(layout);
@@ -1056,7 +1056,7 @@ static void do_test_ellipsis(const struct test_case* tc)
                 GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_MIDDLE, bos + 1, FALSE,
                 0, 0, 0, 0, 10, NULL, 0);
         while ((line = LayoutNextLine(layout, line, max_extent, TRUE,
-                find_ellipsis, (GHANDLE)tc, 0, 0))) {
+                find_ellipsis, (GHANDLE)tc))) {
         }
         DestroyLayoutInfo(layout);
 
@@ -1080,7 +1080,7 @@ static void do_test_ellipsis(const struct test_case* tc)
                 GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_END, bos + 1, FALSE,
                 0, 0, 0, 0, 10, NULL, 0);
         while ((line = LayoutNextLine(layout, line, max_extent, TRUE,
-                find_ellipsis, (GHANDLE)tc, 0, 0))) {
+                find_ellipsis, (GHANDLE)tc))) {
         }
         DestroyLayoutInfo(layout);
 

@@ -12,9 +12,9 @@
 **      InitBasicShapingEngine
 **      CreateLayoutInfo
 **      LayoutNextLine
+**      DrawShapedGlyph
 **      DestroyLayoutInfo
 **      DestroyTextRunsInfo
-**      DrawShapedGlyph
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
@@ -515,10 +515,33 @@ static char* _font_cases [] = {
     "ttf-Source Han Sans-lrnnns-*-36-UTF-8",
 };
 
-static int _text_x, _text_y;
+typedef struct _ParagraphInfo {
+    Uchar32*        ucs;
+    BreakOppo*      bos;
+    TEXTRUNSINFO*   textruns;
+    LAYOUTINFO*     layout;
+    int             nr_ucs;
+} ParagraphInfo;
 
-static int render_glyphs(HDC hdc,
-    const Uchar32* ucs, const Uint16* bos, int n)
+static ParagraphInfo* _paragraphs;
+static int            _nr_parags;
+
+static void destroy_paragraphs(void)
+{
+    for (int i = 0; i < _nr_parags; i++) {
+        DestroyLayoutInfo(_paragraphs[i].layout);
+        DestroyTextRunsInfo(_paragraphs[i].textruns);
+        free(_paragraphs[i].bos);
+        free(_paragraphs[i].ucs);
+    }
+
+    if (_paragraphs)
+        free(_paragraphs);
+    _paragraphs = NULL;
+    _nr_parags = 0;
+}
+
+static void create_layout(ParagraphInfo* p)
 {
     Uint32 render_flags;
     int max_extent;
@@ -548,8 +571,37 @@ static int render_glyphs(HDC hdc,
         max_extent = -1;
     }
 
-    return 1;
+    p->textruns = CreateTextRunsInfo(p->ucs, p->nr_ucs,
+            LANGCODE_unknown, BIDI_PGDIR_LTR,
+            _font_cases[_curr_font], MakeRGB(0, 0, 0), 0, p->bos + 1);
+
+    if (p->textruns) {
+        if (!InitBasicShapingEngine(p->textruns)) {
+            _ERR_PRINTF("%s: InitBasicShapingEngine returns FALSE\n",
+                    __FUNCTION__);
+            exit(1);
+        }
+
+        p->layout = CreateLayoutInfo(p->textruns,
+                render_flags,
+                p->bos + 1, TRUE, max_extent, 0, _letter_spacing, _word_spacing, _tab_size, NULL, 0);
+        if (p->layout == NULL) {
+            _ERR_PRINTF("%s: CreateLayoutInfo returns NULL\n", __FUNCTION__);
+            exit(1);
+        }
+
+        LAYOUTLINE* line = NULL;
+        while ((line = LayoutNextLine(p->layout, line, 0, 0, NULL, 0))) {
+        }
+    }
+    else {
+        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        exit(1);
+    }
 }
+
+static char _text_from_file[4096];
+static char _utf8_str [5000];
 
 #define TOKEN_HAVE_NO_BREAK_OPPORTUNITY "×"
 #define TOKEN_HAVE_BREAK_OPPORTUNITY    "÷"
@@ -583,8 +635,6 @@ static void do_dump(const Uchar32* ucs, const Uint16* bos, int n,
         }
     }
 }
-
-static char _utf8_str [5000];
 
 static void dump_glyphs_and_breaks(const char* text,
         const Uchar32* ucs, const Uint16* bos, int n)
@@ -673,26 +723,13 @@ static void dump_glyphs_and_breaks(const char* text,
     printf("END OF DUMPING GLYPHS AND BREAKS\n");
 }
 
-static char _text_from_file[4096];
 
-static void render_text(HDC hdc)
+static void create_paragraphs(void)
 {
     char charset[100];
     PLOGFONT lf = NULL;
     const char* text;
     int left_len_text;
-    Uchar32* ucs;
-    Uint16* bos;
-
-    if (_writing_mode_cases[_curr_writing_mode].rule
-            == GRF_WRITING_MODE_VERTICAL_RL) {
-        _text_x = _rc_output.right;
-        _text_y = _rc_output.top;
-    }
-    else {
-        _text_x = _rc_output.left;
-        _text_y = _rc_output.top;
-    }
 
     text = get_text_case(_text_cases[_curr_text], _text_from_file, 4096);
 
@@ -704,11 +741,15 @@ static void render_text(HDC hdc)
     if (!(lf = CreateLogFontForMChar2UChar(charset))) {
         _ERR_PRINTF("%s: failed to create logfont for charset: %s\n",
                 __FUNCTION__, charset);
-        return;
+        exit(1);
     }
+
+    destroy_paragraphs();
 
     left_len_text = strlen(text);
     while (left_len_text > 0) {
+        Uchar32* ucs;
+        Uint16* bos;
         int consumed;
         int n;
 
@@ -718,10 +759,16 @@ static void render_text(HDC hdc)
                 &ucs, &n);
         if (consumed > 0) {
 
-            _DBG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
+            _MG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
                 __FUNCTION__, consumed, n);
 
             if (n > 0) {
+                _nr_parags++;
+                _paragraphs = realloc(_paragraphs,
+                        sizeof(ParagraphInfo) * _nr_parags);
+                _paragraphs[_nr_parags - 1].ucs = ucs;
+                _paragraphs[_nr_parags - 1].nr_ucs = n;
+
                 int len_bos;
                 bos = NULL;
                 len_bos = UStrGetBreaks (SCRIPT_LATIN,
@@ -732,9 +779,8 @@ static void render_text(HDC hdc)
 
                 if (len_bos > 0) {
                     dump_glyphs_and_breaks(text, ucs, bos, n);
-
-                    if (render_glyphs(hdc, ucs, bos + 1, n))
-                        goto error;
+                    _paragraphs[_nr_parags - 1].bos = bos;
+                    create_layout(_paragraphs + _nr_parags - 1);
                 }
                 else {
                     _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
@@ -753,25 +799,58 @@ static void render_text(HDC hdc)
             goto error;
         }
 
-        if (ucs) {
-            free (ucs);
-            ucs = NULL;
-        }
-
-        if (bos) {
-            free (bos);
-            bos = NULL;
-        }
-
         left_len_text -= consumed;
         text += consumed;
     }
 
     DestroyLogFont(lf);
+    return;
 
 error:
-    if (ucs) free (ucs);
-    if (bos) free (bos);
+    exit(1);
+}
+
+static int _text_x, _text_y;
+
+static void render_paragraphs(HDC hdc)
+{
+    if (_writing_mode_cases[_curr_writing_mode].rule
+            == GRF_WRITING_MODE_VERTICAL_RL) {
+        _text_x = _rc_output.right;
+        _text_y = _rc_output.top;
+    }
+    else {
+        _text_x = _rc_output.left;
+        _text_y = _rc_output.top;
+    }
+
+    SetMapMode(hdc, MM_ANISOTROPIC);
+
+    POINT pt = {_text_x, _text_y};
+    for (int i = 0; i < _nr_parags; i++) {
+        LAYOUTINFO* layout = _paragraphs[i].layout;
+        LAYOUTLINE* line = NULL;
+        int j = 0;
+
+        _MG_PRINTF("%s: rendering paragraph: %d\n",
+            __FUNCTION__, i);
+
+        SetViewportOrg(hdc, &pt);
+        while ((line = LayoutNextLine(layout, line, 0, 0,
+                DrawShapedGlyph, (GHANDLE)hdc))) {
+
+            _MG_PRINTF("%s: rendered line by calling DrawShapedGlyph: %d\n",
+                __FUNCTION__, j);
+
+            // TODO forward text_x and text_y
+            j++;
+            pt.y += 20;
+
+            SetViewportOrg(hdc, &pt);
+        }
+
+        pt.y += 10;
+    }
 }
 
 static int _auto_test_runs = 0;
@@ -782,6 +861,11 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
+        create_paragraphs();
+        break;
+
+    case MSG_DESTROY:
+        destroy_paragraphs();
         break;
 
     case MSG_IDLE:
@@ -791,6 +875,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             _nr_test_runs++;
             randomize_items();
+            create_paragraphs();
             InvalidateRect(hWnd, NULL, TRUE);
         }
         break;
@@ -803,8 +888,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SetPenColor(hdc, PIXEL_red);
         Rectangle(hdc, _rc_output.left, _rc_output.top,
             _rc_output.right, _rc_output.bottom);
-
-        render_text(hdc);
+        render_paragraphs(hdc);
         EndPaint(hWnd, hdc);
         return 0;
     }
@@ -879,8 +963,11 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-        if (repaint)
-            InvalidateRect (hWnd, NULL, TRUE);
+        if (repaint) {
+            create_paragraphs();
+            InvalidateRect(hWnd, NULL, TRUE);
+        }
+
         return 0;
     }
 
@@ -922,6 +1009,8 @@ typedef struct _DEVFONTINFO {
 static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/SourceHanSans-Regular.ttc",
         "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
+    { FONTFILE_PATH "font/unifont_160_50.upf",
+        "upf-unifont,SansSerif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
 };
 
 int MiniGUIMain (int argc, const char* argv[])
@@ -996,5 +1085,5 @@ int MiniGUIMain (int argc, const char* argv[])
 
 
 #else
-#error "To test DrawGlyphStringEx, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test DrawShapedGlyph, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
