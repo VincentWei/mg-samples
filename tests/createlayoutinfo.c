@@ -633,11 +633,12 @@ static void do_test_persist(const struct test_case* tc)
         }
 
         line = NULL;
+        int line_no = 0;
         while ((line = LayoutNextLine(layout, line, max_extent, FALSE,
                 print_glyph, NULL))) {
 
-            int line_no, nr_chars, nr_glyphs;
-            if (!GetLayoutLineInfo(line, &line_no, &max_extent, &nr_chars, &nr_glyphs,
+            int nr_chars, nr_glyphs;
+            if (!GetLayoutLineInfo(line, &max_extent, &nr_chars, &nr_glyphs,
                 NULL, NULL, NULL, NULL, NULL)) {
                 _ERR_PRINTF("%s: GetLayoutLineInfo returns FALSE\n", __FUNCTION__);
                 exit(1);
@@ -647,6 +648,7 @@ static void do_test_persist(const struct test_case* tc)
             printf("LINE NO.:           : %d\n", line_no);
             printf("MAX EXTENT     : %d\n", max_extent);
             printf("NR OF GLYPHS   : %d\n", nr_glyphs);
+            line_no++;
         }
 
         DestroyLayoutInfo(layout);

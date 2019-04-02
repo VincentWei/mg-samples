@@ -207,6 +207,8 @@ static RENDER_RULE _writing_mode_cases [] = {
 };
 
 static RENDER_RULE _text_ort_cases [] = {
+    { GRF_TEXT_ORIENTATION_MIXED,
+        "GRF_TEXT_ORIENTATION_MIXED" },
     { GRF_TEXT_ORIENTATION_UPRIGHT,
         "GRF_TEXT_ORIENTATION_UPRIGHT" },
     { GRF_TEXT_ORIENTATION_SIDEWAYS,
@@ -215,8 +217,6 @@ static RENDER_RULE _text_ort_cases [] = {
         "GRF_TEXT_ORIENTATION_UPSIDE_DOWN" },
     { GRF_TEXT_ORIENTATION_SIDEWAYS_LEFT,
         "GRF_TEXT_ORIENTATION_SIDEWAYS_LEFT" },
-    { GRF_TEXT_ORIENTATION_MIXED,
-        "GRF_TEXT_ORIENTATION_MIXED" },
     { GRF_TEXT_ORIENTATION_AUTO,
         "GRF_TEXT_ORIENTATION_AUTO" },
 };
@@ -780,7 +780,7 @@ static void create_paragraphs(void)
                     ucs, n, &bos);
 
                 if (len_bos > 0) {
-                    dump_glyphs_and_breaks(text, ucs, bos, n);
+                    //dump_glyphs_and_breaks(text, ucs, bos, n);
                     _paragraphs[_nr_parags - 1].bos = bos;
                     create_layout(_paragraphs + _nr_parags - 1);
                 }
