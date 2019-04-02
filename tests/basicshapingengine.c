@@ -1,7 +1,7 @@
 /*
-** drawshapedglyph.c:
+** basicshapingengine.c:
 **
-**  Test code for DrawShapedGlyph of MiniGUI 3.4.0.
+**  Test code for Basic Shaping Engine of MiniGUI 3.4.0.
 **  The following APIs are covered:
 **
 **      CreateLogFontForMChar2UChar
@@ -13,6 +13,7 @@
 **      CreateLayoutInfo
 **      LayoutNextLine
 **      DrawShapedGlyph
+**      DrawLayoutLine
 **      DestroyLayoutInfo
 **      DestroyTextRunsInfo
 **
@@ -505,14 +506,9 @@ static void output_rules(HDC hdc)
     _text_y += 20;
 }
 
-static int _curr_font = 1;
+static int _curr_font = 0;
 static char* _font_cases [] = {
-    "ttf-Source Han Sans-lrnnns-*-12-UTF-8",
-    "ttf-Source Han Sans-trnnns-*-14-UTF-8",
-    "ttf-Source Han Sans-rrnnns-*-16-UTF-8",
-    "ttf-Source Han Sans-nrnnns-*-20-UTF-8",
-    "ttf-Source Han Sans-mrnnns-*-26-UTF-8",
-    "ttf-Source Han Sans-lrnnns-*-36-UTF-8",
+    "upf-unifont-rrncnn-*-16-UTF-8",
 };
 
 typedef struct _ParagraphInfo {
@@ -814,9 +810,8 @@ error:
 
 static int _text_x, _text_y;
 
-static void render_paragraphs(HDC hdc)
+static void render_paragraphs_draw_glphy(HDC hdc)
 {
-
     switch (_writing_mode_cases[_curr_writing_mode].rule) {
     case GRF_WRITING_MODE_HORIZONTAL_BT:
         _text_x = _rc_output.left;
@@ -852,27 +847,31 @@ static void render_paragraphs(HDC hdc)
         while ((line = LayoutNextLine(layout, line, 0, 0,
                 DrawShapedGlyph, (GHANDLE)hdc))) {
 
+            SIZE sz;
+            GetLayoutLineSize(line, &sz);
+            sz.cx += 5;
+            sz.cy += 5;
+
             _MG_PRINTF("%s: rendered line by calling DrawShapedGlyph: %d\n",
                 __FUNCTION__, j);
 
-            // TODO forward text_x and text_y
             j++;
 
             switch (_writing_mode_cases[_curr_writing_mode].rule) {
             case GRF_WRITING_MODE_HORIZONTAL_TB:
-                pt.y += 20;
+                pt.y += sz.cy;
                 break;
 
             case GRF_WRITING_MODE_HORIZONTAL_BT:
-                pt.y -= 20;
+                pt.y -= sz.cy;
                 break;
 
             case GRF_WRITING_MODE_VERTICAL_RL:
-                pt.x -= 20;
+                pt.x -= sz.cy;
                 break;
 
             case GRF_WRITING_MODE_VERTICAL_LR:
-                pt.x += 20;
+                pt.x += sz.cy;
                 break;
             }
 
@@ -896,7 +895,91 @@ static void render_paragraphs(HDC hdc)
             pt.x += 10;
             break;
         }
+    }
+}
 
+static void render_paragraphs_draw_line(HDC hdc)
+{
+    switch (_writing_mode_cases[_curr_writing_mode].rule) {
+    case GRF_WRITING_MODE_HORIZONTAL_BT:
+        _text_x = _rc_output.left;
+        _text_y = _rc_output.bottom;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_RL:
+        _text_x = _rc_output.right;
+        _text_y = _rc_output.top;
+        break;
+
+    case GRF_WRITING_MODE_HORIZONTAL_TB:
+    case GRF_WRITING_MODE_VERTICAL_LR:
+    default:
+        _text_x = _rc_output.left;
+        _text_y = _rc_output.top;
+        break;
+    }
+
+    SetMapMode(hdc, MM_TEXT);
+
+    POINT pt = {_text_x, _text_y};
+    for (int i = 0; i < _nr_parags; i++) {
+        LAYOUTINFO* layout = _paragraphs[i].layout;
+        LAYOUTLINE* line = NULL;
+        int j = 0;
+
+        _MG_PRINTF("%s: rendering paragraph: %d\n",
+            __FUNCTION__, i);
+
+        SetTextColorInTextRuns(_paragraphs[i].textruns, 0, 4096, MakeRGB(255, 0, 0));
+
+        while ((line = LayoutNextLine(layout, line, 0, 0, NULL, 0))) {
+            SIZE sz;
+            GetLayoutLineSize(line, &sz);
+            sz.cx += 5;
+            sz.cy += 5;
+
+            _MG_PRINTF("%s: rendered line by calling DrawShapedGlyph: %d\n",
+                __FUNCTION__, j);
+
+            DrawLayoutLine(hdc, line, pt.x, pt.y);
+
+            j++;
+            switch (_writing_mode_cases[_curr_writing_mode].rule) {
+            case GRF_WRITING_MODE_HORIZONTAL_TB:
+                pt.y += sz.cy;
+                break;
+
+            case GRF_WRITING_MODE_HORIZONTAL_BT:
+                pt.y -= sz.cy;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_RL:
+                pt.x -= sz.cy;
+                break;
+
+            case GRF_WRITING_MODE_VERTICAL_LR:
+                pt.x += sz.cy;
+                break;
+            }
+        }
+
+        switch (_writing_mode_cases[_curr_writing_mode].rule) {
+        case GRF_WRITING_MODE_HORIZONTAL_TB:
+            pt.y += 10;
+            break;
+
+        case GRF_WRITING_MODE_HORIZONTAL_BT:
+            pt.y -= 10;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_RL:
+            pt.x -= 10;
+            break;
+
+        case GRF_WRITING_MODE_VERTICAL_LR:
+            pt.x += 10;
+            break;
+        }
     }
 }
 
@@ -906,6 +989,8 @@ static int _nr_test_runs = 0;
 static
 LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    static int paint_count;
+
     switch (message) {
     case MSG_CREATE:
         create_paragraphs();
@@ -931,7 +1016,13 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SetPenColor(hdc, PIXEL_red);
         Rectangle(hdc, _rc_output.left, _rc_output.top,
             _rc_output.right, _rc_output.bottom);
-        render_paragraphs(hdc);
+        if (paint_count & 1) {
+            render_paragraphs_draw_glphy(hdc);
+        }
+        else {
+            render_paragraphs_draw_line(hdc);
+        }
+        paint_count++;
         EndPaint(hWnd, hdc);
         return 0;
     }
@@ -1051,8 +1142,6 @@ typedef struct _DEVFONTINFO {
 } DEVFONTINFO;
 
 static DEVFONTINFO _devfontinfo[] = {
-    { FONTFILE_PATH "font/SourceHanSans-Regular.ttc",
-        "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
     { FONTFILE_PATH "font/unifont_160_50.upf",
         "upf-unifont,SansSerif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
 };
@@ -1129,5 +1218,5 @@ int MiniGUIMain (int argc, const char* argv[])
 
 
 #else
-#error "To test DrawShapedGlyph, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test Basic Shaping Engine, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
