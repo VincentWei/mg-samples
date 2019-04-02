@@ -816,19 +816,14 @@ static int _text_x, _text_y;
 
 static void render_paragraphs(HDC hdc)
 {
-    Uint32 old_ta;
 
     switch (_writing_mode_cases[_curr_writing_mode].rule) {
     case GRF_WRITING_MODE_HORIZONTAL_BT:
-        _MG_PRINTF("Set text align to TA_LEFT | TA_BOTTOM\n");
-        old_ta = SetTextAlign(hdc, TA_LEFT | TA_BOTTOM | TA_NOUPDATECP);
         _text_x = _rc_output.left;
         _text_y = _rc_output.bottom;
         break;
 
     case GRF_WRITING_MODE_VERTICAL_RL:
-        _MG_PRINTF("Set text align to TA_RIGHT | TA_TOP\n");
-        old_ta = SetTextAlign(hdc, TA_RIGHT | TA_TOP | TA_NOUPDATECP);
         _text_x = _rc_output.right;
         _text_y = _rc_output.top;
         break;
@@ -836,8 +831,6 @@ static void render_paragraphs(HDC hdc)
     case GRF_WRITING_MODE_HORIZONTAL_TB:
     case GRF_WRITING_MODE_VERTICAL_LR:
     default:
-        _MG_PRINTF("Set text align to TA_LEFT | TA_TOP\n");
-        old_ta = SetTextAlign(hdc, TA_LEFT | TA_TOP | TA_NOUPDATECP);
         _text_x = _rc_output.left;
         _text_y = _rc_output.top;
         break;
@@ -905,8 +898,6 @@ static void render_paragraphs(HDC hdc)
         }
 
     }
-
-    SetTextAlign(hdc, old_ta);
 }
 
 static int _auto_test_runs = 0;
