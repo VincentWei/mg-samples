@@ -508,12 +508,10 @@ static void output_rules(HDC hdc)
 
 static int _curr_font = 0;
 static char* _font_cases [] = {
-    "ttf-Source Han Sans-lrnnns-*-12-UTF-8",
-    "ttf-Source Han Sans-trnnns-*-14-UTF-8",
-    "ttf-Source Han Sans-rrnnns-*-16-UTF-8",
-    "ttf-Source Han Sans-nrnnns-*-20-UTF-8",
-    "ttf-Source Han Sans-mrnnns-*-26-UTF-8",
-    "ttf-Source Han Sans-lrnnns-*-36-UTF-8",
+    "ttf-SansSerif,KacstScreen,Loma,Lohit,Saab-rrnnns-*-12-UTF-8",
+    "ttf-SansSerif,KacstScreen,Loma,Lohit,Saab-rrnnns-*-14-UTF-8",
+    "ttf-SansSerif,KacstScreen,Loma,Lohit,Saab-rrnnns-*-16-UTF-8",
+    "ttf-SansSerif,KacstScreen,Loma,Lohit,Saab-rrnnns-*-20-UTF-8",
 };
 
 typedef struct _ParagraphInfo {
@@ -1151,7 +1149,50 @@ typedef struct _DEVFONTINFO {
 
 static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/SourceHanSans-Regular.ttc",
-        "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
+        "ttf-Source Han Sans,SansSerif-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/fonts-guru-extra/Saab.ttf",
+        "ttf-Saab-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/lohit-punjabi/Lohit-Punjabi.ttf",
+        "ttf-Lohit-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstArt.ttf",
+        "ttf-KacstArt-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstBook.ttf",
+        "ttf-KacstBook-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstDecorative.ttf",
+        "ttf-KacstDecorative-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstLetter.ttf",
+        "ttf-KacstLetter-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstNaskh.ttf",
+        "ttf-KacstNaskh-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstScreen.ttf",
+        "ttf-KacstScreen-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Garuda.ttf",
+        "ttf-Garuda-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Kinnari.ttf",
+        "ttf-Kinnari-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Laksaman.ttf",
+        "ttf-Laksaman-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Loma.ttf",
+        "ttf-Loma-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Norasi.ttf",
+        "ttf-Norasi-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Purisa.ttf",
+        "ttf-Purisa-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Sawasdee.ttf",
+        "ttf-Sawasdee-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/TlwgMono.ttf",
+        "ttf-TlwgMono-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/TlwgTypewriter.ttf",
+        "ttf-TlwgTypewriter-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/TlwgTypist.ttf",
+        "ttf-TlwgTypist-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/TlwgTypo.ttf",
+        "ttf-TlwgTypo-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Umpush.ttf",
+        "ttf-Umpush-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/tlwg/Waree.ttf",
+        "ttf-Waree-rrncnn-0-0-UTF-8" },
+
 };
 
 int MiniGUIMain (int argc, const char* argv[])
