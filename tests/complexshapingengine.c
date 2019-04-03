@@ -1,7 +1,7 @@
 /*
-** basicshapingengine.c:
+** complexshapingengine.c:
 **
-**  Test code for Basic Shaping Engine of MiniGUI 3.4.0.
+**  Test code for Complex Shaping Engine of MiniGUI 3.4.0.
 **  The following APIs are covered:
 **
 **      CreateLogFontForMChar2UChar
@@ -9,7 +9,7 @@
 **      UStrGetBreaks
 **      UBidiGetParagraphEmbeddingLevelsAlt
 **      CreateTextRunsInfo
-**      InitBasicShapingEngine
+**      InitComplexShapingEngine
 **      CreateLayoutInfo
 **      LayoutNextLine
 **      DrawShapedGlyph
@@ -508,7 +508,12 @@ static void output_rules(HDC hdc)
 
 static int _curr_font = 0;
 static char* _font_cases [] = {
-    "upf-unifont-rrncnn-*-16-UTF-8",
+    "ttf-Source Han Sans-lrnnns-*-12-UTF-8",
+    "ttf-Source Han Sans-trnnns-*-14-UTF-8",
+    "ttf-Source Han Sans-rrnnns-*-16-UTF-8",
+    "ttf-Source Han Sans-nrnnns-*-20-UTF-8",
+    "ttf-Source Han Sans-mrnnns-*-26-UTF-8",
+    "ttf-Source Han Sans-lrnnns-*-36-UTF-8",
 };
 
 typedef struct _ParagraphInfo {
@@ -1145,8 +1150,8 @@ typedef struct _DEVFONTINFO {
 } DEVFONTINFO;
 
 static DEVFONTINFO _devfontinfo[] = {
-    { FONTFILE_PATH "font/unifont_160_50.upf",
-        "upf-unifont,SansSerif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
+    { FONTFILE_PATH "font/SourceHanSans-Regular.ttc",
+        "ttf-Source Han Sans,思源黑体,SansSerif-rrncnn-0-0-ISO8859-1,UTF-8" },
 };
 
 int MiniGUIMain (int argc, const char* argv[])
@@ -1221,5 +1226,5 @@ int MiniGUIMain (int argc, const char* argv[])
 
 
 #else
-#error "To test Basic Shaping Engine, please use MiniGUI 3.4.0 and enable support for UNICODE"
+#error "To test Complex Shaping Engine, please use MiniGUI 3.4.0 and enable support for UNICODE"
 #endif /* checking version and features */
