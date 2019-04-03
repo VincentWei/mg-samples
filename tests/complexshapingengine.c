@@ -931,6 +931,8 @@ static void render_paragraphs_draw_line(HDC hdc)
     for (int i = 0; i < _nr_parags; i++) {
         LAYOUTINFO* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
+        RECT rc;
+        int line_height = 0;
         int j = 0;
 
         _MG_PRINTF("%s: rendering paragraph: %d\n",
@@ -943,31 +945,24 @@ static void render_paragraphs_draw_line(HDC hdc)
             GetLayoutLineSize(line, &sz);
             sz.cx += 5;
             sz.cy += 5;
+            if (sz.cy > line_height)
+                line_height = sz.cy;
 
             _MG_PRINTF("%s: rendered line by calling DrawShapedGlyph: %d\n",
                 __FUNCTION__, j);
 
             DrawLayoutLine(hdc, line, pt.x, pt.y);
 
+            GetLayoutLineRect(line, &pt.x, &pt.y, sz.cy, &rc);
+            SetPenColor(hdc, PIXEL_blue);
+            Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
+
             j++;
-            switch (_writing_mode_cases[_curr_writing_mode].rule) {
-            case GRF_WRITING_MODE_HORIZONTAL_TB:
-                pt.y += sz.cy;
-                break;
-
-            case GRF_WRITING_MODE_HORIZONTAL_BT:
-                pt.y -= sz.cy;
-                break;
-
-            case GRF_WRITING_MODE_VERTICAL_RL:
-                pt.x -= sz.cy;
-                break;
-
-            case GRF_WRITING_MODE_VERTICAL_LR:
-                pt.x += sz.cy;
-                break;
-            }
         }
+
+        CalcLayoutBoundingRect(layout, 0, -1, line_height, _text_x, _text_y, &rc);
+        SetPenColor(hdc, PIXEL_green);
+        Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
 
         switch (_writing_mode_cases[_curr_writing_mode].rule) {
         case GRF_WRITING_MODE_HORIZONTAL_TB:
@@ -1036,6 +1031,10 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case MSG_KEYDOWN: {
         BOOL repaint = FALSE;
         switch (wParam) {
+        case SCANCODE_ESCAPE:
+            InvalidateRect(hWnd, NULL, TRUE);
+            break;
+
         case SCANCODE_SPACE:
             _limited = !_limited;
             repaint = TRUE;

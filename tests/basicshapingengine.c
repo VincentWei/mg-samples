@@ -941,10 +941,10 @@ static void render_paragraphs_draw_line(HDC hdc)
             sz.cx += 5;
             sz.cy += 5;
 
-            _MG_PRINTF("%s: rendered line by calling DrawShapedGlyph: %d\n",
-                __FUNCTION__, j);
-
             DrawLayoutLine(hdc, line, pt.x, pt.y);
+
+            _MG_PRINTF("%s: rendered line by calling DrawLayoutLine: %d\n",
+                __FUNCTION__, j);
 
             j++;
             switch (_writing_mode_cases[_curr_writing_mode].rule) {
@@ -1033,6 +1033,10 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case MSG_KEYDOWN: {
         BOOL repaint = FALSE;
         switch (wParam) {
+        case SCANCODE_ESCAPE:
+            InvalidateRect(hWnd, NULL, TRUE);
+            break;
+
         case SCANCODE_SPACE:
             _limited = !_limited;
             repaint = TRUE;

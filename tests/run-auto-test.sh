@@ -69,5 +69,11 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
+./basicshapingengine 3600
+if test ! $? -eq 0; then
+    echo "basicshapingengine 3600 not passed"
+    exit 1
+fi
+
 echo "ALL TEST CASES PASSED!"
 exit 0
