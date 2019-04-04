@@ -2,6 +2,7 @@ LDFLAGS=-lefence
 EXTRA_DIST = README.md fetch-ucd-test.sh run-auto-test.sh res
 
 noinst_PROGRAMS = \
+    sliceallocator \
     ustrgetbreaks \
     drawglyphstringex \
     createlogfontex \
@@ -13,6 +14,7 @@ noinst_PROGRAMS = \
     complexshapingengine
 
 COMMFILES = helpers.c helpers.h
+sliceallocator_SOURCES = sliceallocator.c $(COMMFILES)
 ustrgetbreaks_SOURCES = ustrgetbreaks.c $(COMMFILES)
 drawglyphstringex_SOURCES = drawglyphstringex.c $(COMMFILES)
 createlogfontex_SOURCES = createlogfontex.c $(COMMFILES)

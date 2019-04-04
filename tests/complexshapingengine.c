@@ -928,6 +928,7 @@ static void render_paragraphs_draw_line(HDC hdc)
     SetMapMode(hdc, MM_TEXT);
 
     POINT pt = {_text_x, _text_y};
+    int parag_x, parag_y;
     for (int i = 0; i < _nr_parags; i++) {
         LAYOUTINFO* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
@@ -939,6 +940,9 @@ static void render_paragraphs_draw_line(HDC hdc)
             __FUNCTION__, i);
 
         SetTextColorInTextRuns(_paragraphs[i].textruns, 0, 4096, MakeRGB(255, 0, 0));
+
+        parag_x = pt.x;
+        parag_y = pt.y;
 
         while ((line = LayoutNextLine(layout, line, 0, 0, NULL, 0))) {
             SIZE sz;
@@ -960,7 +964,7 @@ static void render_paragraphs_draw_line(HDC hdc)
             j++;
         }
 
-        CalcLayoutBoundingRect(layout, 0, -1, line_height, _text_x, _text_y, &rc);
+        CalcLayoutBoundingRect(layout, 0, -1, line_height, parag_x, parag_y, &rc);
         SetPenColor(hdc, PIXEL_green);
         Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
 

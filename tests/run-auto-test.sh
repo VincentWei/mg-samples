@@ -5,6 +5,12 @@ export MG_IAL_ENGINE=dummy
 
 start_epoch=$(date +%s)
 
+./sliceallocator
+if test ! $? -eq 0; then
+    echo "sliceallocator not passed"
+    exit 1
+fi
+
 ./ustrgetbreaks
 if test ! $? -eq 0; then
     echo "ustrgetbreaks not passed"
