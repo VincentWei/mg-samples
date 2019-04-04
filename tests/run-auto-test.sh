@@ -3,6 +3,8 @@
 export MG_GAL_ENGINE=dummy
 export MG_IAL_ENGINE=dummy
 
+start_epoch=$(date +%s)
+
 ./ustrgetbreaks
 if test ! $? -eq 0; then
     echo "ustrgetbreaks not passed"
@@ -75,5 +77,8 @@ if test ! $? -eq 0; then
     exit 1
 fi
 
-echo "ALL TEST CASES PASSED!"
+end_epoch=$(date +%s)
+time=$(($end_epoch - $start_epoch))
+
+echo "ALL TEST CASES PASSED ($time S)!"
 exit 0
