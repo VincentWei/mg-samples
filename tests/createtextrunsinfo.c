@@ -4,7 +4,7 @@
 **  Test code for Text Runs of MiniGUI 3.4.0
 **  The following APIs are covered:
 **
-**      CreateTextRunsInfo
+**      CreateTextRuns
 **      UBidiGetParagraphEmbeddingLevelsAlt
 **      SetFontNameInTextRuns
 **      SetTextColorInTextRuns
@@ -12,7 +12,7 @@
 **      GetFontNameInTextRuns
 **      GetTextColorInTextRuns
 **      GetBackgroundColorInTextRuns
-**      DestroyTextRunsInfo
+**      DestroyTextRuns
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
@@ -452,8 +452,8 @@ static void do_test(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
@@ -507,7 +507,7 @@ static void do_test(const struct test_case* tc)
         }
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
@@ -527,7 +527,7 @@ static void do_test(const struct test_case* tc)
     }
 #endif
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
     free(got_levels);
@@ -541,7 +541,7 @@ static const char* fonts[] = {
     "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
 };
 
-static BOOL check_change_font(TEXTRUNSINFO* runinfo, const struct test_case* tc)
+static BOOL check_change_font(TEXTRUNS* runinfo, const struct test_case* tc)
 {
     int nr_loops = random() % tc->nr_ucs;
     int start_index;
@@ -639,8 +639,8 @@ static void do_test_change_font(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
@@ -701,7 +701,7 @@ static void do_test_change_font(const struct test_case* tc)
         }
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
@@ -721,13 +721,13 @@ static void do_test_change_font(const struct test_case* tc)
     }
 #endif
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
     free(got_levels);
 }
 
-static BOOL check_change_color(TEXTRUNSINFO* runinfo, const struct test_case* tc)
+static BOOL check_change_color(TEXTRUNS* runinfo, const struct test_case* tc)
 {
     int nr_loops = random() % tc->nr_ucs;
     int start_index;
@@ -832,8 +832,8 @@ static void do_test_change_color(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
@@ -894,7 +894,7 @@ static void do_test_change_color(const struct test_case* tc)
         }
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
@@ -914,7 +914,7 @@ static void do_test_change_color(const struct test_case* tc)
     }
 #endif
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
     free(got_levels);
@@ -988,13 +988,13 @@ int MiniGUIMain (int argc, const char* argv[])
 
     srandom(time(NULL));
 
-    _MG_PRINTF ("========= START TO TEST CreateTextRunsInfo (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= START TO TEST CreateTextRuns (BidiCharacterTest.txt)\n");
 
     start_time = get_curr_time();
     bidi_character_test("ucd/BidiCharacterTest.txt", test_mode);
     end_time = get_curr_time();
 
-    _MG_PRINTF ("========= END OF TEST CreateTextRunsInfo (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= END OF TEST CreateTextRuns (BidiCharacterTest.txt)\n");
     _MG_PRINTF ("Totol elapsed time: %.2f\n", end_time - start_time);
 
     exit(0);

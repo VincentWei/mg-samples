@@ -1,16 +1,16 @@
 /*
 ** createtextrunsinfo.c
 **
-**  Test code for LayoutInfo of MiniGUI 3.4.0
+**  Test code for Layout of MiniGUI 3.4.0
 **  The following APIs are covered:
 **
-**      CreateTextRunsInfo
+**      CreateTextRuns
 **      UBidiGetParagraphEmbeddingLevelsAlt
 **      InitBasicShapingEngine
-**      CreateLayoutInfo
+**      CreateLayout
 **      LayoutNextLine
-**      DestroyLayoutInfo
-**      DestroyTextRunsInfo
+**      DestroyLayout
+**      DestroyTextRuns
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
@@ -464,13 +464,13 @@ static void do_test(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
-        LAYOUTINFO* layout;
+        LAYOUT* layout;
         LAYOUTLINE* line = NULL;
         int bos_len;
         BreakOppo* bos = NULL;
@@ -489,7 +489,7 @@ static void do_test(const struct test_case* tc)
             exit(1);
         }
 
-        layout = CreateLayoutInfo(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, FALSE,
+        layout = CreateLayout(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, FALSE,
             0, 0, 0, 0, 10, NULL, 0);
 
         int max_extent = random() % 100;
@@ -497,15 +497,15 @@ static void do_test(const struct test_case* tc)
                 print_glyph, NULL))) {
         }
 
-        DestroyLayoutInfo(layout);
+        DestroyLayout(layout);
         free (bos);
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
     free(check_levels);
@@ -590,13 +590,13 @@ static void do_test_persist(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
     if (runinfo) {
-        LAYOUTINFO* layout;
+        LAYOUT* layout;
         LAYOUTLINE* line = NULL;
         int bos_len;
         BreakOppo* bos = NULL;
@@ -615,7 +615,7 @@ static void do_test_persist(const struct test_case* tc)
             exit(1);
         }
 
-        layout = CreateLayoutInfo(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, TRUE,
+        layout = CreateLayout(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, TRUE,
             0, 0, 0, 0, 10, NULL, 0);
 
         int i = 0;
@@ -651,15 +651,15 @@ static void do_test_persist(const struct test_case* tc)
             line_no++;
         }
 
-        DestroyLayoutInfo(layout);
+        DestroyLayout(layout);
         free (bos);
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
     free(check_levels);
@@ -726,7 +726,7 @@ error:
     exit(1);
 }
 
-static void check_text_runs(TEXTRUNSINFO* runinfo, const struct test_case* tc,
+static void check_text_runs(TEXTRUNS* runinfo, const struct test_case* tc,
     BidiLevel* levels)
 {
     void* ctxt = NULL;
@@ -862,8 +862,8 @@ static void do_test_reorder(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
@@ -871,7 +871,7 @@ static void do_test_reorder(const struct test_case* tc)
 
         check_text_runs(runinfo, tc, levels);
 
-        LAYOUTINFO* layout;
+        LAYOUT* layout;
         LAYOUTLINE* line = NULL;
         int bos_len;
         BreakOppo* bos = NULL;
@@ -890,7 +890,7 @@ static void do_test_reorder(const struct test_case* tc)
             exit(1);
         }
 
-        layout = CreateLayoutInfo(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, FALSE,
+        layout = CreateLayout(runinfo, GRF_LINE_EXTENT_VARIABLE, bos + 1, FALSE,
             0, 0, 0, 0, 10, NULL, 0);
 
         int max_extent = random() % 100;
@@ -904,15 +904,15 @@ static void do_test_reorder(const struct test_case* tc)
             _nr_reordered_uchars = 0;
         }
 
-        DestroyLayoutInfo(layout);
+        DestroyLayout(layout);
         free (bos);
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
 }
@@ -997,8 +997,8 @@ static void do_test_ellipsis(const struct test_case* tc)
         break;
     }
 
-    TEXTRUNSINFO* runinfo;
-    runinfo = CreateTextRunsInfo(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
+    TEXTRUNS* runinfo;
+    runinfo = CreateTextRuns(tc->ucs, tc->nr_ucs, LANGCODE_unknown, base_dir,
             "ttf-Courier,宋体,Naskh,SansSerif-rrncns-U-16-UTF-8",
             MakeRGB(0, 0, 0), 0, NULL);
 
@@ -1006,7 +1006,7 @@ static void do_test_ellipsis(const struct test_case* tc)
 
         check_text_runs(runinfo, tc, levels);
 
-        LAYOUTINFO* layout;
+        LAYOUT* layout;
         LAYOUTLINE* line = NULL;
         int bos_len;
         BreakOppo* bos = NULL;
@@ -1029,14 +1029,14 @@ static void do_test_ellipsis(const struct test_case* tc)
         _index_ellipsis = -1;
         _line_width = 0;
         int max_extent = random() % 50;
-        layout = CreateLayoutInfo(runinfo,
+        layout = CreateLayout(runinfo,
                 GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_START, bos + 1, FALSE,
                 0, 0, 0, 0, 10, NULL, 0);
         while ((line = LayoutNextLine(layout, line, max_extent, TRUE,
                 find_ellipsis, (GHANDLE)tc))) {
             nr_lines++;
         }
-        DestroyLayoutInfo(layout);
+        DestroyLayout(layout);
 
         if (nr_lines > 1) {
             _ERR_PRINTF("%s: not an ellipsized single line.\n", __FUNCTION__);
@@ -1054,13 +1054,13 @@ static void do_test_ellipsis(const struct test_case* tc)
         _line_width = 0;
 
         max_extent = random() % 50;
-        layout = CreateLayoutInfo(runinfo,
+        layout = CreateLayout(runinfo,
                 GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_MIDDLE, bos + 1, FALSE,
                 0, 0, 0, 0, 10, NULL, 0);
         while ((line = LayoutNextLine(layout, line, max_extent, TRUE,
                 find_ellipsis, (GHANDLE)tc))) {
         }
-        DestroyLayoutInfo(layout);
+        DestroyLayout(layout);
 
         if (nr_lines > 1) {
             _ERR_PRINTF("%s: not an ellipsized single line.\n", __FUNCTION__);
@@ -1078,13 +1078,13 @@ static void do_test_ellipsis(const struct test_case* tc)
         _line_width = 0;
 
         max_extent = random() % 50;
-        layout = CreateLayoutInfo(runinfo,
+        layout = CreateLayout(runinfo,
                 GRF_LINE_EXTENT_VARIABLE | GRF_OVERFLOW_ELLIPSIZE_END, bos + 1, FALSE,
                 0, 0, 0, 0, 10, NULL, 0);
         while ((line = LayoutNextLine(layout, line, max_extent, TRUE,
                 find_ellipsis, (GHANDLE)tc))) {
         }
-        DestroyLayoutInfo(layout);
+        DestroyLayout(layout);
 
         if (nr_lines > 1) {
             _ERR_PRINTF("%s: not an ellipsized single line.\n", __FUNCTION__);
@@ -1100,11 +1100,11 @@ static void do_test_ellipsis(const struct test_case* tc)
         free (bos);
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 
-    DestroyTextRunsInfo(runinfo);
+    DestroyTextRuns(runinfo);
 
     free(levels);
 }
@@ -1179,11 +1179,11 @@ int MiniGUIMain (int argc, const char* argv[])
 
     srandom(time(NULL));
 
-    _MG_PRINTF ("========= START TO TEST CreateLayoutInfo (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= START TO TEST CreateLayout (BidiCharacterTest.txt)\n");
     start_time = get_curr_time();
     bidi_character_test("ucd/BidiCharacterTest.txt", test_mode);
     end_time = get_curr_time();
-    _MG_PRINTF ("========= END OF TEST CreateLayoutInfo (BidiCharacterTest.txt)\n");
+    _MG_PRINTF ("========= END OF TEST CreateLayout (BidiCharacterTest.txt)\n");
 
     _MG_PRINTF ("Totol elapsed time: %.2f\n", end_time - start_time);
 

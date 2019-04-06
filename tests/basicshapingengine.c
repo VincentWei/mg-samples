@@ -8,14 +8,14 @@
 **      GetUCharsUntilParagraphBoundary
 **      UStrGetBreaks
 **      UBidiGetParagraphEmbeddingLevelsAlt
-**      CreateTextRunsInfo
+**      CreateTextRuns
 **      InitBasicShapingEngine
-**      CreateLayoutInfo
+**      CreateLayout
 **      LayoutNextLine
 **      DrawShapedGlyph
 **      DrawLayoutLine
-**      DestroyLayoutInfo
-**      DestroyTextRunsInfo
+**      DestroyLayout
+**      DestroyTextRuns
 **
 ** Copyright (C) 2019 FMSoft (http://www.fmsoft.cn).
 **
@@ -514,8 +514,8 @@ static char* _font_cases [] = {
 typedef struct _ParagraphInfo {
     Uchar32*        ucs;
     BreakOppo*      bos;
-    TEXTRUNSINFO*   textruns;
-    LAYOUTINFO*     layout;
+    TEXTRUNS*   textruns;
+    LAYOUT*     layout;
     int             nr_ucs;
 } ParagraphInfo;
 
@@ -525,8 +525,8 @@ static int            _nr_parags;
 static void destroy_paragraphs(void)
 {
     for (int i = 0; i < _nr_parags; i++) {
-        DestroyLayoutInfo(_paragraphs[i].layout);
-        DestroyTextRunsInfo(_paragraphs[i].textruns);
+        DestroyLayout(_paragraphs[i].layout);
+        DestroyTextRuns(_paragraphs[i].textruns);
         free(_paragraphs[i].bos);
         free(_paragraphs[i].ucs);
     }
@@ -569,7 +569,7 @@ static void create_layout(ParagraphInfo* p)
         max_extent = -1;
     }
 
-    p->textruns = CreateTextRunsInfo(p->ucs, p->nr_ucs,
+    p->textruns = CreateTextRuns(p->ucs, p->nr_ucs,
             LANGCODE_unknown, BIDI_PGDIR_LTR,
             _font_cases[_curr_font], MakeRGB(0, 0, 0), 0, p->bos + 1);
 
@@ -580,11 +580,11 @@ static void create_layout(ParagraphInfo* p)
             exit(1);
         }
 
-        p->layout = CreateLayoutInfo(p->textruns,
+        p->layout = CreateLayout(p->textruns,
                 render_flags,
                 p->bos + 1, TRUE, max_extent, 100, _letter_spacing, _word_spacing, _tab_size, NULL, 0);
         if (p->layout == NULL) {
-            _ERR_PRINTF("%s: CreateLayoutInfo returns NULL\n", __FUNCTION__);
+            _ERR_PRINTF("%s: CreateLayout returns NULL\n", __FUNCTION__);
             exit(1);
         }
 
@@ -596,7 +596,7 @@ static void create_layout(ParagraphInfo* p)
         }
     }
     else {
-        _ERR_PRINTF("%s: CreateTextRunsInfo returns NULL\n", __FUNCTION__);
+        _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
 }
@@ -839,7 +839,7 @@ static void render_paragraphs_draw_glphy(HDC hdc)
 
     POINT pt = {_text_x, _text_y};
     for (int i = 0; i < _nr_parags; i++) {
-        LAYOUTINFO* layout = _paragraphs[i].layout;
+        LAYOUT* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
         int j = 0;
 
@@ -926,7 +926,7 @@ static void render_paragraphs_draw_line(HDC hdc)
 
     POINT pt = {_text_x, _text_y};
     for (int i = 0; i < _nr_parags; i++) {
-        LAYOUTINFO* layout = _paragraphs[i].layout;
+        LAYOUT* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
         int j = 0;
 
