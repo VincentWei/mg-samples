@@ -67,7 +67,7 @@ fi
 dnl ========================================================================
 dnl check for installation of MiniGUI
 dnl ========================================================================
-PKG_CHECK_MODULES([MINIGUI], [minigui >= 3.2.0])
+PKG_CHECK_MODULES([MINIGUI], [minigui >= 3.4.0])
 PKG_CHECK_MODULES([MGUTILS], [mgutils >= 1.2.0])
 PKG_CHECK_MODULES([MGPLUS], [mgplus >= 1.4.0])
 PKG_CHECK_MODULES([MGEFF], [mgeff >= 1.2.0])
@@ -84,7 +84,6 @@ AM_CONDITIONAL(MGRM_PROCESSES, test "x$minigui_runmode" = "xprocs")
 AC_OUTPUT(
     Makefile
     m4/Makefile
-    tests/Makefile
     mginit/Makefile
     mginit/res/Makefile
     src/Makefile
