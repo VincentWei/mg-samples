@@ -12,7 +12,7 @@
 #include <minigui/common.h>
 #include <minigui/minigui.h>
 #include <minigui/gdi.h>
-#include <minigui/window.h>
+#include <minigui/exstubs.h>
 
 #define SCREEN_WIDTH    240
 #define SCREEN_HEIGHT   240
@@ -21,24 +21,6 @@
 #define PITCH           (SCREEN_WIDTH * BYTES_PER_PIXEL)
 #define FB_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT * BYTES_PER_PIXEL)
 
-/* The pixel format defined by depth */
-#define COMMLCD_PSEUDO_RGB332    1
-#define COMMLCD_TRUE_RGB555      2
-
-#define COMMLCD_TRUE_RGB565      3
-#define COMMLCD_TRUE_RGB888      4
-#define COMMLCD_TRUE_RGB0888     5
-
-struct commlcd_info {
-    short height, width;  // Size of the screen
-    short bpp;            // Depth (bits-per-pixel)
-    short type;           // Pixel type
-    short rlen;           // Length of one scan line in bytes
-    void  *fb;            // Frame buffer
-};
-
-static void* sg_fb;
-
 /* all methods for COMMLCD engine should return zero for success */
 
 int __commlcd_drv_init (void)
@@ -46,8 +28,10 @@ int __commlcd_drv_init (void)
     return 0;
 }
 
+static BYTE* sg_fb;
+
 /* return zero for success */
-int __commlcd_drv_getinfo (struct commlcd_info *li)
+int __commlcd_drv_getinfo (struct commlcd_info *li, int width, int height, int depth)
 {
     sg_fb = (BYTE*) mmap (0, FB_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     if (sg_fb == MAP_FAILED) {
@@ -55,11 +39,12 @@ int __commlcd_drv_getinfo (struct commlcd_info *li)
         return -1;
     }
 
-    li->type = COMMLCD_TRUE_RGB565;
+    li->type = COMMLCD_TRUE_ARGB8888;
     li->height = SCREEN_HEIGHT;
     li->width = SCREEN_WIDTH;
     li->bpp = COLOR_DEPTH;
-    li->rlen = SCREEN_WIDTH * BYTES_PER_PIXEL;
+    li->pitch = SCREEN_WIDTH * BYTES_PER_PIXEL;
+    li->update_method = COMMLCD_UPDATE_ASYNC;
     li->fb = sg_fb;
     return 0;
 }
@@ -97,5 +82,8 @@ int __commlcd_drv_release (void)
     return 0;
 }
 
-int (*__commlcd_drv_setclut) (int firstcolor, int ncolors, GAL_Color *colors) = NULL;
+int __commlcd_drv_setclut (int firstcolor, int ncolors, GAL_Color *colors)
+{
+    return 0;
+}
 
