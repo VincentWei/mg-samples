@@ -1,4 +1,4 @@
-/* 
+/*
 ** commlcd.c: Sample program for CommLCD NEWGAL engine.
 **
 ** Copyright (C) 2003 ~ 2018 FMSoft (http://www.fmsoft.cn).
@@ -50,10 +50,10 @@ static DLGTEMPLATE DlgYourTaste =
 };
 
 static CTRLDATA CtrlYourTaste[] =
-{ 
+{
     {
         "static",
-        WS_VISIBLE | SS_GROUPBOX, 
+        WS_VISIBLE | SS_GROUPBOX,
         16, 10, 230, 160,
         IDC_STATIC,
         optional_snack,
@@ -70,9 +70,9 @@ static CTRLDATA CtrlYourTaste[] =
     },
     {
         "button",
-        WS_VISIBLE | BS_AUTORADIOBUTTON, 
-        36, 64, 200, 20, 
-        IDC_CHOUDOUFU, 
+        WS_VISIBLE | BS_AUTORADIOBUTTON,
+        36, 64, 200, 20,
+        IDC_CHOUDOUFU,
         chang_sha_bad_smelling_bean_curd,
         0
     },
@@ -102,7 +102,7 @@ static CTRLDATA CtrlYourTaste[] =
     },
     {
         "static",
-        WS_VISIBLE | SS_GROUPBOX | WS_GROUP, 
+        WS_VISIBLE | SS_GROUPBOX | WS_GROUP,
         250, 10, 100, 160,
         IDC_STATIC,
         flavor,
@@ -119,9 +119,9 @@ static CTRLDATA CtrlYourTaste[] =
     },
     {
         "button",
-        WS_VISIBLE | BS_AUTOCHECKBOX | BS_CHECKED, 
-        260, 64, 80, 20, 
-        IDC_LA, 
+        WS_VISIBLE | BS_AUTOCHECKBOX | BS_CHECKED,
+        260, 64, 80, 20,
+        IDC_LA,
         partial_spicy,
         0
     },
@@ -137,7 +137,7 @@ static CTRLDATA CtrlYourTaste[] =
         "button",
         WS_VISIBLE | BS_DEFPUSHBUTTON | WS_TABSTOP | WS_GROUP,
         70, 230, 70, 30,
-        IDOK, 
+        IDOK,
         OK,
         0
     },
@@ -169,7 +169,7 @@ static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                 SetNotificationCallback (GetDlgItem (hDlg, i), my_notif_proc);
         }
         return 1;
-        
+
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
@@ -178,9 +178,9 @@ static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             break;
         }
         break;
-        
+
     }
-    
+
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
@@ -189,9 +189,9 @@ int MiniGUIMain (int argc, const char* argv[])
 #ifdef _MGRM_PROCESSES
     JoinLayer(NAME_DEF_LAYER , "button" , 0 , 0);
 #endif
-    
+
     DlgYourTaste.controls = CtrlYourTaste;
-    
+
     DialogBoxIndirectParam (&DlgYourTaste, HWND_DESKTOP, DialogBoxProc2, 0L);
 
     return 0;
