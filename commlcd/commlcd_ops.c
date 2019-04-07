@@ -39,12 +39,12 @@ int __commlcd_drv_getinfo (struct commlcd_info *li, int width, int height, int d
         return -1;
     }
 
-    li->type = COMMLCD_TRUE_ABRG8888;
+    li->type = COMMLCD_TRUE_ARGB8888;
     li->height = SCREEN_HEIGHT;
     li->width = SCREEN_WIDTH;
     li->bpp = COLOR_DEPTH;
     li->pitch = SCREEN_WIDTH * BYTES_PER_PIXEL;
-    li->update_method = COMMLCD_UPDATE_SYNC;
+    li->update_method = COMMLCD_UPDATE_ASYNC;
     li->fb = sg_fb;
     return 0;
 }
