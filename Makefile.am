@@ -1,4 +1,4 @@
-COMMON_SUBDIRS = src graphics ctrl_dlg \
+COMMON_SUBDIRS = src graphics complexscripts ctrl_dlg \
         lf_skin font_text look_feel dbuff \
         same housekeeper minesweeper commlcd \
         mgutils mgplus mgeff mgncs

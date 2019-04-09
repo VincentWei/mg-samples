@@ -90,6 +90,7 @@ AC_OUTPUT(
     src/res/Makefile
     graphics/Makefile
     graphics/res/Makefile
+    complexscripts/Makefile
     dbuff/Makefile
     dbuff/res/Makefile
     ctrl_dlg/Makefile
