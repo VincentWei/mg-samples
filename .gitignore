@@ -22,6 +22,10 @@ Makefile.in
 /*.pc
 /*config.h
 /*config.h.in
+
+# execuatable
+
+complexscripts/complexscripts
 commlcd/commlcd
 ctrl_dlg/ctrl_dlg
 dbuff/dbuff
