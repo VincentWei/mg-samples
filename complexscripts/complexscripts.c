@@ -238,6 +238,128 @@ static void create_layout(ParagraphInfo* p, Uint32 render_flags, const char* fon
     }
 }
 
+#define TOKEN_HAVE_NO_BREAK_OPPORTUNITY "×"
+#define TOKEN_HAVE_BREAK_OPPORTUNITY    "÷"
+
+static void do_dump(const Uchar32* ucs, const Uint16* bos, int n,
+        Uint16 bo_flag)
+{
+    int i;
+
+    if (bos[0] & bo_flag) {
+        printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
+    }
+    else {
+        printf (TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
+    }
+
+    for (i = 0; i < n; i++) {
+        char utf8[16];
+        int len;
+        Uchar32 uc = ucs[i];
+
+        len = uc32_to_utf8(uc, utf8);
+        utf8[len] = 0;
+        printf(" %s ", utf8);
+
+        if (bos[i + 1] & bo_flag) {
+            printf (TOKEN_HAVE_BREAK_OPPORTUNITY);
+        }
+        else {
+            printf (TOKEN_HAVE_NO_BREAK_OPPORTUNITY);
+        }
+    }
+}
+
+static char _utf8_str [5000];
+static void dump_glyphs_and_breaks(const char* text,
+        const Uchar32* ucs, const Uint16* bos, int n)
+{
+    int i;
+    char* tmp = _utf8_str;
+
+    printf("START OF DUMPING GLYPHS AND BREAKS\n");
+    printf("==================================\n");
+
+    memset(_utf8_str, 0, 5000);
+    for (i = 0; i < n; i++) {
+        int len;
+        Uchar32 uc = ucs[i];
+
+        if ((tmp - _utf8_str) < 4990) {
+            len = uc32_to_utf8(uc, tmp);
+            tmp += len;
+        }
+
+        printf("%04X(%s, %s)\n", uc,
+            get_general_category_name(UCharGetCategory(uc)),
+            get_break_type_name(UCharGetBreakType(uc)));
+    }
+    printf("\n");
+
+    printf("TEXT IN UTF-8\n");
+    printf("==================================\n");
+    printf("\n");
+    puts(_utf8_str);
+    printf("\n");
+
+    printf("\tBOV_LB_BREAK_FLAG\n");
+    do_dump(ucs, bos, n, BOV_LB_BREAK_FLAG);
+    printf("\n\n");
+
+    printf("\tBOV_WHITESPACE\n");
+    do_dump(ucs, bos, n, BOV_WHITESPACE);
+    printf("\n\n");
+
+    printf("\tBOV_EXPANDABLE_SPACE\n");
+    do_dump(ucs, bos, n, BOV_EXPANDABLE_SPACE);
+    printf("\n\n");
+
+    printf("\tBOV_ZERO_WIDTH\n");
+    do_dump(ucs, bos, n, BOV_ZERO_WIDTH);
+    printf("\n\n");
+
+    printf("\tBOV_GB_CHAR_BREAK\n");
+    do_dump(ucs, bos, n, BOV_GB_CHAR_BREAK);
+    printf("\n\n");
+
+    printf("\tBOV_GB_CURSOR_POS\n");
+    do_dump(ucs, bos, n, BOV_GB_CURSOR_POS);
+    printf("\n\n");
+
+    printf("\tBOV_GB_BACKSPACE_DEL_CH\n");
+    do_dump(ucs, bos, n, BOV_GB_BACKSPACE_DEL_CH);
+    printf("\n\n");
+
+    printf("\tBOV_WB_WORD_BOUNDARY\n");
+    do_dump(ucs, bos, n, BOV_WB_WORD_BOUNDARY);
+    printf("\n\n");
+
+    printf("\tBOV_WB_WORD_START\n");
+    do_dump(ucs, bos, n, BOV_WB_WORD_START);
+    printf("\n\n");
+
+    printf("\tBOV_WB_WORD_END\n");
+    do_dump(ucs, bos, n, BOV_WB_WORD_END);
+    printf("\n\n");
+
+    printf("\tBOV_SB_SENTENCE_BOUNDARY\n");
+    do_dump(ucs, bos, n, BOV_SB_SENTENCE_BOUNDARY);
+    printf("\n\n");
+
+    printf("\tBOV_SB_SENTENCE_START\n");
+    do_dump(ucs, bos, n, BOV_SB_SENTENCE_START);
+    printf("\n\n");
+
+    printf("\tBOV_SB_SENTENCE_END\n");
+    do_dump(ucs, bos, n, BOV_SB_SENTENCE_END);
+    printf("\n\n");
+
+    printf("================================\n");
+    printf("END OF DUMPING GLYPHS AND BREAKS\n");
+}
+
+
 static ParagraphInfo  _header;
 static ParagraphInfo  _footer;
 static ParagraphInfo* _paragraphs;
@@ -278,7 +400,7 @@ static void create_header(void)
 
                 int len_bos;
                 bos = NULL;
-                len_bos = UStrGetBreaks (LANGCODE_unknown, CTR_NONE, WBR_NORMAL, LBP_NORMAL,
+                len_bos = UStrGetBreaks (LANGCODE_unknown, CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
                     ucs, n, &bos);
 
                 if (len_bos > 0) {
@@ -394,7 +516,6 @@ error:
 }
 
 static char _text_from_file[4096];
-static char _utf8_str [5000];
 
 static void create_paragraphs(void)
 {
@@ -441,10 +562,12 @@ static void create_paragraphs(void)
                 int len_bos;
                 bos = NULL;
                 len_bos = UStrGetBreaks (LANGCODE_unknown,
-                    CTR_NONE, WBR_NORMAL, LBP_NORMAL,
+                    CTR_NONE, WBR_NORMAL, LBP_STRICT,
                     ucs, n, &bos);
 
                 if (len_bos > 0) {
+                    //if (_nr_parags == 1)
+                    //    dump_glyphs_and_breaks(text, ucs, bos, n);
                     _paragraphs[_nr_parags - 1].bos = bos;
                     create_layout(_paragraphs + _nr_parags - 1,
                         _news_cases[_curr_news].common_flags | _news_cases[_curr_news].text_flags,
