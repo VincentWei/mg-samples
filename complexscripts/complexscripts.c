@@ -34,16 +34,17 @@
 #include "helpers.h"
 
 typedef struct _NewsInfo {
-    const char* title;
+    const char* header;
     const char* text;
-    const char* url;
-    const char* title_font;
+    const char* footer;
+    const char* header_font;
     const char* text_font;
-    Uint32      title_flags;
+    const char* footer_font;
+    Uint32      common_flags;
+    Uint32      header_flags;
     Uint32      text_flags;
+    Uint32      footer_flags;
 } NewsInfo;
-
-static const char* link_font =  "upf-unifont-rrnnun-*-16-UTF-8";
 
 static int _curr_news;
 
@@ -53,9 +54,12 @@ static NewsInfo _news_cases[] = {
         "file:res/zh-utf-8.txt",
         "https://news.sina.com.cn/c/xl/2019-04-08/doc-ihvhiewr4147778.shtml",
         "ttf-思源黑体-mrnnns-*-20-UTF-8",
-        "ttf-思源黑体-rrnnns-*-14-UTF-8",
-        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO | GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
-        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO | GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_LEFT | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        "ttf-思源黑体-ernnns-*-14-UTF-8",
+        "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
+        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_LEFT | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
 };
 
@@ -135,7 +139,6 @@ static RENDER_RULE _lbp_cases [] = {
 static int _letter_spacing = 0;
 static int _word_spacing = 0;
 static int _tab_size = 100;
-static RECT _rc_text = {10, 10, 1024 - 20, 600 - 20};
 
 typedef struct _ParagraphInfo {
     Uchar32*    ucs;
@@ -145,25 +148,66 @@ typedef struct _ParagraphInfo {
     int         nr_ucs;
 } ParagraphInfo;
 
-static ParagraphInfo* _paragraphs;
-static int            _nr_parags;
+static RECT _rc_text;
+static RECT _rc_header;
+static RECT _rc_footer;
+static int _max_extent_text;
+static int _max_extent_header;
+static int _max_extent_footer;
 
-static void destroy_paragraphs(void)
+static int _width_inc, _height_inc;
+
+static void set_rectangles(HWND hwnd)
 {
-    for (int i = 0; i < _nr_parags; i++) {
-        DestroyLayout(_paragraphs[i].layout);
-        DestroyTextRuns(_paragraphs[i].textruns);
-        free(_paragraphs[i].bos);
-        free(_paragraphs[i].ucs);
-    }
+    GetClientRect(hwnd, &_rc_text);
+    InflateRect(&_rc_text, -10, -10);
+    InflateRect(&_rc_text, _width_inc, _height_inc);
 
-    if (_paragraphs)
-        free(_paragraphs);
-    _paragraphs = NULL;
-    _nr_parags = 0;
+    CopyRect(&_rc_header, &_rc_text);
+    CopyRect(&_rc_footer, &_rc_text);
+
+    switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
+    default:
+    case GRF_WRITING_MODE_HORIZONTAL_TB:
+        InflateRect(&_rc_text, 0, -50);
+        _rc_header.bottom = _rc_text.top;
+        _rc_footer.top = _rc_text.bottom;
+        _max_extent_text = RECTW(_rc_text);
+        _max_extent_header = RECTW(_rc_header);
+        _max_extent_footer = RECTW(_rc_footer);
+        break;
+
+    case GRF_WRITING_MODE_HORIZONTAL_BT:
+        InflateRect(&_rc_text, 0, -50);
+        _rc_header.top = _rc_text.bottom;
+        _rc_footer.bottom = _rc_text.top;
+        _max_extent_text = RECTW(_rc_text);
+        _max_extent_header = RECTW(_rc_header);
+        _max_extent_footer = RECTW(_rc_footer);
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_LR:
+        InflateRect(&_rc_text, -50, 0);
+        _rc_header.right = _rc_text.left;
+        _rc_footer.left = _rc_text.right;
+        _max_extent_text = RECTH(_rc_text);
+        _max_extent_header = RECTH(_rc_header);
+        _max_extent_footer = RECTH(_rc_footer);
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_RL:
+        InflateRect(&_rc_text, -50, 0);
+        _rc_header.left = _rc_text.right;
+        _rc_footer.right = _rc_text.left;
+        _max_extent_text = RECTH(_rc_text);
+        _max_extent_header = RECTH(_rc_header);
+        _max_extent_footer = RECTH(_rc_footer);
+        break;
+    }
 }
 
-static void create_layout(ParagraphInfo* p, Uint32 render_flags, const char* fontname)
+static void create_layout(ParagraphInfo* p, Uint32 render_flags, const char* fontname,
+        int max_extent, BOOL oneline)
 {
     p->textruns = CreateTextRuns(p->ucs, p->nr_ucs,
             LANGCODE_unknown, BIDI_PGDIR_LTR,
@@ -178,23 +222,175 @@ static void create_layout(ParagraphInfo* p, Uint32 render_flags, const char* fon
 
         p->layout = CreateLayout(p->textruns,
                 render_flags, p->bos + 1, TRUE,
-                RECTW(_rc_text), 0,
-                _letter_spacing, _word_spacing, _tab_size, NULL, 0);
+                max_extent, 0, _letter_spacing, _word_spacing, _tab_size, NULL, 0);
         if (p->layout == NULL) {
             _ERR_PRINTF("%s: CreateLayout returns NULL\n", __FUNCTION__);
             exit(1);
         }
 
         LAYOUTLINE* line = NULL;
-        int i = 1;
-        while ((line = LayoutNextLine(p->layout, line, 100 * i, 0, NULL, 0))) {
-            i++;
+        while ((line = LayoutNextLine(p->layout, line, 0, oneline, NULL, 0))) {
         }
     }
     else {
         _ERR_PRINTF("%s: CreateTextRuns returns NULL\n", __FUNCTION__);
         exit(1);
     }
+}
+
+static ParagraphInfo  _header;
+static ParagraphInfo  _footer;
+static ParagraphInfo* _paragraphs;
+static int            _nr_parags;
+
+static void create_header(void)
+{
+    PLOGFONT lf = NULL;
+    const char* text;
+    int left_len_text;
+
+    text = _news_cases[_curr_news].header;
+
+    if (!(lf = CreateLogFontForMChar2UChar("utf-8"))) {
+        _ERR_PRINTF("%s: failed to create logfont for utf-8 charset\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    left_len_text = strlen(text);
+    while (left_len_text > 0) {
+        Uchar32* ucs;
+        Uint16* bos;
+        int consumed;
+        int n;
+
+        ucs = NULL;
+        consumed = GetUCharsUntilParagraphBoundary(lf, text, left_len_text,
+                WSR_NOWRAP, &ucs, &n);
+        if (consumed > 0) {
+
+            _DBG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
+                __FUNCTION__, consumed, n);
+
+            if (n > 0) {
+                _header.ucs = ucs;
+                _header.nr_ucs = n;
+
+                int len_bos;
+                bos = NULL;
+                len_bos = UStrGetBreaks (LANGCODE_unknown, CTR_NONE, WBR_NORMAL, LBP_NORMAL,
+                    ucs, n, &bos);
+
+                if (len_bos > 0) {
+                    _header.bos = bos;
+                    create_layout(&_header,
+                        _news_cases[_curr_news].common_flags | _news_cases[_curr_news].header_flags,
+                        _news_cases[_curr_news].header_font, _max_extent_header, TRUE);
+                }
+                else {
+                    _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
+                        __FUNCTION__);
+                    goto error;
+                }
+            }
+            else {
+                _ERR_PRINTF("%s: GetUCharsUntilParagraphBoundary did not generate any uchar\n",
+                    __FUNCTION__);
+                goto error;
+            }
+
+            // keep header has only one paragraph
+            break;
+        }
+        else {
+            _ERR_PRINTF("%s: GetUCharsUntilParagraphBoundary failed\n", __FUNCTION__);
+            goto error;
+        }
+
+        left_len_text -= consumed;
+        text += consumed;
+    }
+
+    DestroyLogFont(lf);
+    return;
+
+error:
+    exit(1);
+}
+
+static void create_footer(void)
+{
+    PLOGFONT lf = NULL;
+    const char* text;
+    int left_len_text;
+
+    text = _news_cases[_curr_news].footer;
+
+    if (!(lf = CreateLogFontForMChar2UChar("utf-8"))) {
+        _ERR_PRINTF("%s: failed to create logfont for utf-8 charset\n",
+                __FUNCTION__);
+        exit(1);
+    }
+
+    left_len_text = strlen(text);
+    while (left_len_text > 0) {
+        Uchar32* ucs;
+        Uint16* bos;
+        int consumed;
+        int n;
+
+        ucs = NULL;
+        consumed = GetUCharsUntilParagraphBoundary(lf, text, left_len_text,
+                WSR_NOWRAP, &ucs, &n);
+        if (consumed > 0) {
+
+            _DBG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
+                __FUNCTION__, consumed, n);
+
+            if (n > 0) {
+                _footer.ucs = ucs;
+                _footer.nr_ucs = n;
+
+                int len_bos;
+                bos = NULL;
+                len_bos = UStrGetBreaks (LANGCODE_unknown, CTR_NONE, WBR_NORMAL, LBP_NORMAL,
+                    ucs, n, &bos);
+
+                if (len_bos > 0) {
+                    _footer.bos = bos;
+                    create_layout(&_footer,
+                        _news_cases[_curr_news].common_flags | _news_cases[_curr_news].footer_flags,
+                        _news_cases[_curr_news].footer_font, _max_extent_footer, TRUE);
+                }
+                else {
+                    _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
+                        __FUNCTION__);
+                    goto error;
+                }
+            }
+            else {
+                _ERR_PRINTF("%s: GetUCharsUntilParagraphBoundary did not generate any uchar\n",
+                    __FUNCTION__);
+                goto error;
+            }
+
+            // keep footer has only one paragraph
+            break;
+        }
+        else {
+            _ERR_PRINTF("%s: GetUCharsUntilParagraphBoundary failed\n", __FUNCTION__);
+            goto error;
+        }
+
+        left_len_text -= consumed;
+        text += consumed;
+    }
+
+    DestroyLogFont(lf);
+    return;
+
+error:
+    exit(1);
 }
 
 static char _text_from_file[4096];
@@ -220,8 +416,6 @@ static void create_paragraphs(void)
         exit(1);
     }
 
-    destroy_paragraphs();
-
     left_len_text = strlen(text);
     while (left_len_text > 0) {
         Uchar32* ucs;
@@ -234,7 +428,7 @@ static void create_paragraphs(void)
                 WSR_PRE_WRAP, &ucs, &n);
         if (consumed > 0) {
 
-            _MG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
+            _DBG_PRINTF("%s: GetUCharsUntilParagraphBoundary: bytes: %d, glyphs: %d\n",
                 __FUNCTION__, consumed, n);
 
             if (n > 0) {
@@ -246,14 +440,15 @@ static void create_paragraphs(void)
 
                 int len_bos;
                 bos = NULL;
-                len_bos = UStrGetBreaks (SCRIPT_LATIN,
+                len_bos = UStrGetBreaks (LANGCODE_unknown,
                     CTR_NONE, WBR_NORMAL, LBP_NORMAL,
                     ucs, n, &bos);
 
                 if (len_bos > 0) {
                     _paragraphs[_nr_parags - 1].bos = bos;
                     create_layout(_paragraphs + _nr_parags - 1,
-                        _news_cases[_curr_news].text_flags, _news_cases[_curr_news].text_font);
+                        _news_cases[_curr_news].common_flags | _news_cases[_curr_news].text_flags,
+                        _news_cases[_curr_news].text_font, _max_extent_text, FALSE);
                 }
                 else {
                     _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
@@ -283,11 +478,115 @@ error:
     exit(1);
 }
 
-static int _text_x, _text_y;
+static void destroy_news(void)
+{
+    if (_header.layout) {
+        DestroyLayout(_header.layout);
+        DestroyTextRuns(_header.textruns);
+        free(_header.bos);
+        free(_header.ucs);
+        memset(&_header, 0, sizeof(ParagraphInfo));
+    }
 
+    for (int i = 0; i < _nr_parags; i++) {
+        DestroyLayout(_paragraphs[i].layout);
+        DestroyTextRuns(_paragraphs[i].textruns);
+        free(_paragraphs[i].bos);
+        free(_paragraphs[i].ucs);
+    }
+
+    if (_paragraphs)
+        free(_paragraphs);
+    _paragraphs = NULL;
+    _nr_parags = 0;
+
+    if (_footer.layout) {
+        DestroyLayout(_footer.layout);
+        DestroyTextRuns(_footer.textruns);
+        free(_footer.bos);
+        free(_footer.ucs);
+        memset(&_footer, 0, sizeof(ParagraphInfo));
+    }
+}
+
+static void create_news(HWND hwnd)
+{
+    set_rectangles(hwnd);
+
+    destroy_news();
+    create_header();
+    create_paragraphs();
+    create_footer();
+}
+
+static int _header_x, _header_y;
+static void render_header(HDC hdc)
+{
+    LAYOUTLINE* line = NULL;
+
+    switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
+    case GRF_WRITING_MODE_HORIZONTAL_BT:
+        _header_x = _rc_header.left;
+        _header_y = _rc_header.bottom;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_RL:
+        _header_x = _rc_header.right;
+        _header_y = _rc_header.top;
+        break;
+
+    case GRF_WRITING_MODE_HORIZONTAL_TB:
+    case GRF_WRITING_MODE_VERTICAL_LR:
+    default:
+        _header_x = _rc_header.left;
+        _header_y = _rc_header.top;
+        break;
+    }
+
+    SetTextColorInTextRuns(_header.textruns, 0, 4096, MakeRGB(255, 0, 0));
+
+    // always draw only one line
+    if ((line = LayoutNextLine(_header.layout, line, 0, 0, NULL, 0))) {
+        DrawLayoutLine(hdc, line, _header_x, _header_y);
+    }
+}
+
+static int _footer_x, _footer_y;
+static void render_footer(HDC hdc)
+{
+    LAYOUTLINE* line = NULL;
+
+    switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
+    case GRF_WRITING_MODE_HORIZONTAL_BT:
+        _footer_x = _rc_footer.left;
+        _footer_y = _rc_footer.bottom;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_RL:
+        _footer_x = _rc_footer.right;
+        _footer_y = _rc_footer.top;
+        break;
+
+    case GRF_WRITING_MODE_HORIZONTAL_TB:
+    case GRF_WRITING_MODE_VERTICAL_LR:
+    default:
+        _footer_x = _rc_footer.left;
+        _footer_y = _rc_footer.top;
+        break;
+    }
+
+    SetTextColorInTextRuns(_footer.textruns, 0, 4096, MakeRGB(92, 92, 92));
+
+    // always draw only one line
+    if ((line = LayoutNextLine(_footer.layout, line, 0, 0, NULL, 0))) {
+        DrawLayoutLine(hdc, line, _footer_x, _footer_y);
+    }
+}
+
+static int _text_x, _text_y;
 static void render_paragraphs_draw_line(HDC hdc)
 {
-    switch (_news_cases[_curr_news].text_flags & GRF_WRITING_MODE_MASK) {
+    switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
     case GRF_WRITING_MODE_HORIZONTAL_BT:
         _text_x = _rc_text.left;
         _text_y = _rc_text.bottom;
@@ -306,8 +605,6 @@ static void render_paragraphs_draw_line(HDC hdc)
         break;
     }
 
-    SetMapMode(hdc, MM_TEXT);
-
     POINT pt = {_text_x, _text_y};
     int parag_x, parag_y;
     for (int i = 0; i < _nr_parags; i++) {
@@ -317,10 +614,7 @@ static void render_paragraphs_draw_line(HDC hdc)
         int line_height = 0;
         int j = 0;
 
-        _MG_PRINTF("%s: rendering paragraph: %d\n",
-            __FUNCTION__, i);
-
-        SetTextColorInTextRuns(_paragraphs[i].textruns, 0, 4096, MakeRGB(255, 0, 0));
+        SetTextColorInTextRuns(_paragraphs[i].textruns, 0, 4096, MakeRGB(32, 32, 32));
 
         parag_x = pt.x;
         parag_y = pt.y;
@@ -333,9 +627,6 @@ static void render_paragraphs_draw_line(HDC hdc)
             if (sz.cy > line_height)
                 line_height = sz.cy;
 
-            _MG_PRINTF("%s: rendered line by calling DrawShapedGlyph: %d\n",
-                __FUNCTION__, j);
-
             DrawLayoutLine(hdc, line, pt.x, pt.y);
 
             GetLayoutLineRect(line, &pt.x, &pt.y, sz.cy, &rc);
@@ -346,10 +637,8 @@ static void render_paragraphs_draw_line(HDC hdc)
         }
 
         CalcLayoutBoundingRect(layout, 0, -1, line_height, parag_x, parag_y, &rc);
-        //SetPenColor(hdc, PIXEL_green);
-        //Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
 
-        switch (_news_cases[_curr_news].text_flags & GRF_WRITING_MODE_MASK) {
+        switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
         case GRF_WRITING_MODE_HORIZONTAL_TB:
             pt.y += 10;
             break;
@@ -377,18 +666,25 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
     case MSG_CREATE:
-        GetClientRect(hWnd, &_rc_text);
-        InflateRect(&_rc_text, -10, -10);
-        create_paragraphs();
+        create_news(hWnd);
         break;
 
     case MSG_PAINT: {
         HDC hdc;
         hdc = BeginPaint(hWnd);
+
+        SelectClipRect(hdc, &_rc_header);
+        render_header(hdc);
+
+        SelectClipRect(hdc, &_rc_text);
         SetPenColor(hdc, PIXEL_green);
         Rectangle(hdc, _rc_text.left, _rc_text.top,
-            _rc_text.right, _rc_text.bottom);
+                _rc_text.right - 1, _rc_text.bottom - 1);
         render_paragraphs_draw_line(hdc);
+
+        SelectClipRect(hdc, &_rc_footer);
+        render_footer(hdc);
+
         EndPaint(hWnd, hdc);
         return 0;
     }
@@ -412,22 +708,22 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
 
         case SCANCODE_CURSORBLOCKLEFT:
-            _rc_text.right -= 5;
+            _width_inc -= 2;
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKRIGHT:
-            _rc_text.right += 5;
+            _width_inc += 2;
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKUP:
-            _rc_text.bottom -= 20;
+            _height_inc -= 10;
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKDOWN:
-            _rc_text.bottom += 20;
+            _height_inc += 10;
             repaint = TRUE;
             break;
 
@@ -466,7 +762,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
 
         if (repaint) {
-            create_paragraphs();
+            create_news(hWnd);
             InvalidateRect(hWnd, NULL, TRUE);
         }
 
@@ -474,7 +770,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
 
     case MSG_CLOSE:
-        destroy_paragraphs();
+        destroy_news();
         DestroyMainWindow (hWnd);
         PostQuitMessage (hWnd);
         return 0;
@@ -510,6 +806,9 @@ typedef struct _DEVFONTINFO {
 } DEVFONTINFO;
 
 static DEVFONTINFO _devfontinfo[] = {
+    { FONTFILE_PATH "font/SourceSansPro-Light.ttf",
+        "ttf-Source Sans Pro,SansSerif-lrncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
+
     { FONTFILE_PATH "font/SourceHanSans-ExtraLight.ttc",
         "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-erncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Light.ttc",
