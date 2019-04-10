@@ -51,10 +51,22 @@ static int _curr_news;
 static NewsInfo _news_cases[] = {
     {
         "习近平：推动国土绿化不断取得实实在在的成效",
-        "file:res/zh-utf-8.txt",
+        "file:res/zh_CN-utf-8.txt",
         "https://news.sina.com.cn/c/xl/2019-04-08/doc-ihvhiewr4147778.shtml",
         "ttf-思源黑体-mrnnns-*-20-UTF-8",
         "ttf-思源黑体-ernnns-*-14-UTF-8",
+        "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
+        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_LEFT | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+    },
+    {
+        "反對《與臺灣關係法》鬥爭——中美建交後圍繞臺灣問題的第一場較量",
+        "file:res/zh_TW-utf-8.txt",
+        "http://big5.taiwan.cn/plzhx/zhjzhl/zhjlw/201904/t20190409_12154867.htm",
+        "ttf-思源黑體-mrnnns-*-20-UTF-8",
+        "ttf-思源黑體-ernnns-*-14-UTF-8",
         "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
         GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_AUTO | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
@@ -515,7 +527,9 @@ error:
     exit(1);
 }
 
-static char _text_from_file[4096];
+#define MAX_LEN_TEXT        65535
+
+static char _text_from_file[MAX_LEN_TEXT + 1];
 
 static void create_paragraphs(void)
 {
@@ -524,7 +538,7 @@ static void create_paragraphs(void)
     const char* text;
     int left_len_text;
 
-    text = get_text_case(_news_cases[_curr_news].text, _text_from_file, 4096);
+    text = get_text_case(_news_cases[_curr_news].text, _text_from_file, MAX_LEN_TEXT);
 
     strcpy (charset, "utf-8");
     if (text == _text_from_file) {

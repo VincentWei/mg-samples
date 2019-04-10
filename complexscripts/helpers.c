@@ -114,6 +114,7 @@ const char* get_text_case(const char* text, char* read_buff, size_t n)
 /*
  * extract charset name from the filename pattern like:
     "file:res/en-iso8859-1.txt"
+    "file:res/zh_CN-UTF-8.txt"
 */
 BOOL get_charset_from_filename(const char* pattern, char* buff)
 {
@@ -126,8 +127,13 @@ BOOL get_charset_from_filename(const char* pattern, char* buff)
     if ((name_start = strrchr(pattern, '/')) == NULL)
         name_start = pattern + 5; // 'file:'
 
-    // skip language code 'en-'
-    name_start += 3;
+    // skip language code 'zh'
+    name_start += 2;
+    if (*name_start == '_')
+        // skip '_CN-'
+        name_start += 4;
+    else
+        name_start += 1;
 
     if (name_end <= name_start)
         return FALSE;
