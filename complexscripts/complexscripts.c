@@ -275,6 +275,15 @@ static int _max_extent_header;
 static int _max_extent_footer;
 
 static int _width_inc, _height_inc;
+static int _offset, _page_height;
+
+static void reset_offset(void)
+{
+    _width_inc = 0;
+    _height_inc = 0;
+    _offset = 0;
+    _page_height = 0;
+}
 
 static void set_rectangles(HWND hwnd)
 {
@@ -294,6 +303,7 @@ static void set_rectangles(HWND hwnd)
         _max_extent_text = RECTW(_rc_text);
         _max_extent_header = RECTW(_rc_header);
         _max_extent_footer = RECTW(_rc_footer);
+        _page_height = RECTH(_rc_text) + RECTH(_rc_header) + RECTH(_rc_footer);
         break;
 
     case GRF_WRITING_MODE_HORIZONTAL_BT:
@@ -303,6 +313,7 @@ static void set_rectangles(HWND hwnd)
         _max_extent_text = RECTW(_rc_text);
         _max_extent_header = RECTW(_rc_header);
         _max_extent_footer = RECTW(_rc_footer);
+        _page_height = RECTH(_rc_text) + RECTH(_rc_header) + RECTH(_rc_footer);
         break;
 
     case GRF_WRITING_MODE_VERTICAL_LR:
@@ -312,6 +323,7 @@ static void set_rectangles(HWND hwnd)
         _max_extent_text = RECTH(_rc_text);
         _max_extent_header = RECTH(_rc_header);
         _max_extent_footer = RECTH(_rc_footer);
+        _page_height = RECTW(_rc_text) + RECTW(_rc_header) + RECTW(_rc_footer);
         break;
 
     case GRF_WRITING_MODE_VERTICAL_RL:
@@ -321,6 +333,7 @@ static void set_rectangles(HWND hwnd)
         _max_extent_text = RECTH(_rc_text);
         _max_extent_header = RECTH(_rc_header);
         _max_extent_footer = RECTH(_rc_footer);
+        _page_height = RECTW(_rc_text) + RECTW(_rc_header) + RECTW(_rc_footer);
         break;
     }
 }
@@ -763,27 +776,31 @@ static void create_news(HWND hwnd)
     create_footer();
 }
 
-static int _header_x, _header_y;
 static void render_header(HDC hdc)
 {
     LAYOUTLINE* line = NULL;
+    int header_x, header_y;
 
     switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
     case GRF_WRITING_MODE_HORIZONTAL_BT:
-        _header_x = _rc_header.left;
-        _header_y = _rc_header.bottom;
+        header_x = _rc_header.left;
+        header_y = _rc_header.bottom;
         break;
 
     case GRF_WRITING_MODE_VERTICAL_RL:
-        _header_x = _rc_header.right;
-        _header_y = _rc_header.top;
+        header_x = _rc_header.right;
+        header_y = _rc_header.top;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_LR:
+        header_x = _rc_header.left;
+        header_y = _rc_header.top;
         break;
 
     case GRF_WRITING_MODE_HORIZONTAL_TB:
-    case GRF_WRITING_MODE_VERTICAL_LR:
     default:
-        _header_x = _rc_header.left;
-        _header_y = _rc_header.top;
+        header_x = _rc_header.left;
+        header_y = _rc_header.top;
         break;
     }
 
@@ -791,37 +808,41 @@ static void render_header(HDC hdc)
 
     // always draw only one line
     if ((line = LayoutNextLine(_header.layout, line, 0, 0, NULL, 0))) {
-        int x = _header_x;
-        int y = _header_y;
+        int x = header_x;
+        int y = header_y;
         RECT rc;
 
         GetLayoutLineRect(line, &x, &y, 0, &rc);
         if (RectVisible(hdc, &rc))
-            DrawLayoutLine(hdc, line, _header_x, _header_y);
+            DrawLayoutLine(hdc, line, header_x, header_y);
     }
 }
 
-static int _footer_x, _footer_y;
 static void render_footer(HDC hdc)
 {
+    int footer_x, footer_y;
     LAYOUTLINE* line = NULL;
 
     switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
     case GRF_WRITING_MODE_HORIZONTAL_BT:
-        _footer_x = _rc_footer.left;
-        _footer_y = _rc_footer.bottom;
+        footer_x = _rc_footer.left;
+        footer_y = _rc_footer.bottom;
         break;
 
     case GRF_WRITING_MODE_VERTICAL_RL:
-        _footer_x = _rc_footer.right;
-        _footer_y = _rc_footer.top;
+        footer_x = _rc_footer.right;
+        footer_y = _rc_footer.top;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_LR:
+        footer_x = _rc_footer.left;
+        footer_y = _rc_footer.top;
         break;
 
     case GRF_WRITING_MODE_HORIZONTAL_TB:
-    case GRF_WRITING_MODE_VERTICAL_LR:
     default:
-        _footer_x = _rc_footer.left;
-        _footer_y = _rc_footer.top;
+        footer_x = _rc_footer.left;
+        footer_y = _rc_footer.top;
         break;
     }
 
@@ -829,39 +850,44 @@ static void render_footer(HDC hdc)
 
     // always draw only one line
     if ((line = LayoutNextLine(_footer.layout, line, 0, 0, NULL, 0))) {
-        int x = _footer_x;
-        int y = _footer_y;
+        int x = footer_x;
+        int y = footer_y;
         RECT rc;
 
         GetLayoutLineRect(line, &x, &y, 0, &rc);
         if (RectVisible(hdc, &rc))
-            DrawLayoutLine(hdc, line, _footer_x, _footer_y);
+            DrawLayoutLine(hdc, line, footer_x, footer_y);
     }
 }
 
-static int _text_x, _text_y;
-static void render_paragraphs_draw_line(HDC hdc)
+static void render_paragraphs(HDC hdc)
 {
+    int text_x, text_y;
+
     switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
     case GRF_WRITING_MODE_HORIZONTAL_BT:
-        _text_x = _rc_text.left;
-        _text_y = _rc_text.bottom;
+        text_x = _rc_text.left;
+        text_y = _rc_text.bottom - _offset;
         break;
 
     case GRF_WRITING_MODE_VERTICAL_RL:
-        _text_x = _rc_text.right;
-        _text_y = _rc_text.top;
+        text_x = _rc_text.right + _offset;
+        text_y = _rc_text.top;
+        break;
+
+    case GRF_WRITING_MODE_VERTICAL_LR:
+        text_x = _rc_text.left + _offset;
+        text_y = _rc_text.top;
         break;
 
     case GRF_WRITING_MODE_HORIZONTAL_TB:
-    case GRF_WRITING_MODE_VERTICAL_LR:
     default:
-        _text_x = _rc_text.left;
-        _text_y = _rc_text.top;
+        text_x = _rc_text.left;
+        text_y = _rc_text.top - _offset;
         break;
     }
 
-    POINT pt = {_text_x, _text_y};
+    POINT pt = {text_x, text_y};
     for (int i = 0; i < _nr_parags; i++) {
         LAYOUT* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
@@ -921,14 +947,14 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         HDC hdc;
         hdc = BeginPaint(hWnd);
 
-        SelectClipRect(hdc, &_rc_header);
+        //SelectClipRect(hdc, &_rc_header);
         render_header(hdc);
 
         SelectClipRect(hdc, &_rc_text);
         SetPenColor(hdc, PIXEL_green);
         Rectangle(hdc, _rc_text.left, _rc_text.top,
                 _rc_text.right - 1, _rc_text.bottom - 1);
-        render_paragraphs_draw_line(hdc);
+        render_paragraphs(hdc);
 
         SelectClipRect(hdc, &_rc_footer);
         render_footer(hdc);
@@ -952,6 +978,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case SCANCODE_ENTER:
             _curr_news++;
             _curr_news %= TABLESIZE(_news_cases);
+            reset_offset();
             repaint = TRUE;
             break;
 
@@ -977,32 +1004,34 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case SCANCODE_INSERT:
             _letter_spacing += 1;
+            _word_spacing += 2;
+            _tab_size += 5;
             repaint = TRUE;
             break;
 
         case SCANCODE_REMOVE:
             _letter_spacing -= 1;
+            _word_spacing -= 2;
+            _tab_size -= 5;
             repaint = TRUE;
             break;
 
         case SCANCODE_HOME:
-            _word_spacing += 2;
-            repaint = TRUE;
+            _offset = 0;
+            InvalidateRect(hWnd, NULL, TRUE);
             break;
 
         case SCANCODE_END:
-            _word_spacing -= 2;
-            repaint = TRUE;
             break;
 
         case SCANCODE_PAGEUP:
-            _tab_size += 2;
-            repaint = TRUE;
+            _offset -= _page_height >> 1;
+            InvalidateRect(hWnd, NULL, TRUE);
             break;
 
         case SCANCODE_PAGEDOWN:
-            _tab_size -= 2;
-            repaint = TRUE;
+            _offset += _page_height >> 1;
+            InvalidateRect(hWnd, NULL, TRUE);
             break;
 
         default:
