@@ -137,8 +137,8 @@ static NewsInfo _news_cases[] = {
         "حرکت عجیب بیرانوند علیه برانکو! + سند",
         "file:res/ar-utf-8.txt",
         "https://www.varzesh11.com/fa/soccer_news_centre/news/",
-        "ttf-KacstArt,Source Sans Pro-mrnnns-*-20-UTF-8",
-        "ttf-KacstBook,Source Sans Pro-ernnns-*-14-UTF-8",
+        "ttf-Mashq,Source Sans Pro-brnnns-*-20-UTF-8",
+        "ttf-Arab,Source Sans Pro-rrnnns-*-14-UTF-8",
         "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
         GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
@@ -768,7 +768,13 @@ static void render_header(HDC hdc)
 
     // always draw only one line
     if ((line = LayoutNextLine(_header.layout, line, 0, 0, NULL, 0))) {
-        DrawLayoutLine(hdc, line, _header_x, _header_y);
+        int x = _header_x;
+        int y = _header_y;
+        RECT rc;
+
+        GetLayoutLineRect(line, &x, &y, 0, &rc);
+        if (RectVisible(hdc, &rc))
+            DrawLayoutLine(hdc, line, _header_x, _header_y);
     }
 }
 
@@ -800,7 +806,13 @@ static void render_footer(HDC hdc)
 
     // always draw only one line
     if ((line = LayoutNextLine(_footer.layout, line, 0, 0, NULL, 0))) {
-        DrawLayoutLine(hdc, line, _footer_x, _footer_y);
+        int x = _footer_x;
+        int y = _footer_y;
+        RECT rc;
+
+        GetLayoutLineRect(line, &x, &y, 0, &rc);
+        if (RectVisible(hdc, &rc))
+            DrawLayoutLine(hdc, line, _footer_x, _footer_y);
     }
 }
 
@@ -827,37 +839,29 @@ static void render_paragraphs_draw_line(HDC hdc)
     }
 
     POINT pt = {_text_x, _text_y};
-    int parag_x, parag_y;
     for (int i = 0; i < _nr_parags; i++) {
         LAYOUT* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
         RECT rc;
         int line_height = 0;
-        int j = 0;
 
         SetTextColorInTextRuns(_paragraphs[i].textruns, 0, 4096, MakeRGB(32, 32, 32));
-
-        parag_x = pt.x;
-        parag_y = pt.y;
 
         while ((line = LayoutNextLine(layout, line, 0, 0, NULL, 0))) {
             SIZE sz;
             GetLayoutLineSize(line, &sz);
             sz.cx += 5;
             sz.cy += 5;
+
             if (sz.cy > line_height)
                 line_height = sz.cy;
 
-            DrawLayoutLine(hdc, line, pt.x, pt.y);
-
+            int draw_x = pt.x;
+            int draw_y = pt.y;
             GetLayoutLineRect(line, &pt.x, &pt.y, sz.cy, &rc);
-            //SetPenColor(hdc, PIXEL_blue);
-            //Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
-
-            j++;
+            if (RectVisible(hdc, &rc))
+                DrawLayoutLine(hdc, line, draw_x, draw_y);
         }
-
-        CalcLayoutBoundingRect(layout, 0, -1, line_height, parag_x, parag_y, &rc);
 
         switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
         case GRF_WRITING_MODE_HORIZONTAL_TB:
@@ -1080,18 +1084,10 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-EzraSIL-rrncnn-0-0-UTF-8" },
 
     // Fonts for Arabic
-    { "/usr/share/fonts/truetype/kacst/KacstArt.ttf",
-        "ttf-KacstArt-rrncnn-0-0-UTF-8" },
-    { "/usr/share/fonts/truetype/kacst/KacstBook.ttf",
-        "ttf-KacstBook-rrncnn-0-0-UTF-8" },
-    { "/usr/share/fonts/truetype/kacst/KacstDecorative.ttf",
-        "ttf-KacstDecorative-rrncnn-0-0-UTF-8" },
-    { "/usr/share/fonts/truetype/kacst/KacstLetter.ttf",
-        "ttf-KacstLetter-rrncnn-0-0-UTF-8" },
-    { "/usr/share/fonts/truetype/kacst/KacstNaskh.ttf",
-        "ttf-KacstNaskh-rrncnn-0-0-UTF-8" },
-    { "/usr/share/fonts/truetype/kacst/KacstScreen.ttf",
-        "ttf-KacstScreen-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/fonts-arabeyes/ae_Arab.ttf",
+        "ttf-Arab-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/fonts-arabeyes/ae_Mashq-Bold.ttf",
+        "ttf-Mashq-brncnn-0-0-UTF-8" },
 
     // Fonts for Thai
     { "/usr/share/fonts/truetype/tlwg/Garuda.ttf",
@@ -1126,6 +1122,9 @@ static DEVFONTINFO _devfontinfo[] = {
     { "/usr/share/fonts/truetype/lohit-punjabi/Lohit-Punjabi.ttf",
         "ttf-Lohit-rrncnn-0-0-UTF-8" },
 
+    // Unifont
+    { FONTFILE_PATH "font/unifont_160_50.upf",
+         "upf-unifont,SansSerif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
 };
 
 int MiniGUIMain (int argc, const char* argv[])
