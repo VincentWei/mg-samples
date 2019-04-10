@@ -133,6 +133,30 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_LEFT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
+    {
+        "حرکت عجیب بیرانوند علیه برانکو! + سند",
+        "file:res/ar-utf-8.txt",
+        "https://www.varzesh11.com/fa/soccer_news_centre/news/",
+        "ttf-KacstArt,Source Sans Pro-mrnnns-*-20-UTF-8",
+        "ttf-KacstBook,Source Sans Pro-ernnns-*-14-UTF-8",
+        "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
+        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+    },
+    {
+        "97% מהקלפיות נספרו: 55-65 לימין",
+        "file:res/he-utf-8.txt",
+        "https://www.mako.co.il/news-israel-elections/elections_2019-q2_2019/Article-d6ef86f83140a61004.htm?sCh=31750a2610f26110&pId=948912327",
+        "ttf-EzraSIL-mrnnns-*-20-UTF-8",
+        "ttf-EzraSIL-ernnns-*-14-UTF-8",
+        "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
+        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+    },
 };
 
 typedef struct _RENDER_RULE {
@@ -1006,6 +1030,8 @@ static DEVFONTINFO _devfontinfo[] = {
     // Free TrueType or OpenType fonts
     // download location:
     // https://github.com/adobe-fonts/
+
+    // Fonts for Latin
     { FONTFILE_PATH "font/SourceSansPro-BlackIt.ttf",
         "ttf-Source Sans Pro,SansSerif-cincnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
     { FONTFILE_PATH "font/SourceSansPro-Black.ttf",
@@ -1031,6 +1057,7 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/SourceSansPro-Semibold.ttf",
         "ttf-Source Sans Pro,SansSerif-drncnn-0-0-ISO8859-1,ISO8859-15,UTF-8" },
 
+    // Fonts for CJK
     { FONTFILE_PATH "font/SourceHanSans-ExtraLight.ttc",
         "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-erncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
     { FONTFILE_PATH "font/SourceHanSans-Light.ttc",
@@ -1046,13 +1073,13 @@ static DEVFONTINFO _devfontinfo[] = {
     { FONTFILE_PATH "font/SourceHanSans-Heavy.ttc",
         "ttf-Source Han Sans,思源黑体,思源黑體,源ノ角ゴシック,본고딕,SansSerif-crncnn-0-0-ISO8859-1,GBK,BIG5,UTF-8" },
 
-    { FONTFILE_PATH "font/unifont_160_50.upf",
-        "upf-unifont,SansSerif,monospace-rrncnn-8-16-ISO8859-1,ISO8859-6,ISO8859-8,UTF-8" },
+    // Fonts for Hebrew
+    { "/usr/share/fonts/truetype/ezra/SILEOTSR.ttf",
+        "ttf-EzraSILSR-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/ezra/SILEOT.ttf",
+        "ttf-EzraSIL-rrncnn-0-0-UTF-8" },
 
-    { "/usr/share/fonts/truetype/fonts-guru-extra/Saab.ttf",
-        "ttf-Saab-rrncnn-0-0-UTF-8" },
-    { "/usr/share/fonts/truetype/lohit-punjabi/Lohit-Punjabi.ttf",
-        "ttf-Lohit-rrncnn-0-0-UTF-8" },
+    // Fonts for Arabic
     { "/usr/share/fonts/truetype/kacst/KacstArt.ttf",
         "ttf-KacstArt-rrncnn-0-0-UTF-8" },
     { "/usr/share/fonts/truetype/kacst/KacstBook.ttf",
@@ -1065,6 +1092,8 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-KacstNaskh-rrncnn-0-0-UTF-8" },
     { "/usr/share/fonts/truetype/kacst/KacstScreen.ttf",
         "ttf-KacstScreen-rrncnn-0-0-UTF-8" },
+
+    // Fonts for Thai
     { "/usr/share/fonts/truetype/tlwg/Garuda.ttf",
         "ttf-Garuda-rrncnn-0-0-UTF-8" },
     { "/usr/share/fonts/truetype/tlwg/Kinnari.ttf",
@@ -1091,6 +1120,12 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-Umpush-rrncnn-0-0-UTF-8" },
     { "/usr/share/fonts/truetype/tlwg/Waree.ttf",
         "ttf-Waree-rrncnn-0-0-UTF-8" },
+
+    { "/usr/share/fonts/truetype/fonts-guru-extra/Saab.ttf",
+        "ttf-Saab-rrncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/lohit-punjabi/Lohit-Punjabi.ttf",
+        "ttf-Lohit-rrncnn-0-0-UTF-8" },
+
 };
 
 int MiniGUIMain (int argc, const char* argv[])
