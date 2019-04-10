@@ -34,6 +34,7 @@
 #include "helpers.h"
 
 typedef struct _NewsInfo {
+    LanguageCode lc;
     const char* header;
     const char* text;
     const char* footer;
@@ -50,6 +51,7 @@ static int _curr_news;
 
 static NewsInfo _news_cases[] = {
     {
+        LANGCODE_zh,
         "习近平：推动国土绿化不断取得实实在在的成效",
         "file:res/zh_CN-utf-8.txt",
         "https://news.sina.com.cn/c/xl/2019-04-08/doc-ihvhiewr4147778.shtml",
@@ -62,6 +64,7 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_zh,
         "第一回 甄士隐梦幻识通灵　贾雨村风尘怀闺秀",
         "file:res/zh-红楼梦-utf-8.txt",
         "http://www.purepen.com/hlm/001.htm",
@@ -74,6 +77,7 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_zh,
         "反對《與臺灣關係法》鬥爭——中美建交後圍繞臺灣問題的第一場較量",
         "file:res/zh_TW-utf-8.txt",
         "http://big5.taiwan.cn/plzhx/zhjzhl/zhjlw/201904/t20190409_12154867.htm",
@@ -86,6 +90,7 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_en,
         "Japanese F-35 fighter crashes into the Pacific",
         "file:res/en-utf-8.txt",
         "https://edition.cnn.com/2019/04/09/asia/japan-f-35-stealth-fighter-missing-intl/index.html",
@@ -98,6 +103,7 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_ja,
         "青森県沖で浮遊物　不明の空自F35A一部か",
         "file:res/ja-utf-8.txt",
         "https://headlines.yahoo.co.jp/hl?a=20190410-00000014-mai-soci",
@@ -110,6 +116,7 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_ko,
         "박남춘 시장은 '제3연륙교 2023년 개통' 공약 지켜라",
         "file:res/kr-utf-8.txt",
         "http://www.24news.kr/news/articleView.html?idxno=136130",
@@ -122,6 +129,7 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_th,
         "ชมวิธีแพ็ค “สินค้าแตกง่าย” ของไปรษณีย์จีน ที่ทุกคนต้องอยากมาดูงาน",
         "file:res/th-utf-8.txt",
         "https://www.sanook.com/news/7739750/",
@@ -134,18 +142,20 @@ static NewsInfo _news_cases[] = {
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
-        "حرکت عجیب بیرانوند علیه برانکو! + سند",
+        LANGCODE_ar,
+        "تطوير خطوط OpenType للنص العربي",
         "file:res/ar-utf-8.txt",
-        "https://www.varzesh11.com/fa/soccer_news_centre/news/",
+        "https://docs.microsoft.com/en-us/typography/script-development/arabic",
         "ttf-Mashq,Source Sans Pro-brnnns-*-20-UTF-8",
-        "ttf-Arab,Source Sans Pro-rrnnns-*-14-UTF-8",
+        "ttf-Qurn,Source Sans Pro-rrnnns-*-14-UTF-8",
         "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
         GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
-        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_START | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
     {
+        LANGCODE_he,
         "97% מהקלפיות נספרו: 55-65 לימין",
         "file:res/he-utf-8.txt",
         "https://www.mako.co.il/news-israel-elections/elections_2019-q2_2019/Article-d6ef86f83140a61004.htm?sCh=31750a2610f26110&pId=948912327",
@@ -154,7 +164,20 @@ static NewsInfo _news_cases[] = {
         "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
         GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
-        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_START | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+    },
+    {
+        LANGCODE_unknown,
+        "Test",
+        "file:res/ts_TS-utf-8.txt",
+        "none",
+        "ttf-Mashq,Source Sans Pro-brnnns-*-20-UTF-8",
+        "ttf-Qurn,Source Sans Pro-rrnnns-*-14-UTF-8",
+        "ttf-Source Sans Pro-lrnnus-*-10-UTF-8",
+        GRF_WRITING_MODE_HORIZONTAL_TB | GRF_TEXT_ORIENTATION_AUTO,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_MIDDLE | GRF_ALIGN_CENTER | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
+        GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_NONE | GRF_ALIGN_START | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
         GRF_INDENT_NONE | GRF_LINE_EXTENT_FIXED | GRF_OVERFLOW_WRAP_NORMAL | GRF_OVERFLOW_ELLIPSIZE_END | GRF_ALIGN_RIGHT | GRF_TEXT_JUSTIFY_NONE | GRF_HANGING_PUNC_NONE | GRF_SPACES_KEEP,
     },
 };
@@ -303,10 +326,10 @@ static void set_rectangles(HWND hwnd)
 }
 
 static void create_layout(ParagraphInfo* p, Uint32 render_flags, const char* fontname,
-        int max_extent, BOOL oneline)
+        int max_extent, BOOL oneline, LanguageCode lc)
 {
     p->textruns = CreateTextRuns(p->ucs, p->nr_ucs,
-            LANGCODE_unknown, BIDI_PGDIR_LTR,
+            lc, BIDI_PGDIR_ON,
             fontname, MakeRGB(0, 0, 0), 0, p->bos + 1);
 
     if (p->textruns) {
@@ -496,14 +519,14 @@ static void create_header(void)
 
                 int len_bos;
                 bos = NULL;
-                len_bos = UStrGetBreaks (LANGCODE_unknown, CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
+                len_bos = UStrGetBreaks (_news_cases[_curr_news].lc, CTR_CAPITALIZE, WBR_NORMAL, LBP_NORMAL,
                     ucs, n, &bos);
 
                 if (len_bos > 0) {
                     _header.bos = bos;
                     create_layout(&_header,
                         _news_cases[_curr_news].common_flags | _news_cases[_curr_news].header_flags,
-                        _news_cases[_curr_news].header_font, _max_extent_header, TRUE);
+                        _news_cases[_curr_news].header_font, _max_extent_header, TRUE, _news_cases[_curr_news].lc);
                 }
                 else {
                     _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
@@ -571,14 +594,14 @@ static void create_footer(void)
 
                 int len_bos;
                 bos = NULL;
-                len_bos = UStrGetBreaks (LANGCODE_unknown, CTR_NONE, WBR_NORMAL, LBP_NORMAL,
+                len_bos = UStrGetBreaks (_news_cases[_curr_news].lc, CTR_NONE, WBR_NORMAL, LBP_NORMAL,
                     ucs, n, &bos);
 
                 if (len_bos > 0) {
                     _footer.bos = bos;
                     create_layout(&_footer,
                         _news_cases[_curr_news].common_flags | _news_cases[_curr_news].footer_flags,
-                        _news_cases[_curr_news].footer_font, _max_extent_footer, TRUE);
+                        _news_cases[_curr_news].footer_font, _max_extent_footer, TRUE, _news_cases[_curr_news].lc);
                 }
                 else {
                     _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
@@ -659,7 +682,7 @@ static void create_paragraphs(void)
 
                 int len_bos;
                 bos = NULL;
-                len_bos = UStrGetBreaks (LANGCODE_unknown,
+                len_bos = UStrGetBreaks (_news_cases[_curr_news].lc,
                     CTR_NONE, WBR_NORMAL, LBP_STRICT,
                     ucs, n, &bos);
 
@@ -669,7 +692,7 @@ static void create_paragraphs(void)
                     _paragraphs[_nr_parags - 1].bos = bos;
                     create_layout(_paragraphs + _nr_parags - 1,
                         _news_cases[_curr_news].common_flags | _news_cases[_curr_news].text_flags,
-                        _news_cases[_curr_news].text_font, _max_extent_text, FALSE);
+                        _news_cases[_curr_news].text_font, _max_extent_text, FALSE, _news_cases[_curr_news].lc);
                 }
                 else {
                     _ERR_PRINTF("%s: UStrGetBreaks failed.\n",
@@ -1088,6 +1111,8 @@ static DEVFONTINFO _devfontinfo[] = {
         "ttf-Arab-rrncnn-0-0-UTF-8" },
     { "/usr/share/fonts/truetype/fonts-arabeyes/ae_Mashq-Bold.ttf",
         "ttf-Mashq-brncnn-0-0-UTF-8" },
+    { "/usr/share/fonts/truetype/kacst/KacstQurn.ttf",
+        "ttf-Qurn-brncnn-0-0-UTF-8" },
 
     // Fonts for Thai
     { "/usr/share/fonts/truetype/tlwg/Garuda.ttf",
