@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -77,7 +77,7 @@ typedef struct _rotate_info
     PBITMAP bmp_fg; /* the picture of foreground */
 }ROTATEINFO;
 
-void InitRotateInfo(HWND hwnd, ROTATEINFO* info, int frame_num, 
+void InitRotateInfo(HWND hwnd, ROTATEINFO* info, int frame_num,
         PBITMAP bmp_bk, PBITMAP bmp_fg)
 {
     RECT rc;
@@ -119,9 +119,9 @@ static void def_rotate_bkgnd(HDC hdc, const RECT* rtbk, void * context)
     ROTATEINFO *info = (ROTATEINFO *)context;
 
     /*draw background picture*/
-    MGPlusGraphicClear(info->hgp, 0xFF000000); 
+    MGPlusGraphicClear(info->hgp, 0xFF000000);
     MGPlusDrawImageWithPoints(info->hgp, 1, info->pt+4, 4);
-    
+
 }
 
 static void def_rotate_draw_animate(HDC hdc, ANIMATE*ani, void* context)
@@ -135,9 +135,9 @@ static void def_rotate_draw_animate(HDC hdc, ANIMATE*ani, void* context)
 
 static void on_end_draw_one_frame(ANIMATE_SENCE *as)
 {
-	if(as != NULL)
-	{
-	}
+    if(as != NULL)
+    {
+    }
 }
 
 void calc_cubicrotate_coor(ANIMATE* ani, int frame_index, void* context)
@@ -215,7 +215,7 @@ void calc_rotate_coor(ANIMATE* ani, int frame_index, void* context)
     MPPOINT* pt = info->pt;
     int x0 = index * info->inc_x + r;
     int y0 = index * info->inc_y;
-      
+
     if (index <= info->frame_num-1)
     {
         /*draw foreground picture*/
@@ -275,7 +275,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                         on_end_draw_one_frame
                     };
                     SetInterval (50);
-                    InitRotateInfo(hWnd, &g_info, 30, &bmp_res[1], &bmp_res[0]); 
+                    InitRotateInfo(hWnd, &g_info, 30, &bmp_res[1], &bmp_res[0]);
                     RunCommonAnimate(g_buffdc, &g_rcScr, &bmp_res[1], calc_cubicrotate_coor,
                             &ops, 31, &g_info);
                     break;
@@ -288,7 +288,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         case MSG_PAINT:
         {
             HDC hdc = BeginPaint(hWnd);
-            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top, 
+            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top,
                     RECTW(g_rcScr), RECTH(g_rcScr), &bmp_res[0]);
             EndPaint(hWnd, hdc);
             break;

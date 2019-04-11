@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -40,7 +40,7 @@
 #include <ctype.h>
 
 
-static char g_lion[] = 
+static char g_lion[] =
 "f2cc99\n"
 "M 69,18 L 82,8 L 99,3 L 118,5 L 135,12 L 149,21 L 156,13 L 165,9 L 177,13 L 183,28 L 180,50 L 164,91 L 155,107 L 154,114 L 151,121 L 141,127 L 139,136 L 155,206 L 157,251 L 126,342 L 133,357 L 128,376 L 83,376 L 75,368 L 67,350 L 61,350 L 53,369 L 4,369 L 2,361 L 5,354 L 12,342 L 16,321 L 4,257 L 4,244 L 7,218 L 9,179 L 26,127 L 43,93 L 32,77 L 30,70 L 24,67 L 16,49 L 17,35 L 18,23 L 30,12 L 40,7 L 53,7 L 62,12 L 69,18 L 69,18 L 69,18\n"
 "e5b27f\n"
@@ -189,78 +189,78 @@ static char g_lion[] =
 
 int  fill_lion (HGRAPHICS hgs, HBRUSH brush, HPATH path)
 {
-	const char* ptr = g_lion;
-	int npaths = 0;
-	ARGB color_current = 0;
-	BOOL b_first = TRUE;
+    const char* ptr = g_lion;
+    int npaths = 0;
+    ARGB color_current = 0;
+    BOOL b_first = TRUE;
 
-	while(*ptr)
-	{
-		if(*ptr != 'M' && isalnum (*ptr))
-		{
-			unsigned c = 0;
-			unsigned r = 0;
-			unsigned g = 0;
-			unsigned b = 0;
-			ARGB color;
+    while(*ptr)
+    {
+        if(*ptr != 'M' && isalnum (*ptr))
+        {
+            unsigned c = 0;
+            unsigned r = 0;
+            unsigned g = 0;
+            unsigned b = 0;
+            ARGB color;
 
-			sscanf(ptr, "%x", &c);
-			MGPlusPathCloseFigure (path);
+            sscanf(ptr, "%x", &c);
+            MGPlusPathCloseFigure (path);
 
-			r = (c & 0xFF0000) >> 16;
-			g = (c & 0x00FF00) >> 8;
-			b = (c & 0x0000FF);
+            r = (c & 0xFF0000) >> 16;
+            g = (c & 0x00FF00) >> 8;
+            b = (c & 0x0000FF);
 
-			color = 0xFF000000 | (r << 16) | (g << 8) | b;
-			if (b_first)
-			{
-				color_current = color;
-				b_first = FALSE;
-			}
-			else
-			{
-				MGPlusSetSolidBrushColor (brush, color_current);
-				MGPlusFillPath (hgs, brush, path);
-				MGPlusPathReset (path);
-				color_current = color;
-			}
-			npaths++;
-			while(*ptr && *ptr != '\n') 
-				ptr++;
-			if(*ptr == '\n') 
-				ptr++;
-		}
-		else
-		{   
-			MPPOINT point;
+            color = 0xFF000000 | (r << 16) | (g << 8) | b;
+            if (b_first)
+            {
+                color_current = color;
+                b_first = FALSE;
+            }
+            else
+            {
+                MGPlusSetSolidBrushColor (brush, color_current);
+                MGPlusFillPath (hgs, brush, path);
+                MGPlusPathReset (path);
+                color_current = color;
+            }
+            npaths++;
+            while(*ptr && *ptr != '\n')
+                ptr++;
+            if(*ptr == '\n')
+                ptr++;
+        }
+        else
+        {
+            MPPOINT point;
 
-			while(*ptr && *ptr != '\n')
-			{   
-				int c = *ptr;
+            while(*ptr && *ptr != '\n')
+            {
+                int c = *ptr;
 
-				while(*ptr && !isdigit(*ptr)) ptr++;
-				point.x = atof(ptr);
+                while(*ptr && !isdigit(*ptr)) ptr++;
+                point.x = atof(ptr);
 
-				while(*ptr &&  isdigit(*ptr)) ptr++;
-				while(*ptr && !isdigit(*ptr)) ptr++;
-				point.y = atof(ptr);
+                while(*ptr &&  isdigit(*ptr)) ptr++;
+                while(*ptr && !isdigit(*ptr)) ptr++;
+                point.y = atof(ptr);
 
-				if(c == 'M')
-				{
-					MGPlusPathCloseFigure (path);
-				}
-				MGPlusPathAddLines (path, &point, 1);
-				while(*ptr &&  isdigit(*ptr)) ptr++;
-				while(*ptr && *ptr != '\n' && !isalpha(*ptr)) ptr++;
-			}
-			if(*ptr == '\n') ptr++;
-		}
-	}
-	MGPlusPathSetAllOrientation (path, MP_ORIENTATION_CW);
+                if(c == 'M')
+                {
+                    MGPlusPathCloseFigure (path);
+                }
+                MGPlusPathAddLines (path, &point, 1);
+                while(*ptr &&  isdigit(*ptr)) ptr++;
+                while(*ptr && *ptr != '\n' && !isalpha(*ptr)) ptr++;
+            }
+            if(*ptr == '\n') ptr++;
+        }
+    }
+    MGPlusPathSetAllOrientation (path, MP_ORIENTATION_CW);
 
-	MGPlusSetSolidBrushColor (brush, color_current);
-	MGPlusFillPath (hgs, brush, path);
-	return npaths++;
+    MGPlusSetSolidBrushColor (brush, color_current);
+    MGPlusFillPath (hgs, brush, path);
+    return npaths++;
 }
 
 #define HH 320
@@ -278,43 +278,43 @@ static HGRAPHICS hgs;
 
 static int mgPlusInit ( HWND hWnd )
 {
-	hdc   = GetClientDC (hWnd);
-	brush = MGPlusBrushCreate (MP_BRUSH_TYPE_SOLIDCOLOR);
-	path  = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
-	hgs   = MGPlusGraphicCreateFromDC (hdc);
+    hdc   = GetClientDC (hWnd);
+    brush = MGPlusBrushCreate (MP_BRUSH_TYPE_SOLIDCOLOR);
+    path  = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
+    hgs   = MGPlusGraphicCreateFromDC (hdc);
 
-	return 0;
+    return 0;
 }
 
 static int mgPlusClose ( void )
 {
-	MGPlusBrushDelete (brush);
-	MGPlusPathDelete (path);
-	MGPlusGraphicDelete (hgs);
-	ReleaseDC (hdc);
+    MGPlusBrushDelete (brush);
+    MGPlusPathDelete (path);
+    MGPlusGraphicDelete (hgs);
+    ReleaseDC (hdc);
 
-	return 0;
+    return 0;
 }
 
 static int mgPlusShow (HDC hdc)
 {
-	FillBox (MGPlusGetGraphicDC (hgs), 0, 0, HH, WW);
-	MGPlusRotateWorldTransform (hgs, g_nRotateAngle);
-	MGPlusScaleWorldTransform (hgs, g_fScale, g_fScale);
-	MGPlusTranslateWorldTransform (hgs, HH/ 3, WW/ 4);
-	fill_lion (hgs, brush, path);
-	MGPlusResetWorldTransform (hgs);
-	MGPlusGraphicSave (hgs, hdc, 0, 0, 0, 0, 0, 0);
+    FillBox (MGPlusGetGraphicDC (hgs), 0, 0, HH, WW);
+    MGPlusRotateWorldTransform (hgs, g_nRotateAngle);
+    MGPlusScaleWorldTransform (hgs, g_fScale, g_fScale);
+    MGPlusTranslateWorldTransform (hgs, HH/ 3, WW/ 4);
+    fill_lion (hgs, brush, path);
+    MGPlusResetWorldTransform (hgs);
+    MGPlusGraphicSave (hgs, hdc, 0, 0, 0, 0, 0, 0);
 
-	return 0;
+    return 0;
 }
 static LRESULT mgPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	switch (message)
-	{
-		case MSG_CREATE:
-			mgPlusInit (hWnd);
-			break;
+    switch (message)
+    {
+        case MSG_CREATE:
+            mgPlusInit (hWnd);
+            break;
 
         case MSG_PAINT:
             {
@@ -325,16 +325,16 @@ static LRESULT mgPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                 return 0;
             }
 
-		case MSG_LBUTTONDOWN:
-			{
+        case MSG_LBUTTONDOWN:
+            {
                 SetCapture(hWnd);
-				g_bLionStart = TRUE;
-				g_nStartY = HISWORD ( lParam );
-			}
-			break;
+                g_bLionStart = TRUE;
+                g_nStartY = HISWORD ( lParam );
+            }
+            break;
 
-		case MSG_MOUSEMOVE:
-			{
+        case MSG_MOUSEMOVE:
+            {
                 int x, y;
                 x = LOSWORD(lParam);
                 y = HISWORD(lParam);
@@ -342,103 +342,103 @@ static LRESULT mgPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     ScreenToClient (hWnd, &x, &y);
 
                 if ( g_bLionStart )
-				{
-					if ( y > g_nStartY )
-					{
-						if ( g_fScale < 5 )
-						{
-							g_nRotateAngle += 5;
-							g_fScale += 0.01;
-							g_nStartY = y;
-							
-#if 0
-							mgPlusInit (hWnd);
-							mgPlusShow ();
-							TextOut (hdc, 10, 190, "Drag the mouse up and down." );
-							mgPlusClose ();
-#endif
-                            InvalidateRect(hWnd, NULL, TRUE);
-						}
-					}
-					else
-					{
-						if ( g_fScale > 0 )
-						{
-							g_nRotateAngle -= 5;
-							g_fScale -= 0.01;
-							g_nStartY = y;
-							
-#if 0
-							mgPlusInit (hWnd);
-							mgPlusShow ();
-							TextOut (hdc, 10, 190, "Drag the mouse up and down." );
-							mgPlusClose ();
-#endif
-                            InvalidateRect(hWnd, NULL, TRUE);
-						}
-					}
-				}
-			}
-			break;
+                {
+                    if ( y > g_nStartY )
+                    {
+                        if ( g_fScale < 5 )
+                        {
+                            g_nRotateAngle += 5;
+                            g_fScale += 0.01;
+                            g_nStartY = y;
 
-		case MSG_LBUTTONUP:
-			{
-				g_bLionStart = FALSE;
+#if 0
+                            mgPlusInit (hWnd);
+                            mgPlusShow ();
+                            TextOut (hdc, 10, 190, "Drag the mouse up and down." );
+                            mgPlusClose ();
+#endif
+                            InvalidateRect(hWnd, NULL, TRUE);
+                        }
+                    }
+                    else
+                    {
+                        if ( g_fScale > 0 )
+                        {
+                            g_nRotateAngle -= 5;
+                            g_fScale -= 0.01;
+                            g_nStartY = y;
+
+#if 0
+                            mgPlusInit (hWnd);
+                            mgPlusShow ();
+                            TextOut (hdc, 10, 190, "Drag the mouse up and down." );
+                            mgPlusClose ();
+#endif
+                            InvalidateRect(hWnd, NULL, TRUE);
+                        }
+                    }
+                }
+            }
+            break;
+
+        case MSG_LBUTTONUP:
+            {
+                g_bLionStart = FALSE;
                 ReleaseCapture();
-			}
-			break;
+            }
+            break;
 
-		case MSG_CLOSE:
-			mgPlusClose ();
-			DestroyMainWindow(hWnd);
-			PostQuitMessage(hWnd);
-			return 0;
-	}
+        case MSG_CLOSE:
+            mgPlusClose ();
+            DestroyMainWindow(hWnd);
+            PostQuitMessage(hWnd);
+            return 0;
+    }
 
-	return DefaultMainWinProc(hWnd, message, wParam, lParam);
+    return DefaultMainWinProc(hWnd, message, wParam, lParam);
 }
 
 int MiniGUIMain(int argc, const char *argv[])
 {
-	MSG     Msg;
-	HWND    hMainWnd;
-	MAINWINCREATE CreateInfo;
+    MSG     Msg;
+    HWND    hMainWnd;
+    MAINWINCREATE CreateInfo;
 
 #ifdef _MGRM_PROCESSES
-	JoinLayer(NAME_DEF_LAYER, "mgplustest", 0, 0);
+    JoinLayer(NAME_DEF_LAYER, "mgplustest", 0, 0);
 #endif
 
-	CreateInfo.dwStyle = WS_VISIBLE  | WS_CAPTION | WS_BORDER;
-	CreateInfo.dwExStyle = WS_EX_AUTOSECONDARYDC;
-	CreateInfo.spCaption = "mgPlus Test!";
-	CreateInfo.hMenu = 0;
-	CreateInfo.hCursor = 0;
-	CreateInfo.hCursor = GetSystemCursor(0);
-	CreateInfo.hIcon = 0;
-	CreateInfo.MainWindowProc = mgPlusWinProc;
-	CreateInfo.lx = 150;
-	CreateInfo.ty = 300;
-	CreateInfo.rx = HH + 150;
-	CreateInfo.by = WW + 300;
-	CreateInfo.iBkColor = COLOR_lightwhite;
-	CreateInfo.dwAddData = 0;
-	CreateInfo.hHosting = HWND_DESKTOP;
+    CreateInfo.dwStyle = WS_VISIBLE  | WS_CAPTION | WS_BORDER;
+    CreateInfo.dwExStyle = WS_EX_AUTOSECONDARYDC;
+    CreateInfo.spCaption = "mgPlus Test!";
+    CreateInfo.hMenu = 0;
+    CreateInfo.hCursor = 0;
+    CreateInfo.hCursor = GetSystemCursor(0);
+    CreateInfo.hIcon = 0;
+    CreateInfo.MainWindowProc = mgPlusWinProc;
+    CreateInfo.lx = 150;
+    CreateInfo.ty = 300;
+    CreateInfo.rx = HH + 150;
+    CreateInfo.by = WW + 300;
+    CreateInfo.iBkColor = COLOR_lightwhite;
+    CreateInfo.dwAddData = 0;
+    CreateInfo.hHosting = HWND_DESKTOP;
 
-	hMainWnd = CreateMainWindow(&CreateInfo);
+    hMainWnd = CreateMainWindow(&CreateInfo);
 
-	if (hMainWnd == HWND_INVALID)
-		return -1;
+    if (hMainWnd == HWND_INVALID)
+        return -1;
 
-	ShowWindow(hMainWnd, SW_SHOWNORMAL);
+    ShowWindow(hMainWnd, SW_SHOWNORMAL);
 
-	while (GetMessage(&Msg, hMainWnd))
-	{
-		TranslateMessage(&Msg);
-		DispatchMessage(&Msg);
-	}
+    while (GetMessage(&Msg, hMainWnd))
+    {
+        TranslateMessage(&Msg);
+        DispatchMessage(&Msg);
+    }
 
-	MainWindowThreadCleanup(hMainWnd);
-	return 0;
+    MainWindowThreadCleanup(hMainWnd);
+    return 0;
 }
 
 #ifndef _LITE_VERSION

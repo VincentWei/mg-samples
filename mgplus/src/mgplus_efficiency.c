@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -217,7 +217,7 @@ void draw_path(HGRAPHICS hgs, HPEN pen)
     MGPlusPenDelete (pen_dash);
 
     MGPlusDrawArc(hgs, pen, 10, 320, 100, 50, 0, 300);
-    
+
     MGPlusDrawEllipseI(hgs, pen, 0, 0, 200, 100);
     MGPlusDrawBezier(hgs, pen , 120, 350, 145, 312, 200, 380, 220, 350);
 }
@@ -242,7 +242,7 @@ void draw_on_mouse(HGRAPHICS hgs, HPEN pen, int x1, int y1, int x2, int y2)
 static void CleanClient(HWND hWnd)
 {
     HDC hdc = GetClientDC(hWnd);
-    FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom); 
+    FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom);
     ReleaseDC(hdc);
 }
 
@@ -388,7 +388,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                 //MGPlusPathAddArc(clip_path, 100, 120, 100, 100, 0, 360);
                 //MGPlusPathAddArc(clip_path, 150, 120, 100, 100, 0, 360);
                 MGPlusSetClipPath(hgs, clip_path);
-                //MGPlusFillPath(hgs, brush, clip_path); 
+                //MGPlusFillPath(hgs, brush, clip_path);
 #endif
                 //draw_path(hgs, pen);
                 LoadBitmap (HDC_SCREEN, &g_stTestBitmap, "./res/gundam.bmp");
@@ -414,8 +414,8 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
             CleanClient(hWnd);
             break;
         case MSG_LBUTTONDOWN:
-            x_s = LOWORD(lParam); 
-            y_s = HIWORD(lParam); 
+            x_s = LOWORD(lParam);
+            y_s = HIWORD(lParam);
             return 0;
         case MSG_MOUSEMOVE:
             {
@@ -446,7 +446,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                 MGPlusGraphicClear(hgs, 0xffffffff);
                 switch(scancode) {
                     case SCANCODE_F1:
-                        //MGPlusSetCompositingMode (hgs, 
+                        //MGPlusSetCompositingMode (hgs,
                         //        (MPCompositingMode)MP_COMP_OP_SRC_OVER);
                         test_func_draw_line(hgs, pen);
                         break;

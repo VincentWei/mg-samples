@@ -42,67 +42,67 @@ static char CurPosBuffer[16];
 
 static void TrackbarChanged(int code, HWND ctrl)
 {
-	switch (code)
-	{
-	    case TBN_REACHMAX:
-	    	CurrentPos = MaxLength;
-	    	sprintf(CurPosBuffer, "%d", CurrentPos);
+    switch (code)
+    {
+        case TBN_REACHMAX:
+            CurrentPos = MaxLength;
+            sprintf(CurPosBuffer, "%d", CurrentPos);
             SendMessage (hShowWnd,  MSG_SETTEXT, 0, (LPARAM)CurPosBuffer);
-	    break;
+        break;
 
-	    case TBN_REACHMIN:
-	    	CurrentPos = 0;
-	    	sprintf(CurPosBuffer, "%d", CurrentPos);
+        case TBN_REACHMIN:
+            CurrentPos = 0;
+            sprintf(CurPosBuffer, "%d", CurrentPos);
             SendMessage (hShowWnd,  MSG_SETTEXT, 0, (LPARAM)CurPosBuffer);
-	    break;
+        break;
 
-	    case TBN_CHANGE:
-	    	CurrentPos = SendMessage (hTrackWnd1, TBM_GETPOS, 0, 0);
-	    	sprintf(CurPosBuffer, "%d", CurrentPos);
+        case TBN_CHANGE:
+            CurrentPos = SendMessage (hTrackWnd1, TBM_GETPOS, 0, 0);
+            sprintf(CurPosBuffer, "%d", CurrentPos);
             SendMessage (hShowWnd,  MSG_SETTEXT, 0, (LPARAM)CurPosBuffer);
-	    break;
+        break;
 
-	    default:
-	    break;
-	}
+        default:
+        break;
+    }
 }
 
 static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message) {
         case MSG_CREATE:
-            hShowWnd = CreateWindow (CTRL_STATIC, 
-                              "", 
-                              WS_VISIBLE, 
-                              IDC_STATIC, 
+            hShowWnd = CreateWindow (CTRL_STATIC,
+                              "",
+                              WS_VISIBLE,
+                              IDC_STATIC,
                               10, 20, 60, 20, hWnd, 0);
 
-            hTrackWnd1 = CreateWindow (CTRL_TRACKBAR, 
-                              "", 
-                              WS_VISIBLE | TBS_NOTIFY, 
-                              IDC_TRACKBAR1, 
+            hTrackWnd1 = CreateWindow (CTRL_TRACKBAR,
+                              "",
+                              WS_VISIBLE | TBS_NOTIFY,
+                              IDC_TRACKBAR1,
                               10, 40, 180, 100, hWnd, 0);
             SendMessage (hTrackWnd1, TBM_SETRANGE, 0, 1000);
             SendMessage (hTrackWnd1, TBM_SETLINESIZE, 1, 0);
             SendMessage (hTrackWnd1, TBM_SETPAGESIZE, 10, 0);
             SendMessage (hTrackWnd1, TBM_SETTICKFREQ, 1000, 0);
 
-            hTrackWnd2 = CreateWindow (CTRL_TRACKBAR, 
-                              "", 
-                              WS_VISIBLE | TBS_NOTIFY | TBS_TIP, 
-                              IDC_TRACKBAR1 + 1, 
+            hTrackWnd2 = CreateWindow (CTRL_TRACKBAR,
+                              "",
+                              WS_VISIBLE | TBS_NOTIFY | TBS_TIP,
+                              IDC_TRACKBAR1 + 1,
                               200, 40, 180, 50, hWnd, 0);
             SendMessage (hTrackWnd2, TBM_SETTIP, (WPARAM)"Min", (LPARAM)"Max");
 
-            hTrackWnd2 = CreateWindow (CTRL_TRACKBAR, 
-                              "", 
-                              WS_VISIBLE | TBS_NOTIFY | TBS_VERTICAL, 
-                              IDC_TRACKBAR1 + 2, 
+            hTrackWnd2 = CreateWindow (CTRL_TRACKBAR,
+                              "",
+                              WS_VISIBLE | TBS_NOTIFY | TBS_VERTICAL,
+                              IDC_TRACKBAR1 + 2,
                               10, 100, 50, 200, hWnd, 0);
-            CreateWindow (CTRL_TRACKBAR, 
-                              "", 
-                              WS_VISIBLE | TBS_NOTIFY | TBS_VERTICAL | TBS_NOTICK, 
-                              IDC_TRACKBAR1 + 3, 
+            CreateWindow (CTRL_TRACKBAR,
+                              "",
+                              WS_VISIBLE | TBS_NOTIFY | TBS_VERTICAL | TBS_NOTICK,
+                              IDC_TRACKBAR1 + 3,
                               200, 100, 50, 200, hWnd, 0);
 
             SendMessage (hTrackWnd2, TBM_SETRANGE, 0, 10000);
@@ -134,10 +134,10 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         }
         break;
 
-	case MSG_DESTROY:
+    case MSG_DESTROY:
             DestroyAllControls (hWnd);
             hMainWnd = HWND_INVALID;
-	    return 0;
+        return 0;
 
         case MSG_CLOSE:
             DestroyMainWindow (hWnd);
@@ -160,7 +160,7 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(IDC_ARROW);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 460;
     pCreateInfo->by = 380;

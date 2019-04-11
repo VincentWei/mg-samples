@@ -93,7 +93,7 @@ static void create_newtoolbars (HWND hWnd)
 
     ntb1 = CreateWindow (CTRL_NEWTOOLBAR,
                     "",
-                    WS_CHILD | WS_VISIBLE, 
+                    WS_CHILD | WS_VISIBLE,
                     IDC_CTRL_NEWTOOLBAR_1,
                     0, 10, 1024, 0,
                     hWnd,
@@ -292,7 +292,7 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             return -1;
 
         CreateWindow (CTRL_BUTTON, Close,
-                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, IDC_CTRL_BUTTON, 
+                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, IDC_CTRL_BUTTON,
                         400, 320, 60, 25, hWnd,0);
         create_newtoolbars (hWnd);
         break;
@@ -327,7 +327,7 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         UnloadBitmap (&bitmap4);
         DestroyAllControls (hWnd);
         hMainWnd = HWND_INVALID;
-	return 0;
+    return 0;
 
     case MSG_CLOSE:
         DestroyMainWindow (hWnd);

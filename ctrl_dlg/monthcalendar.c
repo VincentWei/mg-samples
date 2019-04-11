@@ -40,23 +40,23 @@
 #include "dlgdemo_res_en.h"
 #endif
 
-#define IDC_CTRL1 	10
-#define IDC_CTRL2 	20
-#define IDC_CTRL3 	30
-#define IDC_CTRL4 	40
-#define IDC_CTRL5 	50
-#define IDC_CTRL6 	60
-#define IDC_CTRL7 	70
-#define IDC_CTRL8	80
-#define IDC_CTRL9	90
-#define IDC_CTRL10	100
-#define IDC_CTRL11	110
-#define IDC_CTRL12	120
-#define IDC_CTRL13	130
-#define IDC_CTRL14 	140
-#define IDC_CTRL15	150
-#define IDC_CTRL16	160
-#define IDC_CTRL17	170
+#define IDC_CTRL1     10
+#define IDC_CTRL2     20
+#define IDC_CTRL3     30
+#define IDC_CTRL4     40
+#define IDC_CTRL5     50
+#define IDC_CTRL6     60
+#define IDC_CTRL7     70
+#define IDC_CTRL8    80
+#define IDC_CTRL9    90
+#define IDC_CTRL10    100
+#define IDC_CTRL11    110
+#define IDC_CTRL12    120
+#define IDC_CTRL13    130
+#define IDC_CTRL14     140
+#define IDC_CTRL15    150
+#define IDC_CTRL16    160
+#define IDC_CTRL17    170
 
 static HWND hMainWnd = HWND_INVALID;
 
@@ -66,125 +66,125 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
     switch (message) {
         case MSG_CREATE:
-            hChildWnd1 = CreateWindow ("monthcalendar", 
-                                        monthcalendar, 
+            hChildWnd1 = CreateWindow ("monthcalendar",
+                                        monthcalendar,
                                         WS_CHILD |
                                         WS_VISIBLE |
-										MCS_ENG_L |
-										MCS_NOTIFY, 
-                                        IDC_CTRL1, 
+                                        MCS_ENG_L |
+                                        MCS_NOTIFY,
+                                        IDC_CTRL1,
                                         50, 20, 250, 180, hWnd, 0);
-			CreateWindow ("button", 
-									 get_current_day,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL2,
-									 140, 220, 160, 24, hWnd, 0);
-			hMeditWnd1 = CreateWindow ("medit", 
-									  NULL,
-									  WS_CHILD | WS_BORDER |
-									  WS_VISIBLE,
-									  IDC_CTRL3,
-									  350, 20, 230, 100, hWnd, 0);
-		
-			CreateWindow ("button", 
-									 get_current_month,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL4,
-									 140, 260, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 get_current_year,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL5,
-									 140, 300, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 set_current_day,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL6,
-									 140, 340, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 set_current_month,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL7,
-									 140, 380, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 set_current_year,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL8,
-									 140, 420, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 set_current_date_as_today,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL9,
-									 140, 460, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 get_first_day_of_week,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL10,
-									 140, 500, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 get_current_date,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL11,
-									 350, 220, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 get_today,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL12,
-									 350, 260, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 get_minreqrectsize,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL13,
-									 350, 300, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 set_current_date,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL14,
-									 350, 340, 160, 24, hWnd, 0);
-			hMeditWnd2 = CreateWindow ("medit", 
-									  NULL,
-									  WS_CHILD | WS_BORDER |
-									  WS_VISIBLE,
-									  IDC_CTRL15,
-									  350, 150, 230, 50, hWnd, 0);
-			CreateWindow ("button", 
-									 set_color,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL16,
-									 350, 380, 160, 24, hWnd, 0);
-			CreateWindow ("button", 
-									 get_color,
-									 WS_CHILD 
-									 | BS_PUSHBUTTON 
-									 | WS_VISIBLE, 
-									 IDC_CTRL17,
-									 350, 420, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_current_day,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL2,
+                                     140, 220, 160, 24, hWnd, 0);
+            hMeditWnd1 = CreateWindow ("medit",
+                                      NULL,
+                                      WS_CHILD | WS_BORDER |
+                                      WS_VISIBLE,
+                                      IDC_CTRL3,
+                                      350, 20, 230, 100, hWnd, 0);
+
+            CreateWindow ("button",
+                                     get_current_month,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL4,
+                                     140, 260, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_current_year,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL5,
+                                     140, 300, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     set_current_day,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL6,
+                                     140, 340, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     set_current_month,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL7,
+                                     140, 380, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     set_current_year,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL8,
+                                     140, 420, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     set_current_date_as_today,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL9,
+                                     140, 460, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_first_day_of_week,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL10,
+                                     140, 500, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_current_date,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL11,
+                                     350, 220, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_today,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL12,
+                                     350, 260, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_minreqrectsize,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL13,
+                                     350, 300, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     set_current_date,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL14,
+                                     350, 340, 160, 24, hWnd, 0);
+            hMeditWnd2 = CreateWindow ("medit",
+                                      NULL,
+                                      WS_CHILD | WS_BORDER |
+                                      WS_VISIBLE,
+                                      IDC_CTRL15,
+                                      350, 150, 230, 50, hWnd, 0);
+            CreateWindow ("button",
+                                     set_color,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL16,
+                                     350, 380, 160, 24, hWnd, 0);
+            CreateWindow ("button",
+                                     get_color,
+                                     WS_CHILD
+                                     | BS_PUSHBUTTON
+                                     | WS_VISIBLE,
+                                     IDC_CTRL17,
+                                     350, 420, 160, 24, hWnd, 0);
 
         break;
 
@@ -194,176 +194,176 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             int code = HIWORD(wParam);
 
             switch (id) {
-            	case IDC_CTRL2:
-				{
-					int day;
-					char chday[50];
-					day = SendMessage (hChildWnd1, MCM_GETCURDAY, 0, 0);
-					sprintf (chday, "Current day=%d\n", day);
-					SetWindowText (hMeditWnd1, chday);
-				}
-           	 	break;
-				
-				case IDC_CTRL4:
-				{
-					int month;
-					char chmon[50];
-					month = SendMessage (hChildWnd1, MCM_GETCURMONTH, 0, 0);
-					sprintf (chmon, "Current month=%d\n", month);
-					SetWindowText (hMeditWnd1, chmon);
-				}
-				break;
+                case IDC_CTRL2:
+                {
+                    int day;
+                    char chday[50];
+                    day = SendMessage (hChildWnd1, MCM_GETCURDAY, 0, 0);
+                    sprintf (chday, "Current day=%d\n", day);
+                    SetWindowText (hMeditWnd1, chday);
+                }
+                    break;
 
-				case IDC_CTRL5:
-				{
-					int year;
-					char chyear[50];
-					year = SendMessage (hChildWnd1, MCM_GETCURYEAR, 0, 0);
-					sprintf (chyear, "Current year=%d\n", year);
-					SetWindowText (hMeditWnd1, chyear);
-				}
-				break;
-			
-				case IDC_CTRL6:
-				{
-					int newday = 31;
-					SendMessage (hChildWnd1, MCM_SETCURDAY, newday, 0);
-				}
-				break;
-				
-				case IDC_CTRL7:
-				{
-					int newmonth = 2;
-					SendMessage (hChildWnd1, MCM_SETCURMONTH, newmonth, 0);
-				}
-				break;
-				
-				case IDC_CTRL8:
-				{
-					int newyear = 1997;
-					SendMessage (hChildWnd1, MCM_SETCURYEAR, newyear, 0);
-				}
-				break;
-				
-				case IDC_CTRL9:
-				{
-					SendMessage (hChildWnd1, MCM_SETTODAY, 0, 0);
-				}
-				break;
-				
-				case IDC_CTRL10:
-				{
-					int weekday1;
-					char buffer[50];
-					weekday1 = SendMessage (hChildWnd1, MCM_GETFIRSTWEEKDAY, 0, 0);
-					sprintf (buffer, "first day of week =%d\n", weekday1);
-					SetWindowText (hMeditWnd1, buffer);
-				}
-				break;
-				
-				case IDC_CTRL11:
-				{
-					SYSTEMTIME curdate;
-					char buffer[300];
-					SendMessage (hChildWnd1, MCM_GETCURDATE, 0, (LPARAM) &curdate);
-					sprintf (buffer, "current year = %d\ncurrent month = %d\ncurrent day = %d\ncurrent day of week = %d\n",	curdate.year, curdate.month, curdate.day, curdate.weekday);
-					SetWindowText (hMeditWnd1, buffer);
-				}
-				break;
-				
-				case IDC_CTRL12:
-				{
-					SYSTEMTIME today;
-					char buffer[300];
+                case IDC_CTRL4:
+                {
+                    int month;
+                    char chmon[50];
+                    month = SendMessage (hChildWnd1, MCM_GETCURMONTH, 0, 0);
+                    sprintf (chmon, "Current month=%d\n", month);
+                    SetWindowText (hMeditWnd1, chmon);
+                }
+                break;
 
-					SendMessage (hChildWnd1, MCM_GETTODAY, 0, (LPARAM) &today);
-					sprintf (buffer, "today is \nyear %d\nmonth %d\nday %d\nday of week %d\n",
-									today.year, today.month, today.day, today.weekday);
-					SetWindowText (hMeditWnd1, buffer);
-				}
-				break;
-				
-				case IDC_CTRL13:
-				{
-					int minw, minh;
-					char buffer[100];
+                case IDC_CTRL5:
+                {
+                    int year;
+                    char chyear[50];
+                    year = SendMessage (hChildWnd1, MCM_GETCURYEAR, 0, 0);
+                    sprintf (chyear, "Current year=%d\n", year);
+                    SetWindowText (hMeditWnd1, chyear);
+                }
+                break;
 
-					minw = SendMessage (hChildWnd1, MCM_GETMINREQRECTW, 0, 0);
-					minh = SendMessage (hChildWnd1, MCM_GETMINREQRECTH, 0, 0);
-					sprintf (buffer, "the minimum required window width = %d\nthe minimum required window height =%d\n", minw, minh);
-					SetWindowText (hMeditWnd1, buffer);
-				}
-				break;
-				
-				case IDC_CTRL14:
-				{
-					SYSTEMTIME curdate;
-				
-					curdate.year = 1997;
-					curdate.month = 7;
-					curdate.day = 1;
-					SendMessage (hChildWnd1, MCM_SETCURDATE, 0, (LPARAM) &curdate);	
-				}
-				break;
-			
-				case IDC_CTRL1:
-					switch (code) {
-						case MCN_DATECHANGE:
-							SetWindowText (hMeditWnd2, "the current date is changed\n");
-						break;
-					
-					}
-				break;
-				
-				case IDC_CTRL16:
-				{
-					MCCOLORINFO mcci;
-					
-					memset (&mcci, -1, 11*sizeof(int));
-					//mcci.clr_titlebk 		= COLOR_darkgray;
-					//mcci.clr_titletext 		= PIXEL_lightwhite;
-					mcci.clr_arrow 			= PIXEL_darkblue;
-					mcci.clr_arrowHibk 		= COLOR_yellow;
-					mcci.clr_daybk			= COLOR_yellow;
-					mcci.clr_dayHibk		= COLOR_magenta;
-					mcci.clr_daytext		= PIXEL_darkblue;
-					mcci.clr_trailingtext	= COLOR_green;
-					mcci.clr_dayHitext		= COLOR_yellow;
-					mcci.clr_weekcaptbk		= COLOR_darkgreen;
-					mcci.clr_weekcapttext 	= COLOR_yellow;
-				
-					SendMessage (hChildWnd1, MCM_SETCOLOR, 0, (LPARAM) &mcci);
-				}
-				break;
-				
-				case IDC_CTRL17:
-				{
-					char buffer[300];
-					MCCOLORINFO mcci;
-					
-					SendMessage (hChildWnd1, MCM_GETCOLOR, 0, (LPARAM) &mcci);
-					sprintf (buffer, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", 
-							mcci.clr_titlebk, mcci.clr_titletext, 
-							mcci.clr_arrow, mcci.clr_arrowHibk,
-							mcci.clr_daybk, mcci.clr_dayHibk,
-							mcci.clr_daytext, mcci.clr_trailingtext,
-							mcci.clr_dayHitext, mcci.clr_weekcaptbk,
-							mcci.clr_weekcapttext);
-					SetWindowText (hMeditWnd1, buffer);
-				}
-				break;
-				
-            	default:
-            	break;
+                case IDC_CTRL6:
+                {
+                    int newday = 31;
+                    SendMessage (hChildWnd1, MCM_SETCURDAY, newday, 0);
+                }
+                break;
+
+                case IDC_CTRL7:
+                {
+                    int newmonth = 2;
+                    SendMessage (hChildWnd1, MCM_SETCURMONTH, newmonth, 0);
+                }
+                break;
+
+                case IDC_CTRL8:
+                {
+                    int newyear = 1997;
+                    SendMessage (hChildWnd1, MCM_SETCURYEAR, newyear, 0);
+                }
+                break;
+
+                case IDC_CTRL9:
+                {
+                    SendMessage (hChildWnd1, MCM_SETTODAY, 0, 0);
+                }
+                break;
+
+                case IDC_CTRL10:
+                {
+                    int weekday1;
+                    char buffer[50];
+                    weekday1 = SendMessage (hChildWnd1, MCM_GETFIRSTWEEKDAY, 0, 0);
+                    sprintf (buffer, "first day of week =%d\n", weekday1);
+                    SetWindowText (hMeditWnd1, buffer);
+                }
+                break;
+
+                case IDC_CTRL11:
+                {
+                    SYSTEMTIME curdate;
+                    char buffer[300];
+                    SendMessage (hChildWnd1, MCM_GETCURDATE, 0, (LPARAM) &curdate);
+                    sprintf (buffer, "current year = %d\ncurrent month = %d\ncurrent day = %d\ncurrent day of week = %d\n",    curdate.year, curdate.month, curdate.day, curdate.weekday);
+                    SetWindowText (hMeditWnd1, buffer);
+                }
+                break;
+
+                case IDC_CTRL12:
+                {
+                    SYSTEMTIME today;
+                    char buffer[300];
+
+                    SendMessage (hChildWnd1, MCM_GETTODAY, 0, (LPARAM) &today);
+                    sprintf (buffer, "today is \nyear %d\nmonth %d\nday %d\nday of week %d\n",
+                                    today.year, today.month, today.day, today.weekday);
+                    SetWindowText (hMeditWnd1, buffer);
+                }
+                break;
+
+                case IDC_CTRL13:
+                {
+                    int minw, minh;
+                    char buffer[100];
+
+                    minw = SendMessage (hChildWnd1, MCM_GETMINREQRECTW, 0, 0);
+                    minh = SendMessage (hChildWnd1, MCM_GETMINREQRECTH, 0, 0);
+                    sprintf (buffer, "the minimum required window width = %d\nthe minimum required window height =%d\n", minw, minh);
+                    SetWindowText (hMeditWnd1, buffer);
+                }
+                break;
+
+                case IDC_CTRL14:
+                {
+                    SYSTEMTIME curdate;
+
+                    curdate.year = 1997;
+                    curdate.month = 7;
+                    curdate.day = 1;
+                    SendMessage (hChildWnd1, MCM_SETCURDATE, 0, (LPARAM) &curdate);
+                }
+                break;
+
+                case IDC_CTRL1:
+                    switch (code) {
+                        case MCN_DATECHANGE:
+                            SetWindowText (hMeditWnd2, "the current date is changed\n");
+                        break;
+
+                    }
+                break;
+
+                case IDC_CTRL16:
+                {
+                    MCCOLORINFO mcci;
+
+                    memset (&mcci, -1, 11*sizeof(int));
+                    //mcci.clr_titlebk         = COLOR_darkgray;
+                    //mcci.clr_titletext         = PIXEL_lightwhite;
+                    mcci.clr_arrow             = PIXEL_darkblue;
+                    mcci.clr_arrowHibk         = COLOR_yellow;
+                    mcci.clr_daybk            = COLOR_yellow;
+                    mcci.clr_dayHibk        = COLOR_magenta;
+                    mcci.clr_daytext        = PIXEL_darkblue;
+                    mcci.clr_trailingtext    = COLOR_green;
+                    mcci.clr_dayHitext        = COLOR_yellow;
+                    mcci.clr_weekcaptbk        = COLOR_darkgreen;
+                    mcci.clr_weekcapttext     = COLOR_yellow;
+
+                    SendMessage (hChildWnd1, MCM_SETCOLOR, 0, (LPARAM) &mcci);
+                }
+                break;
+
+                case IDC_CTRL17:
+                {
+                    char buffer[300];
+                    MCCOLORINFO mcci;
+
+                    SendMessage (hChildWnd1, MCM_GETCOLOR, 0, (LPARAM) &mcci);
+                    sprintf (buffer, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
+                            mcci.clr_titlebk, mcci.clr_titletext,
+                            mcci.clr_arrow, mcci.clr_arrowHibk,
+                            mcci.clr_daybk, mcci.clr_dayHibk,
+                            mcci.clr_daytext, mcci.clr_trailingtext,
+                            mcci.clr_dayHitext, mcci.clr_weekcaptbk,
+                            mcci.clr_weekcapttext);
+                    SetWindowText (hMeditWnd1, buffer);
+                }
+                break;
+
+                default:
+                break;
             }
 
         }
         break;
-       
-	case MSG_DESTROY:
+
+    case MSG_DESTROY:
             DestroyAllControls (hWnd);
             hMainWnd = HWND_INVALID;
-	    return 0;
+        return 0;
 
         case MSG_CLOSE:
             DestroyMainWindow (hWnd);
@@ -383,7 +383,7 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(1);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 640;
     pCreateInfo->by = 480;
@@ -394,17 +394,17 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
 
 void monthcalendar_demo (HWND hwnd)
 {
-	MAINWINCREATE CreateInfo;
+    MAINWINCREATE CreateInfo;
 
     if (hMainWnd != HWND_INVALID) {
         ShowWindow (hMainWnd, SW_SHOWNORMAL);
         return;
     }
 
-	InitCreateInfo(&CreateInfo);
+    InitCreateInfo(&CreateInfo);
     CreateInfo.hHosting = hwnd;
 
-	hMainWnd = CreateMainWindow(&CreateInfo);
+    hMainWnd = CreateMainWindow(&CreateInfo);
 
 }
 

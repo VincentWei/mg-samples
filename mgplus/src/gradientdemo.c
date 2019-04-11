@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -39,7 +39,7 @@
 #include "stdio.h"
 #include <ctype.h>
 
-static char g_lion[] = 
+static char g_lion[] =
 "f2cc99\n"
 "M 69,18 L 82,8 L 99,3 L 118,5 L 135,12 L 149,21 L 156,13 L 165,9 L 177,13 L 183,28 L 180,50 L 164,91 L 155,107 L 154,114 L 151,121 L 141,127 L 139,136 L 155,206 L 157,251 L 126,342 L 133,357 L 128,376 L 83,376 L 75,368 L 67,350 L 61,350 L 53,369 L 4,369 L 2,361 L 5,354 L 12,342 L 16,321 L 4,257 L 4,244 L 7,218 L 9,179 L 26,127 L 43,93 L 32,77 L 30,70 L 24,67 L 16,49 L 17,35 L 18,23 L 30,12 L 40,7 L 53,7 L 62,12 L 69,18 L 69,18 L 69,18\n"
 "e5b27f\n"
@@ -229,11 +229,11 @@ int  fill_lion (HGRAPHICS hgs, HBRUSH brush, HPATH path)
 
         }
         else
-        {   
+        {
             MPPOINT point;
 
             while(*ptr && *ptr != '\n')
-            {   
+            {
                 int c = *ptr;
 
                 while(*ptr && !isdigit(*ptr)) ptr++;
@@ -309,11 +309,11 @@ int  draw_lion (HGRAPHICS hgs, HPEN pen, HPATH path)
 
         }
         else
-        {   
+        {
             MPPOINT point;
 
             while(*ptr && *ptr != '\n')
-            {   
+            {
                 int c = *ptr;
 
                 while(*ptr && !isdigit(*ptr)) ptr++;
@@ -365,7 +365,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                 printf("window font is null\n");
             break;
         }
-#if 1 
+#if 1
         case MSG_PAINT:
         {
             HDC hdc = BeginPaint (hWnd);
@@ -455,7 +455,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
             g_nStartY = 0;
             g_nRotateAngle = 0;
             g_fScale = 1;
-            FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom); 
+            FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom);
             ReleaseDC(hdc);
         }
         break;
@@ -482,10 +482,10 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     MGPlusSetSolidBrushColor (brush_solid, a);
 
                     //MGPlusDrawLineI (hgs, pen, 10, 10, 20, 20);
-                    
+
                     MGPlusPathMovetoI (path_solid, 200, 40);
                     MGPlusPathLinetoI (path_solid, 240, 150);
-                    
+
                     //MGPlusPenSetJoinStyle (pen, 0);
                     //MGPlusPenSetCapStyle (pen, 0);
                     //MGPlusDrawRectangleI (hgs, pen, 10, 10, 100, 100);
@@ -500,7 +500,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
                     if (MGPlusGraphicSave(hgs, hdc, 0, 0, 0, 0, 0, 0) == MP_OK)
                         printf ("save graphic ok!");
-                    
+
                     MGPlusBrushDelete (brush_solid);
                     MGPlusGraphicDelete (hgs);
                     //SetPenColor(hdc, PIXEL_red);
@@ -520,7 +520,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     }
                     HBRUSH brush_solid = MGPlusBrushCreate (MP_BRUSH_TYPE_SOLIDCOLOR);
                     HPATH path_solid = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
-#if 0 
+#if 0
                     MGPlusPathAddEllipse (path_solid, 30, 30, 100, 100, TRUE);
                     MGPlusSetSolidBrushColor (brush_solid, 0xFF000000);
                     MGPlusFillPath (hgs, brush_solid, path_solid);
@@ -530,7 +530,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     HPATH path_path_gradient = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
                     MPPOINT center_point = {180, 150};
                     RECT rect = {180 - 60, 150 - 60, 180 + 60, 150 + 60};
-#if 1 
+#if 1
                     MGPlusSetPathGradientBrushSurroundRect (brush_path_gradient, &rect);
                     MGPlusPathAddEllipse (path_path_gradient, 180, 150, 120, 120, TRUE);
                     MGPlusSetPathGradientBrushCenterPoint (brush_path_gradient, &center_point);
@@ -628,7 +628,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     HGRAPHICS hgs = MGPlusGraphicCreate (MP_PIX_FORMAT_BGRA32,
                             640, 480);
 #endif
-#if 1 
+#if 1
                     HDC hdc = GetClientDC (hWnd);
                     HGRAPHICS hgs = MGPlusGraphicCreateFromDC (hdc);
                     HPATH path = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
@@ -659,7 +659,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 #endif
 
                     LoadBitmap (HDC_SCREEN, &g_stTestBitmap, "./res/gundam.bmp");
-#if 1 
+#if 1
                     MGPlusGraphicLoadBitmap (hgs, 0, &g_stTestBitmap);
                     MGPlusGraphicLoadBitmapFromFile (hgs, 1, "./res/gundam.bmp");
                     MGPlusSetInterpolationMode (hgs, MP_INTERPOLATION_MODE_BILINEAR);
@@ -685,7 +685,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     //MGPlusFillPath (hgs, hBrush, path);
 
                     //MGPlusSetInterpolationMode (hgs, MP_INTERPOLATION_MODE_AFFINE);
-#if 1  
+#if 1
                     MGPlusPathAddRectangle (path, 100, 80, 450, 350);
                     MGPlusDrawImageWithPath (hgs, 0, path);
 #endif
@@ -766,7 +766,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                 {
                     HDC hdc = GetClientDC (hWnd);
                     //SetBrushColor
-                    
+
                     HGRAPHICS hgs = MGPlusGraphicCreateFromDC (hdc);
 
                     if (!g_bLionEnter)
@@ -774,7 +774,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     else
                     {
                         FillBox (MGPlusGetGraphicDC (hgs), 0, 0, g_rcScr.right, g_rcScr.bottom);
-                        //FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom); 
+                        //FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom);
                     }
 
 
@@ -807,7 +807,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                     ReleaseDC (hdc);
                 }
                 break;
-                case SCANCODE_F7: 
+                case SCANCODE_F7:
                 {
                     HDC hdc = GetClientDC (hWnd);
                     //HGRAPHICS hGraphics = MGPlusGraphicCreate(1024, 768);
@@ -898,7 +898,7 @@ mouse_calibrate(void)
 }
 #endif /* !_MISC_MOUSECALIBRATE */
 
- 
+
 
 int
 MiniGUIMain(int argc, const char *argv[])

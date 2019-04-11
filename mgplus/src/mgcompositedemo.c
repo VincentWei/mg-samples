@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -90,13 +90,13 @@ static void GetCompMode(HWND hWnd, WPARAM wParam)
         case COMP_DST_OUT:
             comp_mode = MP_COMP_OP_DST_OUT;
             break;
-        case COMP_SRC_ATOP: 
+        case COMP_SRC_ATOP:
             comp_mode = MP_COMP_OP_SRC_ATOP;
             break;
         case COMP_DST_ATOP:
             comp_mode = MP_COMP_OP_DST_ATOP;
             break;
-        case COMP_XOR: 
+        case COMP_XOR:
             comp_mode = MP_COMP_OP_XOR;
             break;
         default:
@@ -109,10 +109,10 @@ static void GetCompMode(HWND hWnd, WPARAM wParam)
 #define C_W   170
 
 static CTRLDATA CtrlYourTaste[] =
-{ 
+{
     {
         "static",
-        WS_VISIBLE | SS_GROUPBOX, 
+        WS_VISIBLE | SS_GROUPBOX,
         16+C_POS, 0, 200, 160+200,
         IDC_STATIC,
         "Composite_Mode",
@@ -136,9 +136,9 @@ static CTRLDATA CtrlYourTaste[] =
     },
     {
         "button",
-        WS_VISIBLE | BS_AUTORADIOBUTTON, 
-        36+C_POS, 90, C_W, 20, 
-        COMP_DST, 
+        WS_VISIBLE | BS_AUTORADIOBUTTON,
+        36+C_POS, 90, C_W, 20,
+        COMP_DST,
         "Composite_Dst",
         0
     },
@@ -176,9 +176,9 @@ static CTRLDATA CtrlYourTaste[] =
     },
     {
         "button",
-        WS_VISIBLE | BS_AUTORADIOBUTTON, 
-        36+C_POS, 142+3*26, C_W, 20, 
-        COMP_SRC_OUT, 
+        WS_VISIBLE | BS_AUTORADIOBUTTON,
+        36+C_POS, 142+3*26, C_W, 20,
+        COMP_SRC_OUT,
         "Composite_SourceOut",
         0
     },
@@ -217,7 +217,7 @@ static CTRLDATA CtrlYourTaste[] =
 
     {
         "static",
-        WS_VISIBLE | SS_GROUPBOX, 
+        WS_VISIBLE | SS_GROUPBOX,
         16+C_POS, 50+142+7*26, 200, 235,
         IDC_STATIC,
         "Composite_Alpha",
@@ -249,8 +249,8 @@ void CompositeDrawBmpBlend(HWND hDlg)
 
     /* first Clear the output_area that have draw last time.*/
     GetClientRect(hDlg, &cl_rc);
-    //FillBox (hdc, 0, 0, 400, 200); 
-    FillBox (hdc, 0, 0, RECTW(cl_rc), RECTH(cl_rc)); 
+    //FillBox (hdc, 0, 0, 400, 200);
+    FillBox (hdc, 0, 0, RECTW(cl_rc), RECTH(cl_rc));
 
     hgs_comp = MGPlusGraphicCreateFromDC(hdc);
     hgs = MGPlusGraphicCreateFromDC(hdc);
@@ -259,12 +259,12 @@ void CompositeDrawBmpBlend(HWND hDlg)
         return;
     }
 
-    hbrush = MGPlusBrushCreate(MP_BRUSH_TYPE_SOLIDCOLOR); 
+    hbrush = MGPlusBrushCreate(MP_BRUSH_TYPE_SOLIDCOLOR);
     if (!hbrush){
         printf("create brush failed!\n");
     }
 
-    MGPlusPathAddArc (hpath, rect.left+RECTW(rect)/2, 
+    MGPlusPathAddArc (hpath, rect.left+RECTW(rect)/2,
             rect.top+RECTH(rect)/2, RECTW(rect)/2, RECTH(rect)/2, 0, 360);
 
     MGPlusGraphicClear(hgs_comp, 0x00000000);
@@ -274,14 +274,14 @@ void CompositeDrawBmpBlend(HWND hDlg)
     MGPlusDrawImage(hgs_comp, 1, 220, 35, -1, -1);
     MGPlusSetSolidBrushColor (hbrush, 0xDF6FF0FD);
     MGPlusSetCompositingMode (hgs_comp, (MPCompositingMode)MP_COMP_OP_SRC);
-    MGPlusFillPath(hgs_comp, hbrush, hpath); 
+    MGPlusFillPath(hgs_comp, hbrush, hpath);
 
     MGPlusPathReset(hpath);
     OffsetRect(&rect, 80, 0);
     MGPlusPathAddRoundRect(hpath, rect.left, rect.top, RECTW(rect), RECTH(rect), 50);
     MGPlusSetSolidBrushColor (hbrush, 0xBFFFC17F);
     MGPlusSetCompositingMode (hgs_comp, (MPCompositingMode)comp_mode);
-    MGPlusFillPath(hgs_comp, hbrush, hpath); 
+    MGPlusFillPath(hgs_comp, hbrush, hpath);
     MGPlusGraphicBlend(hgs_comp, hgs);
 
     if (MGPlusGraphicSave(hgs, hdc, 0, 0, 0, 0, 0, 0) != MP_OK)
@@ -306,8 +306,8 @@ void CompositeDrawBlend(HWND hDlg)
 
     /* first Clear the output_area that have draw last time.*/
     GetClientRect(hDlg, &cl_rc);
-    //FillBox (hdc, 0, 0, 400, 200); 
-    FillBox (hdc, 0, 0, RECTW(cl_rc), RECTH(cl_rc)); 
+    //FillBox (hdc, 0, 0, 400, 200);
+    FillBox (hdc, 0, 0, RECTW(cl_rc), RECTH(cl_rc));
 
     hgs_comp = MGPlusGraphicCreateFromDC(hdc);
     hgs = MGPlusGraphicCreateFromDC(hdc);
@@ -316,12 +316,12 @@ void CompositeDrawBlend(HWND hDlg)
         return;
     }
 
-    hbrush = MGPlusBrushCreate(MP_BRUSH_TYPE_SOLIDCOLOR); 
+    hbrush = MGPlusBrushCreate(MP_BRUSH_TYPE_SOLIDCOLOR);
     if (!hbrush){
         printf("create brush failed!\n");
     }
 
-    MGPlusPathAddArc (hpath, rect.left+RECTW(rect)/2, 
+    MGPlusPathAddArc (hpath, rect.left+RECTW(rect)/2,
             rect.top+RECTH(rect)/2, RECTW(rect)/2, RECTH(rect)/2, 0, 360);
 
 #if 0
@@ -334,14 +334,14 @@ void CompositeDrawBlend(HWND hDlg)
 
     MGPlusSetSolidBrushColor (hbrush, 0xDF6FF0FD);
     MGPlusSetCompositingMode (hgs_comp, (MPCompositingMode)MP_COMP_OP_SRC);
-    MGPlusFillPath(hgs_comp, hbrush, hpath); 
+    MGPlusFillPath(hgs_comp, hbrush, hpath);
 
     MGPlusPathReset(hpath);
     OffsetRect(&rect, 80, 0);
     MGPlusPathAddRoundRect(hpath, rect.left, rect.top, RECTW(rect), RECTH(rect), 50);
     MGPlusSetSolidBrushColor (hbrush, 0xBFFFC17F);
     MGPlusSetCompositingMode (hgs_comp, (MPCompositingMode)comp_mode);
-    MGPlusFillPath(hgs_comp, hbrush, hpath); 
+    MGPlusFillPath(hgs_comp, hbrush, hpath);
     MGPlusGraphicBlend(hgs_comp, hgs);
 
     if (MGPlusGraphicSave(hgs, hdc, 0, 0, 0, 0, 0, 0) != MP_OK)
@@ -365,8 +365,8 @@ void CompositeDrawCopy(HWND hDlg)
 
     /* first Clear the output_area that have draw last time.*/
     GetClientRect(hDlg, &cl_rc);
-    //FillBox (hdc, 0, 0, 400, 200); 
-    FillBox (hdc, 0, 0, RECTW(cl_rc), RECTH(cl_rc)); 
+    //FillBox (hdc, 0, 0, 400, 200);
+    FillBox (hdc, 0, 0, RECTW(cl_rc), RECTH(cl_rc));
 
     hgs = MGPlusGraphicCreateFromDC(hdc);
 
@@ -375,23 +375,23 @@ void CompositeDrawCopy(HWND hDlg)
         return;
     }
 
-    hbrush = MGPlusBrushCreate(MP_BRUSH_TYPE_SOLIDCOLOR); 
+    hbrush = MGPlusBrushCreate(MP_BRUSH_TYPE_SOLIDCOLOR);
     if (!hbrush){
         printf("create brush failed!\n");
     }
 
-    MGPlusPathAddArc (hpath, rect.left+RECTW(rect)/2, 
+    MGPlusPathAddArc (hpath, rect.left+RECTW(rect)/2,
             rect.top+RECTH(rect)/2, RECTW(rect)/2, RECTH(rect)/2, 0, 360);
     MGPlusSetSolidBrushColor (hbrush, 0xDF6FF0FD);
     MGPlusSetCompositingMode (hgs, (MPCompositingMode)MP_COMP_OP_SRC_OVER);
-    MGPlusFillPath(hgs, hbrush, hpath); 
+    MGPlusFillPath(hgs, hbrush, hpath);
 
     MGPlusPathReset(hpath);
     OffsetRect(&rect, 80, 0);
     MGPlusPathAddRoundRect(hpath, rect.left, rect.top, RECTW(rect), RECTH(rect), 50);
     MGPlusSetSolidBrushColor (hbrush, 0xBFFFC17F);
     MGPlusSetCompositingMode (hgs, (MPCompositingMode)comp_mode);
-    MGPlusFillPath(hgs, hbrush, hpath); 
+    MGPlusFillPath(hgs, hbrush, hpath);
 
     if (MGPlusGraphicSave(hgs, hdc, 0, 0, 0, 0, 0, 0) != MP_OK)
         printf("save graphic failed!");
@@ -447,13 +447,13 @@ static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                 CompositeDrawCopy(hDlg);
             else if (disp_mode == 2)
                 CompositeDrawBlend(hDlg);
-            else 
+            else
                 CompositeDrawBmpBlend(hDlg);
             break;
         case MSG_CLOSE:
             break;
     }
-    
+
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
@@ -463,7 +463,7 @@ int MiniGUIMain (int argc, const char* argv[])
 #ifdef _MGRM_PROCESSES
     JoinLayer(NAME_DEF_LAYER , "composite" , 0 , 0);
 #endif
-    
+
     if (LoadBitmap (HDC_SCREEN, &bmp_comp, "res/compositing.bmp"))
         return 1;
     if (LoadBitmap (HDC_SCREEN, &bmp_butterfly, "res/butterfly.png"))
@@ -472,7 +472,7 @@ int MiniGUIMain (int argc, const char* argv[])
         return 1;
 
     DlgYourTaste.controls = CtrlYourTaste;
-    
+
     DialogBoxIndirectParam (&DlgYourTaste, HWND_DESKTOP, DialogBoxProc2, 0L);
 
     UnloadBitmap (&bmp_butterfly);

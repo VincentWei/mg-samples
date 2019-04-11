@@ -54,7 +54,7 @@ static HMENU createpmenuabout (void)
     mii.id          = 0;
     mii.typedata    = (DWORD)About;
     hmnu = CreatePopupMenu (&mii);
-    
+
     memset (&mii, 0, sizeof(MENUITEMINFO));
     mii.type        = MFT_STRING ;
     mii.state       = 0;
@@ -74,7 +74,7 @@ static HMENU createpmenufile (void)
     mii.id          = 0;
     mii.typedata    = (DWORD)File;
     hmnu = CreatePopupMenu (&mii);
-    
+
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_EXIT;
@@ -93,36 +93,36 @@ static HMENU createpmenudialogs (void)
     mii.id          = 0;
     mii.typedata    = (DWORD)Dialogs;
     hmnu = CreatePopupMenu (&mii);
-    
+
     mii.type        = MFT_STRING ;
     mii.state       = 0;
     mii.id          = IDM_DIALOG1;
     mii.typedata    = (DWORD)Dialog1;
     InsertMenuItem(hmnu, 0, TRUE, &mii);
-     
+
     mii.type        = MFT_STRING ;
     mii.state       = 0;
     mii.id          = IDM_DIALOG2;
     mii.typedata    = (DWORD)Dialog2;
-    InsertMenuItem(hmnu, 1, TRUE, &mii);  
-    
+    InsertMenuItem(hmnu, 1, TRUE, &mii);
+
     mii.type        = MFT_STRING ;
     mii.state       = 0;
     mii.id          = IDM_DIALOG3;
     mii.typedata    = (DWORD)Dialog3;
-    InsertMenuItem(hmnu, 2, TRUE, &mii);  
+    InsertMenuItem(hmnu, 2, TRUE, &mii);
 
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_DIALOG4;
     mii.typedata    = (DWORD)Dialog4;
-    InsertMenuItem(hmnu, 3, TRUE, &mii);  
+    InsertMenuItem(hmnu, 3, TRUE, &mii);
 
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_DIALOG5;
     mii.typedata    = (DWORD)Property_Sheet;
-    InsertMenuItem(hmnu, 4, TRUE, &mii);  
+    InsertMenuItem(hmnu, 4, TRUE, &mii);
 
     return hmnu;
 }
@@ -137,25 +137,25 @@ static HMENU createpmenuobject (void)
     mii.id          = 0;
     mii.typedata    = (DWORD)Controls;
     hmnu = CreatePopupMenu (&mii);
-    
+
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_STATIC;
     mii.typedata    = (DWORD)Static_control;
     InsertMenuItem(hmnu, 0, TRUE, &mii);
-     
+
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_BUTTON;
     mii.typedata    = (DWORD)Button_control;
     InsertMenuItem(hmnu, 1, TRUE, &mii);
-     
+
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_MENUBUTTON;
     mii.typedata    = (DWORD)MenuButton_control;
     InsertMenuItem(hmnu, 2, TRUE, &mii);
-     
+
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_EDIT;
@@ -203,7 +203,7 @@ static HMENU createpmenuobject (void)
     mii.id          = IDM_LISTVIEW;
     mii.typedata    = (DWORD)ListView_control;
     InsertMenuItem(hmnu, 10, TRUE, &mii);
-    
+
     mii.type        = MFT_STRING;
     mii.state       = 0;
     mii.id          = IDM_TREEVIEW;
@@ -275,7 +275,7 @@ static HMENU createmenu (void)
     mii.typedata    = (DWORD)About;
     mii.hsubmenu    = createpmenuabout ();
     InsertMenuItem(hmnu, 3, TRUE, &mii);
-                   
+
     return hmnu;
 }
 
@@ -284,7 +284,7 @@ static LRESULT DialogBoxProc1 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     switch (message) {
     case MSG_INITDIALOG:
         return 1;
-        
+
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
@@ -297,7 +297,7 @@ static LRESULT DialogBoxProc1 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
         EndDialog (hDlg, IDCANCEL);
         return 0;
     }
-    
+
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
@@ -308,14 +308,14 @@ static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 
     switch (message) {
     case MSG_INITDIALOG:
-        for (i = 0; i < 20; i++) { 
+        for (i = 0; i < 20; i++) {
             sprintf (temp, "%d-Welcome", i);
             SendDlgItemMessage (hDlg, IDC_BOX1, CB_ADDSTRING, 0, (LPARAM)temp) ;
             SendDlgItemMessage (hDlg, IDC_BOX2, CB_ADDSTRING, 0, (LPARAM)temp) ;
             SendDlgItemMessage (hDlg, IDC_BOX4, CB_ADDSTRING, 0, (LPARAM)temp) ;
-        } 
+        }
         return 1;
-        
+
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
@@ -327,9 +327,9 @@ static LRESULT DialogBoxProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     case MSG_CLOSE:
             EndDialog (hDlg, IDCANCEL);
         break;
-        
+
     }
-    
+
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
@@ -338,7 +338,7 @@ static LRESULT DialogBoxProc3 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     switch (message) {
     case MSG_INITDIALOG:
         return 1;
-        
+
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
@@ -347,9 +347,9 @@ static LRESULT DialogBoxProc3 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             break;
         }
         break;
-        
+
     }
-    
+
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
@@ -358,7 +358,7 @@ static LRESULT DialogBoxProc4 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
     switch (message) {
     case MSG_INITDIALOG:
         return 1;
-        
+
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
@@ -367,37 +367,37 @@ static LRESULT DialogBoxProc4 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             break;
         }
         break;
-        
+
     }
-    
+
     return DefaultDialogProc (hDlg, message, wParam, lParam);
 }
 
 static void testDialogBox1 (HWND hWnd)
 {
     DlgInitProgress.controls = CtrlInitProgress;
-    
+
     DialogBoxIndirectParam (&DlgInitProgress, hWnd, DialogBoxProc1, 0L);
 }
 
 static void testDialogBox2 (HWND hWnd)
 {
     DlgStartupMode.controls = CtrlStartupMode;
-    
+
     DialogBoxIndirectParam (&DlgStartupMode, hWnd, DialogBoxProc2, 0L);
 }
 
 static void testDialogBox3 (HWND hWnd)
 {
     DlgPassword.controls = CtrlPassword;
-    
+
     DialogBoxIndirectParam (&DlgPassword, hWnd, DialogBoxProc3, 0L);
 }
 
 static void testDialogBox4 (HWND hWnd)
 {
     DlgStructParams.controls = CtrlStructParams;
-    
+
     DialogBoxIndirectParam (&DlgStructParams, hWnd, DialogBoxProc4, 0L);
 }
 
@@ -406,9 +406,9 @@ LRESULT DialogTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     switch (message) {
         case MSG_CREATE:
         break;
-        
+
         case MSG_COMMAND:
-        switch (wParam) 
+        switch (wParam)
         {
             case IDM_NEW:
             case IDM_OPEN:
@@ -416,7 +416,7 @@ LRESULT DialogTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
             case IDM_SAVEAS:
             case IDM_CLOSE:
             break;
-            
+
             case IDM_EXIT:
                 SendMessage (hWnd, MSG_CLOSE, 0, 0L);
             break;
@@ -424,15 +424,15 @@ LRESULT DialogTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
             case IDM_DIALOG1:
                 testDialogBox1 (hWnd);
             break;
-            
+
             case IDM_DIALOG2:
                 testDialogBox2 (hWnd);
             break;
-            
+
             case IDM_DIALOG3:
                 testDialogBox3 (hWnd);
             break;
-            
+
             case IDM_DIALOG4:
                 testDialogBox4 (hWnd);
             break;
@@ -504,7 +504,7 @@ LRESULT DialogTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         break;
 
         case MSG_CLOSE:
-            if (MessageBox (hWnd, Are_you_sure_to_quit, DlgTest, 
+            if (MessageBox (hWnd, Are_you_sure_to_quit, DlgTest,
                             MB_YESNOCANCEL | MB_ICONQUESTION |
                             MB_BASEDONPARENT) != IDYES)
                 return 0;
@@ -526,11 +526,11 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor (IDC_ARROW);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = DialogTestMainWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 500;
     pCreateInfo->by = 400;
-    pCreateInfo->iBkColor = COLOR_lightwhite; 
+    pCreateInfo->iBkColor = COLOR_lightwhite;
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
 }
@@ -563,9 +563,9 @@ int MiniGUIMain (int args, const char* arg[])
     if (LoadBitmap (HDC_SCREEN, &bmp_bkgnd, "bkgnd.jpg"))
         return 1;
 
-	//MGPlusRegisterFashionLFRDR();
-	if(args > 1)
-		SetDefaultWindowElementRenderer(arg[1]);
+    //MGPlusRegisterFashionLFRDR();
+    if(args > 1)
+        SetDefaultWindowElementRenderer(arg[1]);
 
     InitCreateInfo (&CreateInfo);
 

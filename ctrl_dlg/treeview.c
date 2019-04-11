@@ -59,10 +59,10 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         {
             int i = 0;
             LRESULT item;
-            hTreeview = CreateWindow (CTRL_TREEVIEW, "", 
+            hTreeview = CreateWindow (CTRL_TREEVIEW, "",
                     WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL
-                    | WS_BORDER | TVS_SORT | TVS_WITHICON, 
-                    IDC_CTRL1, 
+                    | WS_BORDER | TVS_SORT | TVS_WITHICON,
+                    IDC_CTRL1,
                     10, 20, 320, 150, hWnd, 0);
             hEdit1 = CreateWindow ("Edit", Add_a_child_to_current_node,
                     WS_CHILD | WS_VISIBLE | WS_BORDER,
@@ -84,14 +84,14 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
                     WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
                     IDC_CTRL5,
                     270, 270, 60, 24, hWnd, 0);
-            
+
             tvItemInfo.text = "a";
             item = SendMessage (hTreeview, TVM_ADDITEM, 0, (LPARAM) &tvItemInfo);
-            
+
             tvItemInfo.text = "b";
             for (i = 0; i <= 10; i++)
                 SendMessage (hTreeview, TVM_ADDITEM, 0, (LPARAM) &tvItemInfo);
-            
+
             tvItemInfo.text = "c";
             SendMessage (hTreeview, TVM_ADDITEM, 0, (LPARAM) &tvItemInfo);
 
@@ -118,13 +118,13 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
                     SendMessage (hTreeview, TVM_ADDITEM, (WPARAM)item, (LPARAM) &tvItemInfo);
                 }
                 break;
-                        
+
                 case IDC_CTRL5:
                     item = SendMessage (hTreeview, TVM_GETSELITEM, 0, 0);
                     SendMessage (hTreeview, TVM_DELTREE, item, 0);
                     //SendMessage (hTreeview, TVM_DELTREE, 0, 0);
                 break;
-                
+
                 case IDC_CTRL6:
                 {
                     SendMessage (hEdit2, MSG_GETTEXT, 99, (LPARAM) buffer);
@@ -136,17 +136,17 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
                     }
                 }
                 break;
-                
+
                 default:
                 break;
             }
         }
         break;
-        
+
         case MSG_DESTROY:
             DestroyAllControls (hWnd);
             hMainWnd = HWND_INVALID;
-	    return 0;
+        return 0;
 
         case MSG_CLOSE:
             DestroyMainWindow (hWnd);
@@ -166,7 +166,7 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor    = GetSystemCursor(0);
     pCreateInfo->hIcon      = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx         = 0; 
+    pCreateInfo->lx         = 0;
     pCreateInfo->ty         = 0;
     pCreateInfo->rx         = 360;
     pCreateInfo->by         = 340;

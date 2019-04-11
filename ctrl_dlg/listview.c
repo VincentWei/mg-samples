@@ -171,7 +171,7 @@ static HMENU create_rightbutton_menu (void)
         mii.type = MFT_STRING;
         mii.id = IDM_FILE+ i;
         mii.state = 0;
-        mii.typedata= (DWORD) msg[i]; 
+        mii.typedata= (DWORD) msg[i];
         InsertMenuItem ( hMenu, i, TRUE, &mii );
     }
 
@@ -185,7 +185,7 @@ lv_notify_process (HWND hwnd, LINT id, int code, DWORD addData)
     if (code == LVN_KEYDOWN) {
         PLVNM_KEYDOWN down;
         int key;
-        
+
         down = (PLVNM_KEYDOWN)addData;
         key = LOWORD(down->wParam);
 
@@ -193,7 +193,7 @@ lv_notify_process (HWND hwnd, LINT id, int code, DWORD addData)
             HLVITEM hlvi;
             hlvi = (HLVITEM)SendMessage (hwnd, LVM_GETSELECTEDITEM, 0, 0);
             if (hlvi) {
-                if( MessageBox (hMainWnd, are_you_really_want_to_delete_this_file, 
+                if( MessageBox (hMainWnd, are_you_really_want_to_delete_this_file,
                             warning, MB_YESNO) == IDYES) {
                     // not really delete yet.
                     SendMessage (hwnd, LVM_DELITEM, 0, (LPARAM)hlvi);
@@ -206,20 +206,20 @@ lv_notify_process (HWND hwnd, LINT id, int code, DWORD addData)
     if (code == LVN_ITEMRUP) {
         PLVNM_ITEMRUP up;
         int x, y;
-        
+
         up = (PLVNM_ITEMRUP)addData;
         x = LOSWORD(up->lParam);
         y = HISWORD(up->lParam);
 
         ClientToScreen (hChildWnd1, &x, &y);
 
-        TrackPopupMenu (GetPopupSubMenu (hRightMenu), TPM_LEFTALIGN | TPM_LEFTBUTTON , 
+        TrackPopupMenu (GetPopupSubMenu (hRightMenu), TPM_LEFTALIGN | TPM_LEFTBUTTON ,
             x, y, hMainWnd);
     }
     if (code == LVN_ITEMDBCLK) {
         HLVITEM hlvi = (HLVITEM)SendMessage (hwnd, LVM_GETSELECTEDITEM, 0, 0);
         if (hlvi > 0) {
-                if( MessageBox (hMainWnd, Are_you_really_want_to_open_this_file, 
+                if( MessageBox (hMainWnd, Are_you_really_want_to_open_this_file,
                             Question, MB_YESNO) == IDYES) {
                     MessageBox (hMainWnd, "Me too.", "Sorry", MB_OK);
                 }
@@ -296,7 +296,7 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
                 continue;
             }
 
-            if ( !( S_ISDIR(my_stat.st_mode) || S_ISREG(my_stat.st_mode) ) ) 
+            if ( !( S_ISDIR(my_stat.st_mode) || S_ISREG(my_stat.st_mode) ) )
                 continue;
 
             item.itemData = (DWORD) strdup(dir_ent->d_name);
@@ -423,9 +423,9 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
             break;
         }
         case IDM_FILE:
-		case IDM_FILE+1:
-		case IDM_FILE+2:
-		case IDM_FILE+3:
+        case IDM_FILE+1:
+        case IDM_FILE+2:
+        case IDM_FILE+3:
         case IDM_FILE+4:
             MessageBox (hMainWnd, "In Construction ...", "Sorry", MB_OK);
             break;
@@ -434,19 +434,19 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
         break;
     }
 
-    
+
     case MSG_ERASEBKGND:
     {
         HDC hdc = (HDC)wParam;
         const RECT* clip = (const RECT*) lParam;
         BOOL fGetDC = FALSE;
         RECT rcTemp;
-                
+
         if (hdc == 0) {
             hdc = GetClientDC (hWnd);
             fGetDC = TRUE;
-        }       
-                
+        }
+
         if (clip) {
             rcTemp = *clip;
             ScreenToClient (hWnd, &rcTemp.left, &rcTemp.top);

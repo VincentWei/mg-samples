@@ -3,7 +3,7 @@
 **
 ** custom_minigui.c: The reference implementation file for custom input
 **         engine, and configuration file for in-core MiniGUI.
-** 
+**
 ** Copyright (C) 2003 ~ 2017 FMSoft (http://www.fmsoft.cn).
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
@@ -343,7 +343,7 @@ static int read_key (void)
         kbd_state [last] = 0;
     }
     else {
-        scancode = keycode_to_scancode (HIWORD (kbd_data.unicode) & 0x00FF, 
+        scancode = keycode_to_scancode (HIWORD (kbd_data.unicode) & 0x00FF,
                     LOWORD (kbd_data.unicode));
         kbd_state [scancode] = kbd_data.press ? 1 : 0;
         last = scancode;
@@ -394,7 +394,7 @@ static int wait_event (int which, int maxfd, fd_set *in, fd_set *out, fd_set *ex
     e = select (FD_SETSIZE, in, out, except, timeout) ;
 #endif
 
-    if (e > 0) { 
+    if (e > 0) {
         fd = mouse_fd;
         /* If data is present on the mouse fd, service it: */
         if (fd >= 0 && FD_ISSET (fd, in)) {

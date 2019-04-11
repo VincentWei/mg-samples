@@ -58,11 +58,11 @@ static void create_normal_menubutton (HWND hparent)
     struct  stat my_stat;
 
     menubtn = CreateWindowEx (CTRL_MENUBTN,
-                       Files_in_the_current_directory , 
+                       Files_in_the_current_directory ,
 #if _MINIGUI_VERSION_CODE >= _VERSION_CODE (1, 5, 3)
-                        WS_CHILD | WS_VISIBLE | MBS_ALIGNCENTER, 
+                        WS_CHILD | WS_VISIBLE | MBS_ALIGNCENTER,
 #else
-                        WS_CHILD | WS_VISIBLE, 
+                        WS_CHILD | WS_VISIBLE,
 #endif
                         WS_EX_NONE,
                         IDC_MENUBUTTON,
@@ -99,9 +99,9 @@ static void create_sorted_menubutton (HWND hparent)
     struct  stat my_stat;
 
     menubtn = CreateWindowEx (CTRL_MENUBTN,
-                        Files_and_directories_in_the_current_directory_sorted, 
+                        Files_and_directories_in_the_current_directory_sorted,
 #if _MINIGUI_VERSION_CODE >= _VERSION_CODE (1, 5, 3)
-                        WS_CHILD | WS_VISIBLE | MBS_SORT | MBS_NOBUTTON | MBS_LEFTARROW, 
+                        WS_CHILD | WS_VISIBLE | MBS_SORT | MBS_NOBUTTON | MBS_LEFTARROW,
 #else
                         WS_CHILD | WS_VISIBLE | MBS_SORT,
 #endif
@@ -143,9 +143,9 @@ static void create_bitmap_menubutton (HWND hparent)
     struct  stat my_stat;
 
     menubtn = CreateWindowEx (CTRL_MENUBTN,
-                        Files_and_directories_in_the_current_directory, 
+                        Files_and_directories_in_the_current_directory,
 #if _MINIGUI_VERSION_CODE >= _VERSION_CODE (1, 5, 3)
-                        WS_CHILD | WS_VISIBLE | MBS_SORT | MBS_LEFTARROW | MBS_ALIGNLEFT, 
+                        WS_CHILD | WS_VISIBLE | MBS_SORT | MBS_LEFTARROW | MBS_ALIGNLEFT,
 #else
                         WS_CHILD | WS_VISIBLE | MBS_SORT,
 #endif
@@ -187,10 +187,10 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             create_sorted_menubutton (hWnd);
             create_bitmap_menubutton (hWnd);
 
-            CreateWindow (CTRL_BUTTON, 
-                                Close, 
-                                WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, 
-                                IDCANCEL, 
+            CreateWindow (CTRL_BUTTON,
+                                Close,
+                                WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                IDCANCEL,
                                 260, 140, 60, 24, hWnd, 0);
             LoadBitmapFromFile (HDC_SCREEN, &bmp_folder, "./res/folder.bmp");
         break;
@@ -211,22 +211,22 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
                     //printf ("Selected item in the control %d has changed.\n", id);
                 }
                 break;
-            
+
             case IDCANCEL:
                 PostMessage (hWnd, MSG_CLOSE, 0, 0);
                 break;
-                
+
             default:
                 break;
             }
         }
         break;
-       
+
         case MSG_DESTROY:
             UnloadBitmap (&bmp_folder);
             DestroyAllControls (hWnd);
             hMainWnd = HWND_INVALID;
-	    return 0;
+        return 0;
 
         case MSG_CLOSE:
             DestroyMainWindow (hWnd);
@@ -246,7 +246,7 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(1);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 340;
     pCreateInfo->by = 200;

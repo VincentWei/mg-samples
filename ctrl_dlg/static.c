@@ -50,143 +50,143 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     switch (message) {
         case MSG_CREATE:
         {
-            CreateWindow (CTRL_STATIC, 
-                            This_is_a_simple_static_control, 
+            CreateWindow (CTRL_STATIC,
+                            This_is_a_simple_static_control,
                             WS_CHILD | SS_NOTIFY | SS_SIMPLE | WS_VISIBLE | WS_BORDER,
-                            IDC_STATIC1, 
+                            IDC_STATIC1,
                             10, 10, 180, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            This_is_a_left_aligned_static_control, 
+            CreateWindow (CTRL_STATIC,
+                            This_is_a_left_aligned_static_control,
                             WS_CHILD | SS_NOTIFY | SS_LEFT | WS_VISIBLE | WS_BORDER,
-                            IDC_STATIC2, 
+                            IDC_STATIC2,
                             10, 40, 180, 45, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            This_is_a_right_aligned_static_control, 
+            CreateWindow (CTRL_STATIC,
+                            This_is_a_right_aligned_static_control,
                             WS_CHILD | SS_NOTIFY | SS_RIGHT | WS_VISIBLE | WS_BORDER,
-                            IDC_STATIC3, 
+                            IDC_STATIC3,
                             10, 90, 180, 45, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            This_is_a_center_aligned_static_control, 
+            CreateWindow (CTRL_STATIC,
+                            This_is_a_center_aligned_static_control,
                             WS_CHILD | SS_NOTIFY | SS_CENTER | WS_VISIBLE | WS_BORDER,
-                            IDC_STATIC4, 
+                            IDC_STATIC4,
                             10, 140, 180, 45, hWnd, 0);
 
-            CreateWindow (CTRL_STATIC, 
-                            An_icon_static_control, 
+            CreateWindow (CTRL_STATIC,
+                            An_icon_static_control,
                             WS_CHILD | SS_RIGHT | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             250, 40, 150, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_ICON | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             420, 20, 50, 50, hWnd, (DWORD)GetLargeSystemIcon (IDI_INFORMATION));
 
-            CreateWindow (CTRL_STATIC, 
-                            A_bitmap_static_control, 
+            CreateWindow (CTRL_STATIC,
+                            A_bitmap_static_control,
                             WS_CHILD | SS_RIGHT | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             250, 100, 150, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_ICON | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             420, 80, 50, 50, hWnd, (DWORD)GetLargeSystemIcon (IDI_APPLICATION));
 
-            CreateWindow (CTRL_STATIC, 
-                            A_bitmap_static_control_center, 
+            CreateWindow (CTRL_STATIC,
+                            A_bitmap_static_control_center,
                             WS_CHILD | SS_RIGHT | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             250, 160, 150, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_ICON | SS_REALSIZEIMAGE | SS_CENTERIMAGE | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             420, 140, 50, 50, hWnd, (DWORD)GetLargeSystemIcon (IDI_STOP));
 
-            CreateWindow (CTRL_STATIC, 
-                            A_black_box, 
+            CreateWindow (CTRL_STATIC,
+                            A_black_box,
                             WS_CHILD |  WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             10, 200, 100, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_BLACKRECT | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             110, 200, 50, 20, hWnd, 0);
 
-            CreateWindow (CTRL_STATIC, 
-                            A_gray_box, 
+            CreateWindow (CTRL_STATIC,
+                            A_gray_box,
                             WS_CHILD | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             10, 230, 100, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_GRAYRECT | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             110, 230, 50, 20, hWnd, 0);
-            
-            CreateWindow (CTRL_STATIC, 
-                            A_white_box, 
+
+            CreateWindow (CTRL_STATIC,
+                            A_white_box,
                             WS_CHILD | WS_VISIBLE ,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             10, 260, 100, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_WHITERECT | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             110, 260, 50, 20, hWnd, 0);
-            
-            CreateWindow (CTRL_STATIC, 
-                            A_black_frame, 
+
+            CreateWindow (CTRL_STATIC,
+                            A_black_frame,
                             WS_CHILD | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             170, 200, 90, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_BLACKFRAME | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             260, 200, 50, 20, hWnd, 0);
 
-            CreateWindow (CTRL_STATIC, 
-                            A_gray_frame, 
+            CreateWindow (CTRL_STATIC,
+                            A_gray_frame,
                             WS_CHILD | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             170, 230, 100, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_GRAYFRAME | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             260, 230, 50, 20, hWnd, 0);
-            
-            CreateWindow (CTRL_STATIC, 
-                            A_white_frame, 
+
+            CreateWindow (CTRL_STATIC,
+                            A_white_frame,
                             WS_CHILD | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             170, 260, 100, 20, hWnd, 0);
-            CreateWindow (CTRL_STATIC, 
-                            "", 
+            CreateWindow (CTRL_STATIC,
+                            "",
                             WS_CHILD | SS_WHITEFRAME | WS_VISIBLE,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             260, 260, 50, 20, hWnd, 0);
-            
-            CreateWindowEx (CTRL_STATIC, 
-                            A_Group_Box, 
+
+            CreateWindowEx (CTRL_STATIC,
+                            A_Group_Box,
                             WS_CHILD | SS_GROUPBOX | WS_VISIBLE,
                             WS_EX_TRANSPARENT,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             350, 190, 160, 90, hWnd, 0);
-            
-            CreateWindow (CTRL_STATIC, 
-                            Tabs_are_expanded, 
+
+            CreateWindow (CTRL_STATIC,
+                            Tabs_are_expanded,
                             WS_CHILD | SS_LEFTNOWORDWRAP | WS_VISIBLE | WS_BORDER,
-                            IDC_STATIC, 
+                            IDC_STATIC,
                             10, 290, 500, 30, hWnd, 0);
 
-            CreateWindow (CTRL_BUTTON, 
-                            Close, 
-                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, 
-                            IDCANCEL, 
+            CreateWindow (CTRL_BUTTON,
+                            Close,
+                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                            IDCANCEL,
                             450, 330, 60, 25, hWnd, 0);
         }
         break;
@@ -219,11 +219,11 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(0);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 520;
     pCreateInfo->by = 390;
-    pCreateInfo->iBkColor = GetWindowElementPixel (HWND_NULL, WE_MAINC_THREED_BODY); 
+    pCreateInfo->iBkColor = GetWindowElementPixel (HWND_NULL, WE_MAINC_THREED_BODY);
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
 }

@@ -130,15 +130,15 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
         HWND timeedit, spin;
         SIZE size;
 
-        CreateWindow (CTRL_STATIC, 
+        CreateWindow (CTRL_STATIC,
                         time_editor,
-                        WS_CHILD | WS_VISIBLE | SS_LEFT, 
-                        IDC_STATIC, 
+                        WS_CHILD | WS_VISIBLE | SS_LEFT,
+                        IDC_STATIC,
                         10, 10, 380, 200, hWnd, 0);
 
-        timefont = CreateLogFont (NULL, "Arial", "ISO8859-1", 
+        timefont = CreateLogFont (NULL, "Arial", "ISO8859-1",
                         FONT_WEIGHT_REGULAR, FONT_SLANT_ROMAN, FONT_SETWIDTH_NORMAL,
-                        FONT_SPACING_CHARCELL, FONT_UNDERLINE_NONE, FONT_STRUCKOUT_NONE, 
+                        FONT_SPACING_CHARCELL, FONT_UNDERLINE_NONE, FONT_STRUCKOUT_NONE,
                         30, 0);
 
         hdc = GetClientDC (hWnd);
@@ -146,21 +146,21 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
         GetTextExtent (hdc, "00:00:00", -1, &size);
         ReleaseDC (hdc);
 
-        timeedit = CreateWindow (CTRL_SLEDIT, 
-                        "00:00:00", 
-                        WS_CHILD | WS_VISIBLE | ES_BASELINE, 
-                        IDC_EDIT, 
+        timeedit = CreateWindow (CTRL_SLEDIT,
+                        "00:00:00",
+                        WS_CHILD | WS_VISIBLE | ES_BASELINE,
+                        IDC_EDIT,
                         120, 220, size.cx + 4, size.cy + 4, hWnd, 0);
 
         SetWindowFont (timeedit, timefont);
         old_edit_proc = SetWindowCallbackProc (timeedit, TimeEditBox);
 
-        spin = CreateWindowEx (CTRL_SPINBOX, 
-                        "", 
-                        WS_CHILD | WS_VISIBLE, 
+        spin = CreateWindowEx (CTRL_SPINBOX,
+                        "",
+                        WS_CHILD | WS_VISIBLE,
                         WS_EX_NONE,
-                        IDC_SPINBOX, 
-                        120 + size.cx + 6, 220, 
+                        IDC_SPINBOX,
+                        120 + size.cx + 6, 220,
                         size.cy + 4, size.cy + 4, hWnd, 0);
         SendMessage (spin, SPM_SETTARGET, 0, (LPARAM)timeedit);
         break;
@@ -170,7 +170,7 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
         DestroyAllControls (hWnd);
         DestroyLogFont (timefont);
         hMainWnd = HWND_INVALID;
-	return 0;
+    return 0;
 
     case MSG_CLOSE:
         DestroyMainWindow (hWnd);
@@ -190,7 +190,7 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(0);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 400;
     pCreateInfo->by = 300;

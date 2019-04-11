@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -74,13 +74,13 @@
 
 #define MENU_START_X    25
 #define MENU_START_Y    116
-#define MENU_WIDTH      270 
-#define MENU_HEIGHT     50 
+#define MENU_WIDTH      270
+#define MENU_HEIGHT     50
 
 #define DISK_START_X    297
 #define DISK_START_Y    116
-#define DISK_WIDTH      270 
-#define DISK_HEIGHT     50 
+#define DISK_WIDTH      270
+#define DISK_HEIGHT     50
 
 #define PI 3.14159265358979323846
 
@@ -102,7 +102,7 @@ static HDC     g_buffdc;
 static void def_out_bkgnd(HDC hdc, const RECT* rtbk, void *param)
 {
     PBITMAP bmpIn = (PBITMAP)param;
-    FillBoxWithBitmap(hdc, 0, 0,  
+    FillBoxWithBitmap(hdc, 0, 0,
             RECTW(g_rcScr), RECTH(g_rcScr), bmpIn);
 }
 
@@ -128,28 +128,28 @@ static void def_out_draw_animate(HDC hdc, ANIMATE*ani, void* context)
 
 static void on_end_draw_one_frame(ANIMATE_SENCE *as)
 {
-	if(as != NULL)
-	{
-		BitBlt(as->hdc, 0, 0, RECTW(as->rtArea),RECTH(as->rtArea), HDC_SCREEN, 0, 0, 0); 
-	}
+    if(as != NULL)
+    {
+        BitBlt(as->hdc, 0, 0, RECTW(as->rtArea),RECTH(as->rtArea), HDC_SCREEN, 0, 0, 0);
+    }
 }
-    
+
 static void GetSubBitmap(PBITMAP pbmp, PBITMAP psub, int x, int y, int w, int h)
 {
     memcpy(psub, pbmp, sizeof(BITMAP));
     psub->bmWidth  = w;
     psub->bmHeight = h;
-    psub->bmBits   = pbmp->bmBits + (pbmp->bmPitch * y) 
+    psub->bmBits   = pbmp->bmBits + (pbmp->bmPitch * y)
         + x * pbmp->bmBytesPerPixel;
 }
 
 
-static void Center4SplitAnimate(HDC hdc, const RECT *rt, 
+static void Center4SplitAnimate(HDC hdc, const RECT *rt,
         PBITMAP bmpIn, PBITMAP bmpOut, int frame_num, BOOL dir)
 {
-	int w,h;
-	w = RECTWP(rt);
-	h = RECTHP(rt);
+    int w,h;
+    w = RECTWP(rt);
+    h = RECTHP(rt);
     BITMAP bmp1, bmp2, bmp3, bmp4;
     int center_x = w/2, center_y = h/2;
 
@@ -229,7 +229,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         case MSG_PAINT:
         {
             HDC hdc = BeginPaint(hWnd);
-            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top, 
+            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top,
                     RECTW(g_rcScr), RECTH(g_rcScr), &bmp_res[0]);
             EndPaint(hWnd, hdc);
             break;

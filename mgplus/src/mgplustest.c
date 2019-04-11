@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -35,13 +35,13 @@
 #include <minigui/control.h>
 #include <mgplus/mgplus.h>
 
-static inline void radio_gradient_draw(HGRAPHICS hgs, int cx, int cy, int r, 
+static inline void radio_gradient_draw(HGRAPHICS hgs, int cx, int cy, int r,
         gal_pixel *pixels, int pixel_num)
 {
     HPATH path;
     HBRUSH brush;
 
-    brush = MGPlusBrushCreate(MP_BRUSH_TYPE_PATHGRADIENT); 
+    brush = MGPlusBrushCreate(MP_BRUSH_TYPE_PATHGRADIENT);
     if (!brush){
         return;
     }
@@ -60,7 +60,7 @@ static inline void radio_gradient_draw(HGRAPHICS hgs, int cx, int cy, int r,
 
     MGPlusPathAddEllipseI(path, cx, cy, r, r, TRUE);
 
-    MGPlusFillPath(hgs, brush, path); 
+    MGPlusFillPath(hgs, brush, path);
 
     MGPlusPathDelete(path);
     MGPlusBrushDelete(brush);
@@ -72,7 +72,7 @@ static inline void linear_gradient_draw_round(HGRAPHICS hgs, MPLinearGradientMod
     HPATH path;
     HBRUSH brush;
 
-    brush = MGPlusBrushCreate(MP_BRUSH_TYPE_LINEARGRADIENT); 
+    brush = MGPlusBrushCreate(MP_BRUSH_TYPE_LINEARGRADIENT);
     if (!brush){
         MGPlusGraphicDelete(hgs);
         return;
@@ -85,7 +85,7 @@ static inline void linear_gradient_draw_round(HGRAPHICS hgs, MPLinearGradientMod
 
     MGPlusSetLinearGradientBrushMode(brush, mode);
     MGPlusSetLinearGradientBrushRect(brush, rc);
-    MGPlusSetLinearGradientBrushColors(brush, (ARGB*)pixel, pixel_num); 
+    MGPlusSetLinearGradientBrushColors(brush, (ARGB*)pixel, pixel_num);
 
     if(up) {
         MGPlusPathAddLineI(path, rc->left+2, rc->top, rc->right-2, rc->top);
@@ -104,19 +104,19 @@ static inline void linear_gradient_draw_round(HGRAPHICS hgs, MPLinearGradientMod
         MGPlusPathAddLineI(path, rc->left, rc->bottom-2, rc->left, rc->top);
     }
 
-    MGPlusFillPath(hgs, brush, path); 
+    MGPlusFillPath(hgs, brush, path);
 
     MGPlusPathDelete(path);
     MGPlusBrushDelete(brush);
 }
 
-static inline void linear_gradient_draw(HGRAPHICS hgs, MPLinearGradientMode mode, 
+static inline void linear_gradient_draw(HGRAPHICS hgs, MPLinearGradientMode mode,
         RECT *rc, gal_pixel *pixel, int pixel_num)
 {
     HPATH path;
     HBRUSH brush;
 
-    brush = MGPlusBrushCreate(MP_BRUSH_TYPE_LINEARGRADIENT); 
+    brush = MGPlusBrushCreate(MP_BRUSH_TYPE_LINEARGRADIENT);
     if (!brush){
         MGPlusGraphicDelete(hgs);
         return;
@@ -129,10 +129,10 @@ static inline void linear_gradient_draw(HGRAPHICS hgs, MPLinearGradientMode mode
 
     MGPlusSetLinearGradientBrushMode(brush, mode);
     MGPlusSetLinearGradientBrushRect(brush, rc);
-    MGPlusSetLinearGradientBrushColors(brush, (ARGB*)pixel, pixel_num); 
+    MGPlusSetLinearGradientBrushColors(brush, (ARGB*)pixel, pixel_num);
 
     MGPlusPathAddRectangleI(path, rc->left, rc->top, RECTWP(rc), RECTHP(rc));
-    MGPlusFillPath(hgs, brush, path); 
+    MGPlusFillPath(hgs, brush, path);
 
     MGPlusPathDelete(path);
     MGPlusBrushDelete(brush);
@@ -163,7 +163,7 @@ void draw_path(HGRAPHICS hgs, HPEN pen)
     MGPlusPenDelete (pen_dash);
 
     MGPlusDrawArc(hgs, pen, 10, 320, 100, 50, 0, 300);
-    
+
     MGPlusDrawEllipseI(hgs, pen, 0, 0, 200, 100);
     MGPlusDrawBezier(hgs, pen , 120, 350, 145, 312, 200, 380, 220, 350);
 #endif
@@ -203,7 +203,7 @@ static void test_add_path(HGRAPHICS hgs, HPEN pen, HBRUSH brush)
 static void CleanClient(HWND hWnd)
 {
     HDC hdc = GetClientDC(hWnd);
-    FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom); 
+    FillBox (hdc, 0, 0, g_rcScr.right, g_rcScr.bottom);
     ReleaseDC(hdc);
 }
 
@@ -418,7 +418,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             for (i = 0; i < count; i++) {
                                 //printf("rotate p:x=%f,y=%f\n", pt[i].x, pt[i].y);
                             }
-                            MGPlusFillPath(hgs, brush, path); 
+                            MGPlusFillPath(hgs, brush, path);
 
                             {
                                 HPEN pen = MGPlusPenCreate (1, 0xFF505050);
@@ -430,7 +430,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                                 MGPlusPathCloseFigure (path);
                                 MGPlusPenSetJoinStyle (pen, JOIN_ROUND);
                                 MGPlusPenSetCapStyle (pen, CAP_ROUND);
-                                MGPlusDrawPath(hgs, pen, path); 
+                                MGPlusDrawPath(hgs, pen, path);
                                 MGPlusPenDelete (pen);
                             }
 
@@ -457,7 +457,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             MGPlusSetPathGradientBrushCenterColor (brush_path_gradient, 0xFF505050);
 
                             ARGB rect_rgba [4] = {0xFFABCDEF, 0xFFBCDEFA, 0xFFCDEFAB, 0xFFDEFABC};
-                            MGPlusSetPathGradientBrushSurroundColors (brush_path_gradient, 
+                            MGPlusSetPathGradientBrushSurroundColors (brush_path_gradient,
                                     rect_rgba, 4);
                             MGPlusFillPath (hgs, brush_path_gradient, path_path_gradient);
 
@@ -474,7 +474,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             HPATH path_x_gradient = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
                             RECT rect = {10, 10, 200, 100};
                             ARGB colors [3] = {0xFFFF0000, 0xFF00FF00, 0xFFFF0000};
-                            MGPlusPathAddRectangle (path_x_gradient, rect.left, rect.top, 
+                            MGPlusPathAddRectangle (path_x_gradient, rect.left, rect.top,
                                     rect.right - rect.left, rect.bottom - rect.top);
                             MGPlusSetLinearGradientBrushMode (brush_x_gradient,
                                     MP_LINEAR_GRADIENT_MODE_HORIZONTAL);
@@ -487,7 +487,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             HPATH path_y_gradient = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
                             rect.top = 110;
                             rect.bottom = 200;
-                            MGPlusPathAddRectangle (path_y_gradient, rect.left, rect.top, 
+                            MGPlusPathAddRectangle (path_y_gradient, rect.left, rect.top,
                                     rect.right - rect.left, rect.bottom - rect.top);
                             MGPlusSetLinearGradientBrushMode (brush_y_gradient,
                                     MP_LINEAR_GRADIENT_MODE_VERTICAL);
@@ -500,7 +500,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             HPATH path_xy_gradient = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
                             rect.top = 210;
                             rect.bottom = 300;
-                            MGPlusPathAddRectangle (path_xy_gradient, rect.left, rect.top, 
+                            MGPlusPathAddRectangle (path_xy_gradient, rect.left, rect.top,
                                     rect.right - rect.left, rect.bottom - rect.top);
                             MGPlusSetLinearGradientBrushMode (brush_xy_gradient,
                                     MP_LINEAR_GRADIENT_MODE_FORWARDDIAGONAL);
@@ -513,7 +513,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             HPATH path_yx_gradient = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
                             rect.top = 310;
                             rect.bottom = 400;
-                            MGPlusPathAddRectangle (path_yx_gradient, rect.left, rect.top, 
+                            MGPlusPathAddRectangle (path_yx_gradient, rect.left, rect.top,
                                     rect.right - rect.left, rect.bottom - rect.top);
                             MGPlusSetLinearGradientBrushMode (brush_yx_gradient,
                                     MP_LINEAR_GRADIENT_MODE_BACKWARDDIAGONAL);
@@ -596,7 +596,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             MGPlusPathAddEllipseI (path_wind, 64, 304, 40, 40, FALSE);
                             MGPlusPathAddEllipseI (path_wind, 192, 304, 40, 40, FALSE);
 
-                            MGPlusFillPath (hgs, brush, path_wind); 
+                            MGPlusFillPath (hgs, brush, path_wind);
 
                             MGPlusPathAddRectangleI(path, 262, 12, 232, 70);
                             MGPlusPathAddEllipseI(path, 314, 64, 40, 40, TRUE);
@@ -612,7 +612,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             MGPlusPathAddEllipseI (path, 314, 304, 40, 40, FALSE);
                             MGPlusPathAddEllipseI (path, 442, 304, 40, 40, FALSE);
 
-                            MGPlusFillPath(hgs, brush, path); 
+                            MGPlusFillPath(hgs, brush, path);
 
                             MGPlusPathDelete(path);
                             MGPlusPathDelete(path_wind);
@@ -629,13 +629,13 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             MGPlusSetSolidBrushColor(brush, 0xFFFF0000);
                             MGPlusPathAddRoundRect(path, 10, 10, 100, 100, 20);
                             MGPlusPathAddRoundRect(path, 30, 30, 50,  50,  20);
-                            MGPlusFillPath(hgs, brush, path); 
+                            MGPlusFillPath(hgs, brush, path);
                             MGPlusPathAddEllipseI(path, 192, 64, 100, 40, TRUE);
                             // rotate.
                             MGPlusTranslateWorldTransform (hgs, -192, -64);
                             MGPlusRotateWorldTransform (hgs, 120);
                             MGPlusTranslateWorldTransform (hgs, 192, 64);
-                            MGPlusFillPath(hgs, brush, path); 
+                            MGPlusFillPath(hgs, brush, path);
 
                             MGPlusPathDelete(path);
                             break;
@@ -646,7 +646,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                             gal_pixel color[2]= {
                                 0xFF00FF00, 0xFF0000FF
                             };
-                            HDC hdc_com = CreateCompatibleDC (HDC_SCREEN); 
+                            HDC hdc_com = CreateCompatibleDC (HDC_SCREEN);
                             //radio_gradient_draw(hdc_com, 200, 300, 100, color, 2);
                             radio_gradient_draw(hgs, 200, 300, 100, color, 2);
                             DeleteCompatibleDC (hdc_com);
@@ -667,7 +667,7 @@ static LRESULT mGPlusWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                         int begin, end;
 
                         //MGPlusSetInterpolationMode (hgs, MP_INTERPOLATION_MODE_PERSPECTIVE);
-                        
+
                         MGPlusGraphicLoadBitmapFromFile(hgs, 0, "res/pic1.jpg");
                         begin = GetTickCount();
                         for(i=0;i<count;i++)

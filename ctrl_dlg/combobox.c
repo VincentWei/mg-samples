@@ -59,7 +59,7 @@ static void create_combobox (HWND parent)
     DIR*    dir;
     struct  dirent* dir_ent;
 
-    hwnd1 = CreateWindow (CTRL_COMBOBOX, 
+    hwnd1 = CreateWindow (CTRL_COMBOBOX,
             "combobox",
             WS_VISIBLE | CBS_DROPDOWNLIST | CBS_NOTIFY | CBS_READONLY,
             IDC_BOX1,
@@ -110,7 +110,7 @@ static void create_combobox (HWND parent)
     }
     closedir (dir);
 
-    for (i = 0; i < 10; i++) { 
+    for (i = 0; i < 10; i++) {
         sprintf (temp, "Welcome: %03d", i);
         SendMessage (hwnd2, CB_ADDSTRING, 0, (LPARAM)temp);
         SendMessage (hwnd5, CB_ADDSTRING, 0, (LPARAM)temp);
@@ -125,15 +125,15 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
               create_combobox (hWnd);
 
               CreateWindow (CTRL_STATIC,
-                        selected_, 
-                        WS_CHILD | WS_VISIBLE | SS_SIMPLE, 
-                        IDC_SELECTED, 
+                        selected_,
+                        WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+                        IDC_SELECTED,
                         210, 10, 200, 25, hWnd, 0);
 
               CreateWindow (CTRL_BUTTON,
-                        Close, 
-                        WS_CHILD | WS_VISIBLE, 
-                        IDCANCEL, 
+                        Close,
+                        WS_CHILD | WS_VISIBLE,
+                        IDCANCEL,
                         320, 190, 60, 25, hWnd, 0);
 
         break;
@@ -143,7 +143,7 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             int id   = LOWORD(wParam);
             int code = HIWORD(wParam);
             char str [NAME_MAX + 20], file [NAME_MAX + 1];
-            int selected; 
+            int selected;
 
             if (wParam == IDCANCEL) {
                 PostMessage (hWnd, MSG_CLOSE, 0, 0);
@@ -172,7 +172,7 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         case MSG_DESTROY:
             DestroyAllControls (hWnd);
             hMainWnd = HWND_INVALID;
-	    return 0;
+        return 0;
 
         case MSG_CLOSE:
             DestroyMainWindow (hWnd);
@@ -192,11 +192,11 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(IDC_ARROW);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 400;
     pCreateInfo->by = 260;
-    pCreateInfo->iBkColor = GetWindowElementColor (WE_MAINC_THREED_BODY); 
+    pCreateInfo->iBkColor = GetWindowElementColor (WE_MAINC_THREED_BODY);
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
 }

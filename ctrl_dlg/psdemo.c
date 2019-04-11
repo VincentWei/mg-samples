@@ -50,9 +50,9 @@ static LRESULT PageProc1 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             buffer [18] = '\0';
 
             if (buffer [0] == '\0') {
-                MessageBox (hDlg, 
-                            "Please input something in the first edit box.", 
-                            "Warning!", 
+                MessageBox (hDlg,
+                            "Please input something in the first edit box.",
+                            "Warning!",
                             MB_OK | MB_ICONEXCLAMATION | MB_BASEDONPARENT);
                 return -1;
             }
@@ -67,7 +67,7 @@ static LRESULT PageProc1 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
-    
+
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
@@ -79,7 +79,7 @@ static LRESULT PageProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
     case MSG_SHOWPAGE:
         return 1;
-        
+
     case MSG_COMMAND:
         switch (wParam) {
         case IDOK:
@@ -87,9 +87,9 @@ static LRESULT PageProc2 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
         break;
-        
+
     }
-    
+
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
@@ -100,12 +100,12 @@ static LRESULT PageProc3 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
     switch (message) {
     case MSG_INITPAGE:
-        for (i = 0; i < 20; i++) { 
+        for (i = 0; i < 20; i++) {
             sprintf (temp, "%d-Welcome", i);
             SendDlgItemMessage (hDlg, IDC_BOX1, CB_ADDSTRING, 0, (LPARAM)temp) ;
             SendDlgItemMessage (hDlg, IDC_BOX2, CB_ADDSTRING, 0, (LPARAM)temp) ;
             SendDlgItemMessage (hDlg, IDC_BOX4, CB_ADDSTRING, 0, (LPARAM)temp) ;
-        } 
+        }
         break;
 
     case MSG_SHOWPAGE:
@@ -121,9 +121,9 @@ static LRESULT PageProc3 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
         break;
-        
+
     }
-    
+
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
@@ -142,7 +142,7 @@ static LRESULT PageProc4 (HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
     }
-    
+
     return DefaultPageProc (hDlg, message, wParam, lParam);
 }
 
@@ -156,37 +156,37 @@ static LRESULT PropSheetProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
             DlgStructParams.controls = CtrlStructParams;
             SendMessage (pshwnd, PSM_ADDPAGE,
                             (WPARAM)&DlgStructParams, (LPARAM)PageProc1);
-            
+
             DlgPassword.controls = CtrlPassword;
-            SendMessage ( pshwnd, PSM_ADDPAGE, 
+            SendMessage ( pshwnd, PSM_ADDPAGE,
                             (WPARAM)&DlgPassword,(LPARAM) PageProc2);
-            
+
             DlgStartupMode.controls = CtrlStartupMode;
-            SendMessage ( pshwnd, PSM_ADDPAGE, 
+            SendMessage ( pshwnd, PSM_ADDPAGE,
                             (WPARAM)&DlgStartupMode,(LPARAM)PageProc3);
 
             DlgInitProgress.controls = CtrlInitProgress;
-            SendMessage ( pshwnd, PSM_ADDPAGE, 
+            SendMessage ( pshwnd, PSM_ADDPAGE,
                             (WPARAM)&DlgInitProgress, (LPARAM) PageProc4);
 
             break;
         }
 
         case MSG_COMMAND:
-        switch (wParam) 
+        switch (wParam)
         {
             case IDC_APPLY:
             break;
 
             case IDOK:
             {
-                int index = SendDlgItemMessage (hDlg, IDC_PROPSHEET, 
+                int index = SendDlgItemMessage (hDlg, IDC_PROPSHEET,
                                 PSM_SHEETCMD, IDOK, 0);
                 if (index) {
-                    SendDlgItemMessage (hDlg, IDC_PROPSHEET, 
+                    SendDlgItemMessage (hDlg, IDC_PROPSHEET,
                                     PSM_SETACTIVEINDEX, index - 1, 0);
                 }
-                else 
+                else
                     EndDialog (hDlg, wParam);
 
                 break;
@@ -204,7 +204,7 @@ static LRESULT PropSheetProc (HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 void testPropertySheet (HWND hWnd)
 {
     DlgPropertySheet.controls = CtrlPropertySheet;
-    
+
     DialogBoxIndirectParam (&DlgPropertySheet, hWnd, PropSheetProc, 0L);
 }
 

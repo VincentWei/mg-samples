@@ -53,43 +53,43 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
     switch (message) {
         case MSG_CREATE:
-            hChildWnd1 = CreateWindow ("progressbar", 
-                              "", 
-                              WS_VISIBLE, 
-                              IDC_CTRL1, 
+            hChildWnd1 = CreateWindow ("progressbar",
+                              "",
+                              WS_VISIBLE,
+                              IDC_CTRL1,
                               10, 20, 100, 20, hWnd, 0);
-            hChildWnd4 = CreateWindow ("progressbar", 
-                              "", 
-                              WS_VISIBLE, 
-                              IDC_CTRL4, 
+            hChildWnd4 = CreateWindow ("progressbar",
+                              "",
+                              WS_VISIBLE,
+                              IDC_CTRL4,
                               120, 20, 150, 20, hWnd, 0);
             SendMessage (hChildWnd4, PBM_SETRANGE, 0, 1000);
             SendMessage (hChildWnd4, PBM_SETSTEP, 10, 0);
 
-            hChildWnd2 = CreateWindow ("progressbar", 
-                              NULL, 
-                              WS_VISIBLE, 
-                              IDC_CTRL2, 
+            hChildWnd2 = CreateWindow ("progressbar",
+                              NULL,
+                              WS_VISIBLE,
+                              IDC_CTRL2,
                               10, 50, 260, 20, hWnd, 0);
 
-            hChildWnd3 = CreateWindow ("progressbar", 
-                              NULL, 
+            hChildWnd3 = CreateWindow ("progressbar",
+                              NULL,
                               WS_VISIBLE | PBS_VERTICAL | PBS_NOTIFY,
                               IDC_CTRL3,
                               10, 80, 20, 120, hWnd, 0);
 
-            hChildWnd5 = CreateWindow ("progressbar", 
-                              NULL, 
+            hChildWnd5 = CreateWindow ("progressbar",
+                              NULL,
                               WS_VISIBLE | PBS_VERTICAL | PBS_NOTIFY,
                               IDC_CTRL3,
                               120, 80, 20, 120, hWnd, 0);
             SendMessage (hChildWnd5, PBM_SETRANGE, 0, 1000);
             SendMessage (hChildWnd5, PBM_SETSTEP, 10, 0);
 
-            CreateWindow (CTRL_BUTTON, 
-                          Close, 
-                          WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE, 
-                          IDCANCEL, 
+            CreateWindow (CTRL_BUTTON,
+                          Close,
+                          WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                          IDCANCEL,
                           200, 170, 70, 30, hWnd, 0);
 
             pos = 0;
@@ -124,12 +124,12 @@ static LRESULT ControlTestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
             ReleaseDC (hdc);
         }
         break;
-        
-	case MSG_DESTROY:
+
+    case MSG_DESTROY:
             KillTimer (hWnd, 100);
             DestroyAllControls (hWnd);
             hMainWnd = HWND_INVALID;
-	    return 0;
+        return 0;
 
         case MSG_CLOSE:
             DestroyMainWindow (hWnd);
@@ -149,7 +149,7 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor(IDC_ARROW);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = ControlTestWinProc;
-    pCreateInfo->lx = 0; 
+    pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
     pCreateInfo->rx = 300;
     pCreateInfo->by = 230;

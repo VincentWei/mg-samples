@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -73,13 +73,13 @@
 
 #define MENU_START_X    25
 #define MENU_START_Y    116
-#define MENU_WIDTH      270 
-#define MENU_HEIGHT     50 
+#define MENU_WIDTH      270
+#define MENU_HEIGHT     50
 
 #define DISK_START_X    297
 #define DISK_START_Y    116
-#define DISK_WIDTH      270 
-#define DISK_HEIGHT     50 
+#define DISK_WIDTH      270
+#define DISK_HEIGHT     50
 
 #define PI 3.14159265358979323846
 
@@ -128,7 +128,7 @@ typedef struct _rotate_info
     PBITMAP bmp_fg; /* the picture of foreground */
 }ROTATEINFO;
 
-void InitRotateInfo(HWND hwnd, ROTATEINFO* info, int frame_num, 
+void InitRotateInfo(HWND hwnd, ROTATEINFO* info, int frame_num,
         PBITMAP bmp_bk, PBITMAP bmp_fg)
 {
     RECT rc;
@@ -158,7 +158,7 @@ void DestroyRotateInfo(ROTATEINFO* info)
     ReleaseDC(info->hdc);
 }
 
-#define Z_PRP 
+#define Z_PRP
 
 void draw_rotatepic(int index, void *context)
 {
@@ -241,52 +241,52 @@ void draw_rotatepic(int index, void *context)
 
 void RunAnimate(int interval, int frame_num, ANIMATE_DRAW cbdraw, void *context)
 {
-	pthread_cond_t cond;
-	pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    pthread_mutex_t mutex;
 
     int index=0;
-	int interval_sec;
-	int interval_nsec;
-	struct timeval tv;
+    int interval_sec;
+    int interval_nsec;
+    struct timeval tv;
     //int start_time;
 
     if (!interval || !frame_num || !cbdraw || !context)
         return;
 
-	gettimeofday(&tv,NULL);
-	//start_time =tv.tv_sec*1000 + (tv.tv_usec+999)/1000;
+    gettimeofday(&tv,NULL);
+    //start_time =tv.tv_sec*1000 + (tv.tv_usec+999)/1000;
 
-	pthread_cond_init(&cond,NULL);
-	pthread_mutex_init(&mutex, NULL);
+    pthread_cond_init(&cond,NULL);
+    pthread_mutex_init(&mutex, NULL);
 
-	interval_sec = interval/1000;
-	interval_nsec = (interval%1000)*1000000;
+    interval_sec = interval/1000;
+    interval_nsec = (interval%1000)*1000000;
 
     while(1)
     {
-		struct timeval tv;
-		struct timespec timeout;
+        struct timeval tv;
+        struct timespec timeout;
 
-		gettimeofday(&tv, NULL);
-		timeout.tv_sec = tv.tv_sec + interval_sec;
-		timeout.tv_nsec = tv.tv_usec*1000 + interval_nsec;
-		if(timeout.tv_nsec > 1000000000){
-			timeout.tv_sec ++;
-			timeout.tv_nsec -= 1000000000;
-		}
+        gettimeofday(&tv, NULL);
+        timeout.tv_sec = tv.tv_sec + interval_sec;
+        timeout.tv_nsec = tv.tv_usec*1000 + interval_nsec;
+        if(timeout.tv_nsec > 1000000000){
+            timeout.tv_sec ++;
+            timeout.tv_nsec -= 1000000000;
+        }
 
-		pthread_mutex_lock(&mutex);
+        pthread_mutex_lock(&mutex);
         cbdraw(index, context);
         index++;
         if (index > frame_num-1)
             break;
 
-		pthread_cond_timedwait(&cond, &mutex, &timeout);
-		pthread_mutex_unlock(&mutex);
+        pthread_cond_timedwait(&cond, &mutex, &timeout);
+        pthread_mutex_unlock(&mutex);
     }
 
-	pthread_cond_destroy(&cond);
-	pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&cond);
+    pthread_mutex_destroy(&mutex);
 }
 
 typedef struct _blinds_info
@@ -347,7 +347,7 @@ void draw_blinds(int index, void * context)
 
         FillBoxWithBitmapPart(info->hdc,
             0, h,
-            info->part_w, 
+            info->part_w,
             (index < info->frame_h.rem)?info->frame_h.quot+1:info->frame_h.quot,
             0, 0,
             info->bmp_fg, 0, h);
@@ -361,7 +361,7 @@ void draw_blinds(int index, void * context)
 
     FillBoxWithBitmapPart(info->hdc,
             0, h,
-            info->part_w, 
+            info->part_w,
             (index < info->final.rem)?info->final.quot+1:info->final.quot,
             //part_w, h,
             0, 0,
@@ -378,13 +378,13 @@ void draw_blinds(int index, void * context)
 #if 0
 void BlindsAnimate(HWND hwnd, int interval, int part_num, int frame_num, PBITMAP bmp)
 {
-	pthread_cond_t cond;
-	pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    pthread_mutex_t mutex;
 
     int index=0;
-	int interval_sec;
-	int interval_nsec;
-	struct timeval tv;
+    int interval_sec;
+    int interval_nsec;
+    struct timeval tv;
     int start_time;
 
     div_t part, final;
@@ -394,15 +394,15 @@ void BlindsAnimate(HWND hwnd, int interval, int part_num, int frame_num, PBITMAP
     RECT rc;
     HDC hdc;
 
-	gettimeofday(&tv, NULL);
-	start_time =tv.tv_sec*1000 + (tv.tv_usec+999)/1000;
+    gettimeofday(&tv, NULL);
+    start_time =tv.tv_sec*1000 + (tv.tv_usec+999)/1000;
 
-	pthread_cond_init(&cond, NULL);
-	pthread_mutex_init(&mutex, NULL);
+    pthread_cond_init(&cond, NULL);
+    pthread_mutex_init(&mutex, NULL);
 
-	interval_sec = interval/1000;
-	interval_nsec = (interval%1000)*1000000;
-    
+    interval_sec = interval/1000;
+    interval_nsec = (interval%1000)*1000000;
+
     hdc = GetSecondaryDC(hwnd);
     GetClientRect(hwnd, &rc);
     /*count the max height of blind*/
@@ -416,27 +416,27 @@ void BlindsAnimate(HWND hwnd, int interval, int part_num, int frame_num, PBITMAP
 
     while(1)
     {
-		struct timeval tv;
-		struct timespec timeout;
+        struct timeval tv;
+        struct timespec timeout;
 
-		gettimeofday(&tv, NULL);
-		timeout.tv_sec = tv.tv_sec + interval_sec;
-		timeout.tv_nsec = tv.tv_usec*1000 + interval_nsec;
-		if(timeout.tv_nsec > 1000000000){
-			timeout.tv_sec ++;
-			timeout.tv_nsec -= 1000000000;
-		}
+        gettimeofday(&tv, NULL);
+        timeout.tv_sec = tv.tv_sec + interval_sec;
+        timeout.tv_nsec = tv.tv_usec*1000 + interval_nsec;
+        if(timeout.tv_nsec > 1000000000){
+            timeout.tv_sec ++;
+            timeout.tv_nsec -= 1000000000;
+        }
 
-		pthread_mutex_lock(&mutex);
-        draw_blinds(index, part_num, RECTW(rc), part_h, 
-                frame_h, final, bmp); 
+        pthread_mutex_lock(&mutex);
+        draw_blinds(index, part_num, RECTW(rc), part_h,
+                frame_h, final, bmp);
 
         index++;
         if (index > frame_num-1)
             break;
 
-		pthread_cond_timedwait(&cond, &mutex, &timeout);
-		pthread_mutex_unlock(&mutex);
+        pthread_cond_timedwait(&cond, &mutex, &timeout);
+        pthread_mutex_unlock(&mutex);
     }
     //ReleaseDC(hdc);
 
@@ -444,8 +444,8 @@ void BlindsAnimate(HWND hwnd, int interval, int part_num, int frame_num, PBITMAP
     SetSecondaryDC(hwnd, hdc, ON_UPDSECDC_DEFAULT);
     ReleaseSecondaryDC(hwnd, hdc);
 
-	pthread_cond_destroy(&cond);
-	pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&cond);
+    pthread_mutex_destroy(&mutex);
 }
 #endif
 
@@ -480,7 +480,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                 case SCANCODE_F2:
                 {
                     ROTATEINFO info={0};
-                    InitRotateInfo(hWnd, &info, 30, &bmp_res[0], &bmp_res[1]); 
+                    InitRotateInfo(hWnd, &info, 30, &bmp_res[0], &bmp_res[1]);
                     RunAnimate(50, 30, draw_rotatepic, (void *)&info);
                     DestroyRotateInfo(&info);
                     break;
@@ -494,7 +494,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         case MSG_PAINT:
         {
             HDC hdc = BeginPaint(hWnd);
-            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top, 
+            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top,
                     RECTW(g_rcScr), RECTH(g_rcScr), &bmp_res[0]);
             EndPaint(hWnd, hdc);
             break;

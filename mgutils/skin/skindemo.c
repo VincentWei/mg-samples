@@ -1,31 +1,31 @@
 /*
  *   This file is part of mGUtils, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2003~2018, Beijing FMSoft Technologies Co., Ltd.
  *   Copyright (C) 1998~2002, WEI Yongming
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -61,7 +61,7 @@
 
 #define DEF_WIDTH       284
 #define DEF_HEIGHT      135
-#define ID_TIME            100    
+#define ID_TIME            100
 
 /* 定义皮肤元素特定属性 */
 static si_nrmslider_t progress     = { {0, 180, 0 }, 5 };
@@ -74,16 +74,16 @@ static skin_item_t skin_main_items [] =
     {SIID_PLAY, SI_TYPE_CHKBUTTON       | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE,
         205, 106, {}, {1}, "Play"},
     {SIID_PAUSE, SI_TYPE_CHKBUTTON   | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE,
-        230, 106, {}, {2}, "Pause"},    
+        230, 106, {}, {2}, "Pause"},
     {SIID_STOP,  SI_TYPE_CHKBUTTON   | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE,
         254, 106, {}, {3}, "Stop"},
-    {SIID_PROGRESS, SI_TYPE_NRMSLIDER| SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE 
+    {SIID_PROGRESS, SI_TYPE_NRMSLIDER| SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE
         | SI_NRMSLIDER_HORZ, 8, 91, {}, {4}, "Progress" , 0, &progress},
     {SIID_SYSMENU, SI_TYPE_CMDBUTTON | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE,
         9, 2, {}, {6}},
     {SIID_CLOSE, SI_TYPE_CMDBUTTON      | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE,
         263, 2, {}, {7}, "Close"},
-    {SIID_VOLUME, SI_TYPE_NRMSLIDER  | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE 
+    {SIID_VOLUME, SI_TYPE_NRMSLIDER  | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE
         | SI_NRMSLIDER_HORZ, 102, 55, {}, {8}, "Volume" , 0, &volume},
     {SIID_TIMER,   SI_TYPE_BMPLABEL  | SI_TEST_SHAPE_RECT | SI_STATUS_VISIBLE,
         20, 67, {}, {10}, "Time", 0, &timer}
@@ -93,7 +93,7 @@ static skin_item_t skin_main_items [] =
 skin_head_t main_skin =
 {
     "播放器皮肤窗口",
-    SKIN_STYLE_TOOLTIP, NULL, NULL, 
+    SKIN_STYLE_TOOLTIP, NULL, NULL,
     0, 8, skin_main_items, FALSE
 };
 
@@ -109,11 +109,11 @@ static int cur_pos = 0;
 void load_skin_bmps (skin_head_t *skin, BOOL load)
 {
     int i, bmp_num = sizeof (bmp_name)/sizeof(char *);
-    
+
     /* 如果load为真，则将位图装载到skin的bmps数组，否则卸载bmps数组中的位图 */
     if (load)
         skin->bmps = (BITMAP* ) calloc (bmp_num, sizeof(BITMAP));
-    
+
     for (i = 0 ; i < bmp_num ; i++ ) {
         if (load) {
             if (LoadBitmapFromFile (HDC_SCREEN, (PBITMAP)&(skin->bmps[i]), bmp_name[i])) {
@@ -169,7 +169,7 @@ static int main_event_cb (HWND hwnd, skin_item_t* item, int event, void* data)
         minute = pos / 60;
         second = pos % 60;
         if (second > 9) {
-            sprintf (buf, "0%d:%d", minute, second); 
+            sprintf (buf, "0%d:%d", minute, second);
         } else {
             sprintf (buf, "0%d:0%d", minute,second);
         }
@@ -184,20 +184,20 @@ static int msg_event_cb (HWND hwnd, int message, WPARAM wparam, LPARAM lparam, i
 {
     int minute = 0;
     int second = 0;
-    char buf[8];
+    char buf[64];
     skin_head_t *hostskin = NULL;
 
     switch (message) {
         case MSG_TIMER:
-            if (cur_pos++ > 180) 
+            if (cur_pos++ > 180)
                 cur_pos = 0;
             minute = cur_pos / 60;
             second = cur_pos % 60;
             if (second > 9)
-                sprintf (buf, "0%d:%d", minute, second); 
-            else 
+                sprintf (buf, "0%d:%d", minute, second);
+            else
                 sprintf (buf, "0%d:0%d", minute,second);
-            
+
             hostskin = get_window_skin (hwnd);
             skin_set_thumb_pos (hostskin, SIID_PROGRESS, cur_pos);
             skin_set_item_label (hostskin, SIID_TIMER, buf);
@@ -210,7 +210,7 @@ int MiniGUIMain (int argc, const char *argv[])
 {
     MSG msg;
     HWND hWndMain;
-    
+
 #ifdef _MGRM_PROCESSES
     JoinLayer(NAME_DEF_LAYER , "skindemo" , 0 , 0);
 #endif

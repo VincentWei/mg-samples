@@ -1,30 +1,30 @@
 /*
  *   This file is part of mGPlus, a component for MiniGUI.
- * 
+ *
  *   Copyright (C) 2008~2018, Beijing FMSoft Technologies Co., Ltd.
- * 
+ *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- * 
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- * 
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *   Or,
- * 
+ *
  *   As this program is a library, any link to this program must follow
  *   GNU General Public License version 3 (GPLv3). If you cannot accept
  *   GPLv3, you need to be licensed from FMSoft.
- * 
+ *
  *   If you have got a commercial license of this program, please use it
  *   under the terms and conditions of the commercial license.
- * 
+ *
  *   For more information about the commercial license, please refer to
  *   <http://www.minigui.com/en/about/licensing-policy/>.
  */
@@ -39,11 +39,11 @@
 
 #include <mgplus/mgplus.h>
 
-#define SCREEN_WIDTH        640 
-#define SCREEN_HEIGHT       480 
+#define SCREEN_WIDTH        640
+#define SCREEN_HEIGHT       480
 
 #define DEFAULT_WIDTH        1280
-#define DEFAULT_HEIGHT       720 
+#define DEFAULT_HEIGHT       720
 
 static char* g_pBitmapName [] = {"./res/CoverFlow1.bmp",
                                  "./res/CoverFlow2.bmp",
@@ -97,7 +97,7 @@ static void ResetDownPoint (MPPOINT* pUpPoint, MPPOINT* pDownPoint)
     pDownPoint [3].x = pUpPoint [3].x;
     pDownPoint [3].y = pUpPoint [3].y;
 }
-                        
+
 static void InitCoverFlowPoints (int n_total_flame)
 {
     MPPOINT* pCurUpPoint;
@@ -161,7 +161,7 @@ static void InitCoverFlowPoints (int n_total_flame)
 
     //left third down cover
     ResetDownPoint (pCurUpPoint, pCurDownPoint);
-    
+
 
     //middle cover
     pCurUpPoint = &g_CoverUpPoint [6][0];
@@ -290,7 +290,7 @@ static void RedrawCoverFlow (int nCount, BOOL bTurn)
     //unsigned int nFrontTickCount, nBackTickCount;
 
     nRightNode = 0;
-    
+
 
     //nFrontTickCount = GetTickCount ();
     if (g_nRightNumber > 3)
@@ -308,7 +308,7 @@ static void RedrawCoverFlow (int nCount, BOOL bTurn)
     {
         if (nCount > g_nFlameCount / 2)
         {
-            //draw right 
+            //draw right
             for (i = nRightNode - 1; i >= 1 && (nRightNode != 0); i--)
             {
                 MGPlusDrawImageWithPoints (g_hGraphics, \
@@ -413,7 +413,7 @@ static void RedrawCoverFlow (int nCount, BOOL bTurn)
                 MGPlusFillPath (g_hGraphics, g_hBrush, g_hPath);
             }
 
-#if 1 
+#if 1
             for (i = nLeftNode - 1; i >= 1 && (nLeftNode != 0); i--)
             {
                 MGPlusDrawImageWithPoints (g_hGraphics, \
@@ -567,24 +567,24 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
                 }
 
                 pCurUpPoint [0].x = pSrcUpPoint [0].x - (pSrcUpPoint [0].x - pDstUpPoint [0].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [0].y = pSrcUpPoint [0].y - (pSrcUpPoint [0].y - pDstUpPoint [0].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [1].x = pSrcUpPoint [1].x - (pSrcUpPoint [1].x - pDstUpPoint [1].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [1].y = pSrcUpPoint [1].y - (pSrcUpPoint [1].y - pDstUpPoint [1].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [2].x = pSrcUpPoint [2].x - (pSrcUpPoint [2].x - pDstUpPoint [2].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [2].y = pSrcUpPoint [2].y - (pSrcUpPoint [2].y - pDstUpPoint [2].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [3].x = pSrcUpPoint [3].x - (pSrcUpPoint [3].x - pDstUpPoint [3].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [3].y = pSrcUpPoint [3].y - (pSrcUpPoint [3].y - pDstUpPoint [3].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 ResetDownPoint (pCurUpPoint, pCurDownPoint);
 
@@ -603,25 +603,25 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
             pCurDownPoint = g_pSTCoverFlowCur->mpDownPoint;
 
             pCurUpPoint [0].x = pSrcUpPoint [0].x - (pSrcUpPoint [0].x - pDstUpPoint [0].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [0].y = pSrcUpPoint [0].y - (pSrcUpPoint [0].y - pDstUpPoint [0].y)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
 
             pCurUpPoint [1].x = pSrcUpPoint [1].x - (pSrcUpPoint [1].x - pDstUpPoint [1].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [1].y = pSrcUpPoint [1].y - (pSrcUpPoint [1].y - pDstUpPoint [1].y)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
 
             pCurUpPoint [2].x = pSrcUpPoint [2].x - (pSrcUpPoint [2].x - pDstUpPoint [2].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [2].y = pSrcUpPoint [2].y - (pSrcUpPoint [2].y - pDstUpPoint [2].y)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
 
             pCurUpPoint [3].x = pSrcUpPoint [3].x - (pSrcUpPoint [3].x - pDstUpPoint [3].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [3].y = pSrcUpPoint [3].y - (pSrcUpPoint [3].y - pDstUpPoint [3].y)\
-                                * nCount / g_nFlameCount; 
-                    
+                                * nCount / g_nFlameCount;
+
             ResetDownPoint (pCurUpPoint, pCurDownPoint);
         }
 
@@ -668,7 +668,7 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
                     pCurDownPoint = g_pSTCoverFlowLeftPointer [i]->mpDownPoint;
 
                 }
-                
+
                 if (i == 1)
                 {
                     pSrcUpPoint = &g_CoverUpPoint [1][0];
@@ -695,24 +695,24 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
 #endif
 
                 pCurUpPoint [0].x = pSrcUpPoint [0].x - (pSrcUpPoint [0].x - pDstUpPoint [0].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [0].y = pSrcUpPoint [0].y - (pSrcUpPoint [0].y - pDstUpPoint [0].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [1].x = pSrcUpPoint [1].x - (pSrcUpPoint [1].x - pDstUpPoint [1].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [1].y = pSrcUpPoint [1].y - (pSrcUpPoint [1].y - pDstUpPoint [1].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [2].x = pSrcUpPoint [2].x - (pSrcUpPoint [2].x - pDstUpPoint [2].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [2].y = pSrcUpPoint [2].y - (pSrcUpPoint [2].y - pDstUpPoint [2].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [3].x = pSrcUpPoint [3].x - (pSrcUpPoint [3].x - pDstUpPoint [3].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [3].y = pSrcUpPoint [3].y - (pSrcUpPoint [3].y - pDstUpPoint [3].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 ResetDownPoint (pCurUpPoint, pCurDownPoint);
             }
@@ -765,7 +765,7 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
                     pCurDownPoint = g_pSTCoverFlowRightPointer [i]->mpDownPoint;
 
                 }
-#if 0 
+#if 0
                 if (i == 0)
                 {
                     pSrcUpPoint = &g_CoverUpPoint [5][0];
@@ -780,24 +780,24 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
 #endif
 
                 pCurUpPoint [0].x = pSrcUpPoint [0].x - (pSrcUpPoint [0].x - pDstUpPoint [0].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [0].y = pSrcUpPoint [0].y - (pSrcUpPoint [0].y - pDstUpPoint [0].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [1].x = pSrcUpPoint [1].x - (pSrcUpPoint [1].x - pDstUpPoint [1].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [1].y = pSrcUpPoint [1].y - (pSrcUpPoint [1].y - pDstUpPoint [1].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [2].x = pSrcUpPoint [2].x - (pSrcUpPoint [2].x - pDstUpPoint [2].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [2].y = pSrcUpPoint [2].y - (pSrcUpPoint [2].y - pDstUpPoint [2].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [3].x = pSrcUpPoint [3].x - (pSrcUpPoint [3].x - pDstUpPoint [3].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [3].y = pSrcUpPoint [3].y - (pSrcUpPoint [3].y - pDstUpPoint [3].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 ResetDownPoint (pCurUpPoint, pCurDownPoint);
             }
@@ -816,25 +816,25 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
             pCurDownPoint = g_pSTCoverFlowCur->mpDownPoint;
 
             pCurUpPoint [0].x = pSrcUpPoint [0].x - (pSrcUpPoint [0].x - pDstUpPoint [0].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [0].y = pSrcUpPoint [0].y - (pSrcUpPoint [0].y - pDstUpPoint [0].y)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
 
             pCurUpPoint [1].x = pSrcUpPoint [1].x - (pSrcUpPoint [1].x - pDstUpPoint [1].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [1].y = pSrcUpPoint [1].y - (pSrcUpPoint [1].y - pDstUpPoint [1].y)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
 
             pCurUpPoint [2].x = pSrcUpPoint [2].x - (pSrcUpPoint [2].x - pDstUpPoint [2].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [2].y = pSrcUpPoint [2].y - (pSrcUpPoint [2].y - pDstUpPoint [2].y)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
 
             pCurUpPoint [3].x = pSrcUpPoint [3].x - (pSrcUpPoint [3].x - pDstUpPoint [3].x)\
-                                * nCount / g_nFlameCount; 
+                                * nCount / g_nFlameCount;
             pCurUpPoint [3].y = pSrcUpPoint [3].y - (pSrcUpPoint [3].y - pDstUpPoint [3].y)\
-                                * nCount / g_nFlameCount; 
-                    
+                                * nCount / g_nFlameCount;
+
             ResetDownPoint (pCurUpPoint, pCurDownPoint);
         }
 
@@ -855,7 +855,7 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
                     pCurUpPoint = g_pSTCoverFlowLeftPointer [i]->mpUpPoint;
                     pCurDownPoint = g_pSTCoverFlowLeftPointer [i]->mpDownPoint;
                 }
-#if 1 
+#if 1
                 if (i == 1)
                 {
                     pSrcUpPoint = &g_CoverUpPoint [1][0];
@@ -893,24 +893,24 @@ static void DrawCoverFlow (int nCount, BOOL bTurn)
                 }
 #endif
                 pCurUpPoint [0].x = pSrcUpPoint [0].x - (pSrcUpPoint [0].x - pDstUpPoint [0].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [0].y = pSrcUpPoint [0].y - (pSrcUpPoint [0].y - pDstUpPoint [0].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [1].x = pSrcUpPoint [1].x - (pSrcUpPoint [1].x - pDstUpPoint [1].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [1].y = pSrcUpPoint [1].y - (pSrcUpPoint [1].y - pDstUpPoint [1].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [2].x = pSrcUpPoint [2].x - (pSrcUpPoint [2].x - pDstUpPoint [2].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [2].y = pSrcUpPoint [2].y - (pSrcUpPoint [2].y - pDstUpPoint [2].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 pCurUpPoint [3].x = pSrcUpPoint [3].x - (pSrcUpPoint [3].x - pDstUpPoint [3].x)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
                 pCurUpPoint [3].y = pSrcUpPoint [3].y - (pSrcUpPoint [3].y - pDstUpPoint [3].y)\
-                                    * nCount / g_nFlameCount; 
+                                    * nCount / g_nFlameCount;
 
                 ResetDownPoint (pCurUpPoint, pCurDownPoint);
             }
@@ -1524,7 +1524,7 @@ static LRESULT CoverFlowProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
                                     count = count + 4;
                             }
                         }
-                        
+
                     }
                     break;
                 case SCANCODE_CURSORBLOCKRIGHT:
@@ -1549,9 +1549,9 @@ static LRESULT CoverFlowProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         }
         break;
 
-        
+
         case MSG_RBUTTONDOWN:
-        {           
+        {
 
             MGPlusGraphicClear (g_hGraphics, 0xFF000000);
             MGPlusGraphicSave (g_hGraphics, HDC_SCREEN, 0, 0, 0, 0, 0, 0);
