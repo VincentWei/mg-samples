@@ -182,6 +182,7 @@ static NewsInfo _news_cases[] = {
     },
 };
 
+#if 0
 typedef struct _RENDER_RULE {
     Uint32 rule;
     const char* desc;
@@ -254,6 +255,7 @@ static RENDER_RULE _lbp_cases [] = {
     { LBP_ANYWHERE,
         "LBP_ANYWHERE" },
 };
+#endif
 
 static int _letter_spacing = 0;
 static int _word_spacing = 0;
@@ -404,7 +406,7 @@ static void do_dump(const Uchar32* ucs, const Uint16* bos, int n,
 }
 
 static char _utf8_str [5000];
-static void dump_glyphs_and_breaks(const char* text,
+static inline void dump_glyphs_and_breaks(const char* text,
         const Uchar32* ucs, const Uint16* bos, int n)
 {
     int i;
@@ -737,12 +739,14 @@ error:
 
 static void destroy_layouts(void)
 {
+    int i;
+
     if (_header.layout) {
         DestroyLayout(_header.layout);
         _header.layout = NULL;
     }
 
-    for (int i = 0; i < _nr_parags; i++) {
+    for (i = 0; i < _nr_parags; i++) {
         DestroyLayout(_paragraphs[i].layout);
         _paragraphs[i].layout = NULL;
     }
@@ -755,6 +759,8 @@ static void destroy_layouts(void)
 
 static void destroy_news(void)
 {
+    int i;
+
     destroy_layouts();
 
     if (_header.textruns) {
@@ -764,7 +770,7 @@ static void destroy_news(void)
         memset(&_header, 0, sizeof(ParagraphInfo));
     }
 
-    for (int i = 0; i < _nr_parags; i++) {
+    for (i = 0; i < _nr_parags; i++) {
         if (_paragraphs[i].textruns) {
             DestroyTextRuns(_paragraphs[i].textruns);
             free(_paragraphs[i].bos);
@@ -911,6 +917,7 @@ static void render_footer(HDC hdc)
 
 static void render_paragraphs(HDC hdc)
 {
+    int i;
     int text_x, text_y;
 
     switch (_news_cases[_curr_news].common_flags & GRF_WRITING_MODE_MASK) {
@@ -937,7 +944,7 @@ static void render_paragraphs(HDC hdc)
     }
 
     POINT pt = {text_x, text_y};
-    for (int i = 0; i < _nr_parags; i++) {
+    for (i = 0; i < _nr_parags; i++) {
         LAYOUT* layout = _paragraphs[i].layout;
         LAYOUTLINE* line = NULL;
         RECT rc;
@@ -982,7 +989,7 @@ static void render_paragraphs(HDC hdc)
 }
 
 static int _auto_test_runs = 0;
-static int _nr_test_runs = 0;
+//static int _nr_test_runs = 0;
 
 static
 LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
