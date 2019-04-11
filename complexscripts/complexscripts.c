@@ -735,10 +735,29 @@ error:
     exit(1);
 }
 
-static void destroy_news(void)
+static void destroy_layouts(void)
 {
     if (_header.layout) {
         DestroyLayout(_header.layout);
+        _header.layout = NULL;
+    }
+
+    for (int i = 0; i < _nr_parags; i++) {
+        DestroyLayout(_paragraphs[i].layout);
+        _paragraphs[i].layout = NULL;
+    }
+
+    if (_footer.layout) {
+        DestroyLayout(_footer.layout);
+        _footer.layout = NULL;
+    }
+}
+
+static void destroy_news(void)
+{
+    destroy_layouts();
+
+    if (_header.textruns) {
         DestroyTextRuns(_header.textruns);
         free(_header.bos);
         free(_header.ucs);
@@ -746,10 +765,12 @@ static void destroy_news(void)
     }
 
     for (int i = 0; i < _nr_parags; i++) {
-        DestroyLayout(_paragraphs[i].layout);
-        DestroyTextRuns(_paragraphs[i].textruns);
-        free(_paragraphs[i].bos);
-        free(_paragraphs[i].ucs);
+        if (_paragraphs[i].textruns) {
+            DestroyTextRuns(_paragraphs[i].textruns);
+            free(_paragraphs[i].bos);
+            free(_paragraphs[i].ucs);
+            memset(_paragraphs + i, 0, sizeof(ParagraphInfo));
+        }
     }
 
     if (_paragraphs)
@@ -757,8 +778,7 @@ static void destroy_news(void)
     _paragraphs = NULL;
     _nr_parags = 0;
 
-    if (_footer.layout) {
-        DestroyLayout(_footer.layout);
+    if (_footer.textruns) {
         DestroyTextRuns(_footer.textruns);
         free(_footer.bos);
         free(_footer.ucs);
@@ -774,6 +794,35 @@ static void create_news(HWND hwnd)
     create_header();
     create_paragraphs();
     create_footer();
+}
+
+static void relayout(HWND hwnd)
+{
+    int i;
+
+    destroy_layouts();
+
+    set_rectangles(hwnd);
+
+    if (_header.textruns) {
+        create_layout(&_header,
+            _news_cases[_curr_news].common_flags | _news_cases[_curr_news].header_flags,
+            _news_cases[_curr_news].header_font, _max_extent_header, TRUE, _news_cases[_curr_news].lc);
+    }
+
+    for (i = 0; i < _nr_parags; i++) {
+        if (_paragraphs[i].textruns) {
+            create_layout(_paragraphs + i,
+                _news_cases[_curr_news].common_flags | _news_cases[_curr_news].text_flags,
+                _news_cases[_curr_news].text_font, _max_extent_text, FALSE, _news_cases[_curr_news].lc);
+        }
+    }
+
+    if (_footer.textruns) {
+        create_layout(&_footer,
+            _news_cases[_curr_news].common_flags | _news_cases[_curr_news].footer_flags,
+            _news_cases[_curr_news].footer_font, _max_extent_footer, TRUE, _news_cases[_curr_news].lc);
+    }
 }
 
 static void render_header(HDC hdc)
@@ -979,26 +1028,31 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             _curr_news++;
             _curr_news %= TABLESIZE(_news_cases);
             reset_offset();
+            create_news(hWnd);
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKLEFT:
             _width_inc -= 2;
+            relayout(hWnd);
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKRIGHT:
             _width_inc += 2;
+            relayout(hWnd);
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKUP:
             _height_inc -= 10;
+            relayout(hWnd);
             repaint = TRUE;
             break;
 
         case SCANCODE_CURSORBLOCKDOWN:
             _height_inc += 10;
+            relayout(hWnd);
             repaint = TRUE;
             break;
 
@@ -1006,6 +1060,7 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             _letter_spacing += 1;
             _word_spacing += 2;
             _tab_size += 5;
+            relayout(hWnd);
             repaint = TRUE;
             break;
 
@@ -1013,25 +1068,28 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             _letter_spacing -= 1;
             _word_spacing -= 2;
             _tab_size -= 5;
+            relayout(hWnd);
             repaint = TRUE;
             break;
 
         case SCANCODE_HOME:
             _offset = 0;
-            InvalidateRect(hWnd, NULL, TRUE);
+            repaint = TRUE;
             break;
 
         case SCANCODE_END:
+            _offset = _page_height;
+            repaint = TRUE;
             break;
 
         case SCANCODE_PAGEUP:
             _offset -= _page_height >> 1;
-            InvalidateRect(hWnd, NULL, TRUE);
+            repaint = TRUE;
             break;
 
         case SCANCODE_PAGEDOWN:
             _offset += _page_height >> 1;
-            InvalidateRect(hWnd, NULL, TRUE);
+            repaint = TRUE;
             break;
 
         default:
@@ -1039,7 +1097,6 @@ LRESULT MyMainWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
 
         if (repaint) {
-            create_news(hWnd);
             InvalidateRect(hWnd, NULL, TRUE);
         }
 
