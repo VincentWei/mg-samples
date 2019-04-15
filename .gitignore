@@ -32,6 +32,9 @@ graphics/graphicsex
 housekeeper/housekeeper
 lf_skin/lf_skin
 look_feel/look_feel
+incore-data/incore-data
+incore-data/png_pics.inc
+incore-data/unifont_160_50.c
 mgeff/animation/animation_async
 mgeff/animation/animation_callback
 mgeff/animation/animation_control
