@@ -4,6 +4,8 @@ incore_data_SOURCES=incore-data.c unifont_160_50.c png_pics.inc
 
 EXTRA_DIST=res
 
+BUILT_SOURCES=unifont_160_50.c png_pics.inc
+
 # upf2c is a tool included in mg-tools:
 #
 #   https://github.com/VincentWei/mg-tools
