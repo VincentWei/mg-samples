@@ -1,6 +1,8 @@
 noinst_PROGRAMS=incore-data
 
-incore_data_SOURCES=incore-data.c unifont_160_50.c png_pics.inc
+incore_data_SOURCES=png_pics.inc unifont_160_50.c incore-data.c
+
+BUILT_SOURCES = png_pics.inc unifont_160_50.c
 
 EXTRA_DIST=res
 

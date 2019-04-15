@@ -19,7 +19,7 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-#if defined(_MGLF_RDR_SKIN) && defined(_MGCTRL_SPINBOX) && defined(_MGCTRL_PROPSHEET)
+#if defined(_MGLF_RDR_SKIN) && defined(_MGCTRL_TREEVIEW) && defined(_MGCTRL_SPINBOX) && defined(_MGCTRL_PROPSHEET)
 
 #include "lf_skin.h"
 
