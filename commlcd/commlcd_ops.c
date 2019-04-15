@@ -49,7 +49,7 @@ int __commlcd_drv_getinfo (struct commlcd_info *li, int width, int height, int d
     return 0;
 }
 
-/* this method will be called async; do not call. */
+/* this method will be called when there is a dirty rectangle on the screen. */
 int __commlcd_drv_update (const RECT* rc_dirty)
 {
     char filename [PATH_MAX + 1];

@@ -108,6 +108,7 @@ housekeeper/res/Makefile
 minesweeper/Makefile
 minesweeper/res/Makefile
 commlcd/Makefile
+incore-data/Makefile
 mgutils/Makefile
 mgutils/templates/Makefile
 mgutils/mywins/Makefile
