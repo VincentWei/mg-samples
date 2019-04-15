@@ -90,7 +90,6 @@ AC_OUTPUT(
     src/res/Makefile
     graphics/Makefile
     graphics/res/Makefile
-    complexscripts/Makefile
     dbuff/Makefile
     dbuff/res/Makefile
     ctrl_dlg/Makefile
@@ -109,6 +108,8 @@ AC_OUTPUT(
     minesweeper/Makefile
     minesweeper/res/Makefile
     commlcd/Makefile
+    incore-data/Makefile
+    complexscripts/Makefile
     mgutils/Makefile
     mgutils/templates/Makefile
     mgutils/mywins/Makefile

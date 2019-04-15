@@ -1,6 +1,8 @@
-COMMON_SUBDIRS = src graphics complexscripts ctrl_dlg \
+COMMON_SUBDIRS = src graphics ctrl_dlg \
         lf_skin font_text look_feel dbuff \
-        same housekeeper minesweeper commlcd \
+        same housekeeper minesweeper \
+        commlcd incore-data \
+        complexscripts \
         mgutils mgplus mgeff mgncs
 
 if MGRM_PROCESSES
@@ -12,4 +14,4 @@ endif
 DIST_SUBDIRS = m4 $(COMMON_SUBDIRS) mginit
 SUBDIRS = $(COMMON_SUBDIRS) $(LITE_SUBDIRS) m4
 
-EXTRA_DIST = README.md LICENSE
+EXTRA_DIST = README.md RELEASE-NOTES.md LICENSE
