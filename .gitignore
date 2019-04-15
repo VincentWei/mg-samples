@@ -25,6 +25,9 @@ Makefile.in
 
 # execuatable
 
+incore-data/incore-data
+incore-data/png_pics.inc
+incore-data/unifont_160_50.c
 complexscripts/complexscripts
 commlcd/commlcd
 ctrl_dlg/ctrl_dlg

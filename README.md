@@ -4,12 +4,11 @@ This is the mainline release of basic MiniGUI samples for MiniGUI V4.0.x or late
 
 ## Prerequisites
 
-  * MiniGUI v4.0.x 
-    * MiniGUI Core v4.0.0 or later
-    * mGUtils v1.2.2 or later
-    * mGPlus v1.4.0 or later
-    * mGEff v1.2.0 or later
-    * mGNCS v1.2.4 or later
+  * MiniGUI Core v4.0.0 or later
+  * mGUtils v1.2.2 or later
+  * mGPlus v1.4.0 or later
+  * mGEff v1.2.0 or later
+  * mGNCS v1.2.4 or later
 
 ## Building
 
