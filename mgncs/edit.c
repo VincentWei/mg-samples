@@ -245,7 +245,7 @@ static NCS_WND_TEMPLATE _ctrl_templ[] =
         NULL, NULL, 0, 0
     },
     {
-        NCSCTRL_MLEDIT,
+        NCSCTRL_TEXTEDITOR,
         ID_INFO,
         100, HSTART + 5 * HSPACE, 200, 160,
         WS_BORDER | WS_VISIBLE | WS_VSCROLL | NCSS_EDIT_BASELINE,
