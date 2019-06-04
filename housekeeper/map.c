@@ -21,7 +21,7 @@
 */
 
 #include "map.h"
-#include "data.c"
+#include "data.inc"
 
 ptagMap theMap; 
 
