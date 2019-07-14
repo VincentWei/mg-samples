@@ -22,8 +22,6 @@
 #define ID_MP_COMP_OP_DST_ATOP            112
 #define ID_MP_COMP_OP_XOR                 113
 
-//#define TEST
-
 static int comp_mode = MP_COMP_OP_SRC_OVER;
 BITMAP bitmap;
 
@@ -76,14 +74,8 @@ LRESULT ColorCompositeProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
     {
         case MSG_CREATE:
             {
-                HDC hdc = GetClientDC(hWnd);
                 LoadBitmap(HDC_SCREEN, &bitmap, "res/wede.bmp");
-#ifndef TEST
                 graphics = MGPlusGraphicCreate( 1024, 768);
-#else
-                graphics = MGPlusGraphicCreateWithoutCanvas(hdc);
-#endif
-                ReleaseDC (hdc);
             }
             break;
 
