@@ -107,7 +107,6 @@ AC_OUTPUT(
     housekeeper/res/Makefile
     minesweeper/Makefile
     minesweeper/res/Makefile
-    commlcd/Makefile
     incore-data/Makefile
     complexscripts/Makefile
     mgutils/Makefile

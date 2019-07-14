@@ -1,4 +1,4 @@
-/* 
+/*
 ** $Id: fminigui.c 741 2009-03-31 07:16:18Z weiym $
 **
 ** Flying-GUIs - Another MiniGUI demo...
@@ -49,7 +49,7 @@
 #define DEFAULT_GENTIME      200   /* msec */
 #define DEFAULT_MAXSIZE      100   /* percent */
 #define DEFAULT_CLUSTERSIZE  100   /* percent */
-#define DEFAULT_SPEED        30 
+#define DEFAULT_SPEED        30
 
 /* Global Info */
 
@@ -173,7 +173,7 @@ static void translate_hline(HDC hdc, int x, int y, int w, gal_uint8 *data)
         }
         break;
     }
-    
+
     bmp.bmBitsPerPixel = GetGDCapability (hdc, GDCAP_DEPTH);
     bmp.bmBytesPerPixel = GetGDCapability (hdc, GDCAP_BPP);
     bmp.bmPitch = w;
@@ -213,14 +213,13 @@ static void free_textures(void)
 {
     Texture *t;
 
-        while (texture_list != NULL) {
-        
+    while (texture_list != NULL) {
+
         t = texture_list;
         texture_list = t->succ;
-        
+
         free(t);
     }
-    
 }
 
 static void add_texture(int x, int y, gal_uint8 color)
@@ -265,9 +264,9 @@ static void render_texture(int width, int height, Texture *t)
                         dest = image_buf;
                         dest += ((sy>>16) * screen_width);
 
-                        for (x=0, sx=bx; (*pos != 0) && (sx < width); 
+                        for (x=0, sx=bx; (*pos != 0) && (sx < width);
                  x++, pos++, sx += dx) {
-            
+
                                 if ((sx >= 0) && (*pos == '#'))
                                 {
                                         dest[sx>>16] = t->color;
@@ -284,7 +283,7 @@ static void update_texture(Texture *t, Texture ***prev_ptr, int millis)
         t->size = t->millis * t->speed;
 
         if (t->size > max_size) {
-                
+
                 /* remove texture */
 
                 **prev_ptr = t->succ;
@@ -353,7 +352,7 @@ static void InitFlyingGUI (void)
         cluster_size = DEFAULT_CLUSTERSIZE;
     }
 
-    
+
     setup_palette();
 
     screen_width  = 320;
@@ -480,11 +479,11 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->hCursor = GetSystemCursor (0);
     pCreateInfo->hIcon = 0;
     pCreateInfo->MainWindowProc = FlyingGUIWinProc;
-    pCreateInfo->lx = 0; 
-    pCreateInfo->ty = 0; 
+    pCreateInfo->lx = 0;
+    pCreateInfo->ty = 0;
     pCreateInfo->rx = pCreateInfo->lx + DEFAULT_WIDTH;
     pCreateInfo->by = pCreateInfo->ty + DEFAULT_HEIGHT;
-    pCreateInfo->iBkColor = COLOR_black; 
+    pCreateInfo->iBkColor = COLOR_black;
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
 }
@@ -508,7 +507,7 @@ int MiniGUIMain (int args, const char* arg[])
 
     GetLayerInfo (layer, NULL, NULL, NULL);
 
-    if (JoinLayer (layer, arg[0], 
+    if (JoinLayer (layer, arg[0],
                     0, 0) == INV_LAYER_HANDLE) {
         printf ("JoinLayer: invalid layer handle.\n");
         exit (1);
@@ -533,7 +532,7 @@ int MiniGUIMain (int args, const char* arg[])
 #include <minigui/dti.c>
 #endif
 
-/* Image of GGI */
+/* Image of GUI */
 
 static char *banner[46] = {
 

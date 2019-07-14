@@ -1,7 +1,7 @@
 COMMON_SUBDIRS = src graphics ctrl_dlg \
         lf_skin font_text look_feel dbuff \
         same housekeeper minesweeper \
-        commlcd incore-data \
+        incore-data \
         complexscripts \
         mgutils mgplus mgeff mgncs
 
