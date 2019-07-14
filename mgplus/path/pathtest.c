@@ -20,8 +20,6 @@
 #define ID_DrawImageWithPath 112
 #define ID_RoundRect 113
 
-#define TEST
-
 LRESULT PathOddProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HGRAPHICS graphics;
@@ -35,19 +33,12 @@ LRESULT PathOddProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message) 
     {
         case MSG_CREATE:
-            hdc = GetClientDC (hWnd);
-#ifndef TEST
-            graphics= MGPlusGraphicCreateFromDC(hdc);
-            //graphics = MGPlusGraphicCreate( 1024, 768);
-#else
-            graphics = MGPlusGraphicCreateWithoutCanvas(hdc);
-#endif
+            graphics = MGPlusGraphicCreate( 1024, 768);
 
             brush = MGPlusBrushCreate (MP_BRUSH_TYPE_SOLIDCOLOR);
             MGPlusSetSolidBrushColor (brush, 0xFF00FFFF);
 
             pen = MGPlusPenCreate(9, a);
-
             oddpath = MGPlusPathCreate (MP_PATH_FILL_MODE_ALTERNATE);
             zeropath = MGPlusPathCreate (MP_PATH_FILL_MODE_WINDING);
             oldpathodd = MGPlusPathCreate (MP_PATH_FILL_MODE_ALTERNATE);
@@ -60,15 +51,15 @@ LRESULT PathOddProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 MGPlusPathReset(oddpath);
                 MGPlusPathReset(zeropath);
-                MGPlusGraphicClear (graphics,0);
 
                 hdc = GetClientDC (hWnd);
                 RECT rc = {0};
                 GetClientRect(hWnd, &rc);
                 FillBox(hdc, 0, 0, RECTW(rc), RECTH(rc));
-                ReleaseDC(hdc);
                 MGPlusGraphicCopyFromDC (graphics, hdc, 0, 0, 0, 0, 0, 0);
+                ReleaseDC(hdc);
             }
+
             switch (wParam)
             {
                 case ID_AddPath:
@@ -335,16 +326,15 @@ LRESULT PathOddProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case MSG_PAINT:
             hdc = BeginPaint (hWnd);
 
-            MGPlusDrawLine(graphics, pen, 500, 0,500 ,500 );
+            MGPlusDrawLine(graphics, pen, 500, 0, 500, 500);
             TextOut (hdc, 150, 500, "Even-Odd rule");
             TextOut (hdc, 680, 500, "None-Zero rule");
 
-            //MGPlusGraphicSave (graphics, hdc, 0, 0, 0, 0, 0, 0);
-    if (MGPlusGraphicSave(graphics, hdc, 0, 0, 0, 0, 0, 0) != MP_OK)
-        printf("save graphics ok!\n");
+            MGPlusGraphicSave(graphics, hdc, 0, 0, 0, 0, 0, 0);
 
             EndPaint(hWnd, hdc);
             break;
+
         case MSG_CLOSE:
             MGPlusPenDelete (pen);
 
