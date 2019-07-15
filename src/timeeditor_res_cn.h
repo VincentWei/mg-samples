@@ -1,3 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//                          IMPORTANT NOTICE
+//
+// The following open source license statement does not apply to any
+// entity in the Exception List published by FMSoft.
+//
+// For more information, please visit:
+//
+// https://www.fmsoft.cn/exception-list
+//
+//////////////////////////////////////////////////////////////////////////////
 #define CAPTION     "时间编辑器"
 #define PROMPT      "这是时间编辑器。\n\n" \
                                                      "有输入焦点的之后，可以通过按键 <Down-Arrow>， "  \

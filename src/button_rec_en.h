@@ -1,3 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+//                          IMPORTANT NOTICE
+//
+// The following open source license statement does not apply to any
+// entity in the Exception List published by FMSoft.
+//
+// For more information, please visit:
+//
+// https://www.fmsoft.cn/exception-list
+//
+//////////////////////////////////////////////////////////////////////////////
 #define  what_flavor_snack_do_you_like                                         "What flavor snack do you like?" 
 #define  optional_snack                                                        "optional snack"
 #define  northwest_pulled_noodle                                               "Northwest pulled noodle"
