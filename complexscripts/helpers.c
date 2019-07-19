@@ -110,7 +110,7 @@ const char* get_text_case(const char* text, char* read_buff, size_t n)
             }
             else {
                 fclose(fp);
-                _WRN_PRINTF("%s, failed to read from file: %s(%lu)\n",
+                _WRN_PRINTF("%s, failed to read from file: %s(%zu)\n",
                     __FUNCTION__, text + 5, size);
             }
         }
