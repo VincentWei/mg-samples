@@ -77,7 +77,7 @@ static BOOL get_dsp_app (void)
 {
     int i;
     DSPITEM* item;
-    char section [10];
+    char section [32];
 	int distance_x = START_X;
 	int distance_y = START_Y;
     SIZE size;
