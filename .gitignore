@@ -170,3 +170,7 @@ tests/drawglyphstringex
 tests/sliceallocator
 tests/ucd/
 tests/ustrgetbreaks
+mginit/mginit
+src/mginit
+src/scrnsaver
+
