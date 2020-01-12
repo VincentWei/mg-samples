@@ -199,34 +199,36 @@ static void run_zoom_animate (BOOL is_out)
 #define WW  20
 #define HH  20
 #if 1
-#define ROW (RECTW(g_rcScr)/WW/2)
-#define COL (RECTW(g_rcScr)/HH/2)
+#define ROW (RECTW(rcScr)/WW/2)
+#define COL (RECTW(rcScr)/HH/2)
 #else
 #define ROW 2
 #define COL 2
 #endif
 
+    RECT rcScr = GetScreenRect();
     int row;
     int col;
-    int cent_x = g_rcScr.right >> 1;
-    int cent_y = g_rcScr.bottom >> 1;
+    int cent_x = rcScr.right >> 1;
+    int cent_y = rcScr.bottom >> 1;
     int i;
     BITMAP rad_bmp;
     BITMAP zoom_bmp;
     LoadBitmap (HDC_SCREEN, &rad_bmp, "fall_night.jpg");
     LoadBitmap (HDC_SCREEN, &zoom_bmp, "plain_tree.jpg");
     ANIMATE_SENCE* as;
-    as = CreateRadAnimateSence (50, 1000, HDC_SCREEN, &g_rcScr);
+
+    as = CreateRadAnimateSence (50, 1000, HDC_SCREEN, &rcScr);
     for (row=0; row<ROW; row++)
         for (col=0; col<COL; col++)
         {
             AddRadAnimate (as, &rad_bmp, 
-                    g_rcScr.right/ROW * row + g_rcScr.right/ROW/2,
-                    g_rcScr.bottom/COL * col + g_rcScr.bottom/COL/2 , 
+                    rcScr.right/ROW * row + rcScr.right/ROW/2,
+                    rcScr.bottom/COL * col + rcScr.bottom/COL/2 , 
                     WW, HH, cent_x, cent_y, COL<<16, is_out);
         }
     AddScaleAnimate (as, &zoom_bmp, cent_x, cent_y, 
-            0, 0, g_rcScr.right, g_rcScr.bottom, is_out);
+            0, 0, rcScr.right, rcScr.bottom, is_out);
 
     StartAnimateSence (as);
     DeleteAnimateSence (as, NULL); 

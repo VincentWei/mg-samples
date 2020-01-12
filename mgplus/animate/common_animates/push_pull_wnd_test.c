@@ -56,6 +56,7 @@ int MiniGUIMain (int argc, const char* argv[])
 {
     MSG Msg;
 	HWND hwndPush, hwndPull;
+    RECT rcScr = GetScreenRect();
 
 #ifdef _MGRM_PROCESSES
     JoinLayer(NAME_DEF_LAYER , "helloworld" , 0 , 0);
@@ -67,9 +68,9 @@ int MiniGUIMain (int argc, const char* argv[])
 	getchar();
 
 	while(1){
-		RunPushPullWindowAnimate(&g_rcScr, hwndPush, hwndPull, 5, FALSE);
+		RunPushPullWindowAnimate(&rcScr, hwndPush, hwndPull, 5, FALSE);
 		getchar();
-		RunPushPullWindowAnimate(&g_rcScr, hwndPush, hwndPull, 5, TRUE);
+		RunPushPullWindowAnimate(&rcScr, hwndPush, hwndPull, 5, TRUE);
 		getchar();
 	}
 

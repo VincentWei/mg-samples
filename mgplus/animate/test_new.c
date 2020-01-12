@@ -64,6 +64,7 @@ int MiniGUIMain(int argc, const char* argv[])
 	HWND hMainWindow;
 	HDC hdc;
 	int* args = NULL;
+    RECT rcScr = GetScreenRect();
 
 #ifdef _MGRM_PROCESSES
     JoinLayer(NAME_DEF_LAYER , "animate_test" , 0 , 0);
@@ -104,7 +105,7 @@ int MiniGUIMain(int argc, const char* argv[])
 
 	hdc = GetClientDC(hMainWindow);
 
-	InitAnimateSence(&as, 200, -1, hdc, draw_animte, NULL, NULL, &g_rcScr, NULL);
+	InitAnimateSence(&as, 200, -1, hdc, draw_animte, NULL, NULL, &rcScr, NULL);
 	InsertAnimate(&as, &a, FALSE);	
 	tl = CreateTimeLine();
 

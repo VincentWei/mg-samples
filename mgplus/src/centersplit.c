@@ -222,12 +222,13 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                 case SCANCODE_F1:
                 {
                     static int count = 0;
+                    RECT rcScr = GetScreenRect();
                     if ((count++ %2)){
-                        Center4SplitAnimate (g_buffdc, &g_rcScr, &bmp_res[1],
+                        Center4SplitAnimate (g_buffdc, &rcScr, &bmp_res[1],
                                 &bmp_res[0], 20, FALSE);
                     }
                     else {
-                        Center4SplitAnimate (g_buffdc, &g_rcScr, &bmp_res[1],
+                        Center4SplitAnimate (g_buffdc, &rcScr, &bmp_res[1],
                                 &bmp_res[0], 20, TRUE);
                     }
                     break;
@@ -241,7 +242,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         case MSG_PAINT:
         {
             HDC hdc = BeginPaint(hWnd);
-            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top,
+            FillBoxWithBitmap(hdc, g_rcScr.left, g_rcScr.top,
                     RECTW(g_rcScr), RECTH(g_rcScr), &bmp_res[0]);
             EndPaint(hWnd, hdc);
             break;

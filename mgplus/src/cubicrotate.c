@@ -279,6 +279,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
             {
                 case SCANCODE_F1:
                 {
+                    RECT rcScr = GetScreenRect();
                     ANIMATE_OPS ops = {
                         def_rotate_draw_animate,
                         def_rotate_bkgnd,
@@ -286,9 +287,10 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                         NULL,
                         on_end_draw_one_frame
                     };
+
                     SetInterval (50);
                     InitRotateInfo(hWnd, &g_info, 30, &bmp_res[1], &bmp_res[0]);
-                    RunCommonAnimate(g_buffdc, &g_rcScr, &bmp_res[1], calc_cubicrotate_coor,
+                    RunCommonAnimate(g_buffdc, &rcScr, &bmp_res[1], calc_cubicrotate_coor,
                             &ops, 31, &g_info);
                     break;
                 }
@@ -300,7 +302,7 @@ static LRESULT BlindDemoWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         case MSG_PAINT:
         {
             HDC hdc = BeginPaint(hWnd);
-            FillBoxWithBitmap(hdc, g_rcScr.left,g_rcScr.top,
+            FillBoxWithBitmap(hdc, g_rcScr.left, g_rcScr.top,
                     RECTW(g_rcScr), RECTH(g_rcScr), &bmp_res[0]);
             EndPaint(hWnd, hdc);
             break;
