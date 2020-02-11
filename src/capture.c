@@ -94,7 +94,11 @@ BOOL RegisterMybutton (void)
     WndClass.dwStyle     = 0;
     WndClass.dwExStyle   = 0;
     WndClass.hCursor     = GetSystemCursor(0);
+#ifdef _MGSCHEMA_COMPOSITING
+    WndClass.dwBkColor   = COLOR_lightgray;
+#else
     WndClass.iBkColor    = PIXEL_lightgray;
+#endif
     WndClass.WinProc     = MybuttonWindowProc;
 
     return RegisterWindowClass (&WndClass);

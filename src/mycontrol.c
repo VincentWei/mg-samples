@@ -67,7 +67,11 @@ static BOOL RegisterMyControl (void)
     MyClass.dwStyle     = WS_NONE;
     MyClass.dwExStyle   = WS_EX_NONE;
     MyClass.hCursor     = GetSystemCursor (IDC_ARROW);
-    MyClass.iBkColor    = COLOR_lightwhite;
+#ifdef _MGSCHEMA_COMPOSITING
+    MyClass.dwBkColor   = COLOR_lightwhite;
+#else
+    MyClass.iBkColor    = PIXEL_lightwhite;
+#endif
     MyClass.WinProc     = MyControlProc;
 
     return RegisterWindowClass (&MyClass);

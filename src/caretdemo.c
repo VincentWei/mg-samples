@@ -181,7 +181,11 @@ BOOL RegisterMyedit(void)
     WndClass.dwStyle     = 0;
     WndClass.dwExStyle   = 0;
     WndClass.hCursor     = GetSystemCursor(IDC_IBEAM);
+#ifdef _MGSCHEMA_COMPOSITING
+    WndClass.dwBkColor   = COLOR_lightwhite;
+#else
     WndClass.iBkColor    = PIXEL_lightwhite;
+#endif
     WndClass.WinProc     = MyeditWindowProc;
 
     return RegisterWindowClass (&WndClass);
