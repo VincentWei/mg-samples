@@ -299,7 +299,8 @@ HWND create_task_bar (void)
     CreateInfo.ty = g_rcScr.bottom - HEIGHT_TASKBAR;
     CreateInfo.rx = g_rcScr.right;
     CreateInfo.by = g_rcScr.bottom;
-    CreateInfo.iBkColor = GetWindowElementColor (WE_MAINC_THREED_BODY); 
+    CreateInfo.iBkColor =
+        GetWindowElementPixelEx (HWND_NULL, HDC_SCREEN, WE_MAINC_THREED_BODY); 
     CreateInfo.dwAddData = 0;
     CreateInfo.hHosting = HWND_DESKTOP;
 

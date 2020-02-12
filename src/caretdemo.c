@@ -182,7 +182,7 @@ BOOL RegisterMyedit(void)
     WndClass.dwExStyle   = 0;
     WndClass.hCursor     = GetSystemCursor(IDC_IBEAM);
 #ifdef _MGSCHEMA_COMPOSITING
-    WndClass.dwBkColor   = COLOR_lightwhite;
+    WndClass.dwBkColor   = RGBA_lightwhite;
 #else
     WndClass.iBkColor    = PIXEL_lightwhite;
 #endif

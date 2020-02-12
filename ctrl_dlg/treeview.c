@@ -182,7 +182,8 @@ static void InitCreateInfo(PMAINWINCREATE pCreateInfo)
     pCreateInfo->ty         = 0;
     pCreateInfo->rx         = 360;
     pCreateInfo->by         = 340;
-    pCreateInfo->iBkColor   = GetWindowElementColor (WE_MAINC_THREED_BODY);
+    pCreateInfo->iBkColor   =
+        GetWindowElementPixelEx (HWND_NULL, HDC_SCREEN, WE_MAINC_THREED_BODY);
     pCreateInfo->dwAddData  = 0;
     pCreateInfo->hHosting   = HWND_DESKTOP;
 }

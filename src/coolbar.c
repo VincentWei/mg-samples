@@ -149,7 +149,8 @@ int MiniGUIMain (int argc, const char* argv[])
     CreateInfo.ty = 0;
     CreateInfo.rx = 300;
     CreateInfo.by = 220;
-    CreateInfo.iBkColor = GetWindowElementPixel (HWND_DESKTOP, WE_MAINC_THREED_BODY);
+    CreateInfo.iBkColor =
+        GetWindowElementPixelEx (HWND_DESKTOP, HDC_SCREEN, WE_MAINC_THREED_BODY);
     CreateInfo.dwAddData = 0;
     CreateInfo.dwReserved = 0;
     CreateInfo.hHosting = HWND_DESKTOP;

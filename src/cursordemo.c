@@ -87,7 +87,7 @@ BOOL RegisterTrapwindow (void)
     WndClass.dwExStyle   = 0;
     WndClass.hCursor     = GetSystemCursor(IDC_HAND_POINT);
 #ifdef _MGSCHEMA_COMPOSITING
-    WndClass.dwBkColor   = COLOR_black;
+    WndClass.dwBkColor   = RGBA_black;
 #else
     WndClass.iBkColor    = PIXEL_black;
 #endif

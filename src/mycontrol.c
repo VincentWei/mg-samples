@@ -68,7 +68,7 @@ static BOOL RegisterMyControl (void)
     MyClass.dwExStyle   = WS_EX_NONE;
     MyClass.hCursor     = GetSystemCursor (IDC_ARROW);
 #ifdef _MGSCHEMA_COMPOSITING
-    MyClass.dwBkColor   = COLOR_lightwhite;
+    MyClass.dwBkColor   = RGBA_lightwhite;
 #else
     MyClass.iBkColor    = PIXEL_lightwhite;
 #endif
