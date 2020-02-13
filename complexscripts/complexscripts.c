@@ -1284,7 +1284,9 @@ int MiniGUIMain (int argc, const char* argv[])
         printf ("JoinLayer: invalid layer handle.\n");
         exit (1);
     }
+#endif
 
+#ifndef _MGRM_THREADS
     if (!InitVectorialFonts ()) {
         printf ("InitVectorialFonts: error.\n");
         exit (2);
