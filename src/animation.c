@@ -130,8 +130,8 @@ int MiniGUIMain (int argc, const char* argv[])
     CreateInfo.MainWindowProc = AnimationWinProc;
     CreateInfo.lx = 0; 
     CreateInfo.ty = 0;
-    CreateInfo.rx = 240;//GetGDCapability(HDC_SCREEN, GDCAP_HPIXEL);
-    CreateInfo.by = 300;//GetGDCapability(HDC_SCREEN, GDCAP_VPIXEL);
+    CreateInfo.rx = 240;
+    CreateInfo.by = 300;
     CreateInfo.iBkColor = PIXEL_lightgray;
     CreateInfo.dwAddData = 0;
     CreateInfo.dwReserved = 0;

@@ -1143,8 +1143,8 @@ static void InitCreateInfo (PMAINWINCREATE pCreateInfo)
     pCreateInfo->MainWindowProc = MyMainWinProc;
     pCreateInfo->lx = 0;
     pCreateInfo->ty = 0;
-    pCreateInfo->rx = GetGDCapability(HDC_SCREEN, GDCAP_HPIXEL);
-    pCreateInfo->by = GetGDCapability(HDC_SCREEN, GDCAP_VPIXEL);;
+    pCreateInfo->rx = g_rcScr.right;
+    pCreateInfo->by = g_rcScr.bottom;
     pCreateInfo->iBkColor = COLOR_lightwhite;
     pCreateInfo->dwAddData = 0;
     pCreateInfo->hHosting = HWND_DESKTOP;
