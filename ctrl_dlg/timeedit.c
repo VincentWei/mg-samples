@@ -148,7 +148,7 @@ static LRESULT ControlTestWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARA
                         IDC_STATIC,
                         10, 10, 380, 200, hWnd, 0);
 
-        timefont = CreateLogFont (NULL, "Arial", "ISO8859-1",
+        timefont = CreateLogFont (NULL, "System", "ISO8859-1",
                         FONT_WEIGHT_REGULAR, FONT_SLANT_ROMAN, FONT_SETWIDTH_NORMAL,
                         FONT_SPACING_CHARCELL, FONT_UNDERLINE_NONE, FONT_STRUCKOUT_NONE,
                         30, 0);
