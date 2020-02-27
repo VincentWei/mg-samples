@@ -59,35 +59,34 @@ static LRESULT BookProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
     switch (message) {
-        case MSG_INITDIALOG:
-            {
-                TVITEMINFO tvItemInfo = {0};
-                int item;
-                int i, j;
+    case MSG_INITDIALOG: {
+        TVITEMINFO tvItemInfo = {0};
+        LRESULT item;
+        int i, j;
 
-                for (i = 0; i < CHAPTER_NUM; i++) {
-                    tvItemInfo.text = (char*)chapter[i];
-                    item = SendMessage (GetDlgItem(hDlg, IDC_TREEVIEW), TVM_ADDITEM, 
-                            0, (LPARAM)&tvItemInfo);
-                    for (j = 0; j < 3; j++) {
-                        tvItemInfo.text = (char*)section[j];
-                        SendMessage (GetDlgItem(hDlg, IDC_TREEVIEW), TVM_ADDITEM, 
-                                item, (LPARAM)&tvItemInfo);
-                    }
-                }
+        for (i = 0; i < CHAPTER_NUM; i++) {
+            tvItemInfo.text = (char*)chapter[i];
+            item = SendMessage (GetDlgItem(hDlg, IDC_TREEVIEW), TVM_ADDITEM, 
+                    0, (LPARAM)&tvItemInfo);
+            for (j = 0; j < 3; j++) {
+                tvItemInfo.text = (char*)section[j];
+                SendMessage (GetDlgItem(hDlg, IDC_TREEVIEW), TVM_ADDITEM, 
+                        item, (LPARAM)&tvItemInfo);
             }
-            break;
+        }
+        break;
+    }
 
-        case MSG_COMMAND:
-        	switch (LOWORD(wParam)) {
-        	case IDOK:
-            	EndDialog (hDlg, wParam);
-			}	
-			break;
-		
-        case MSG_CLOSE:
-	    EndDialog (hDlg, 0);
-            return 0;
+    case MSG_COMMAND:
+        switch (LOWORD(wParam)) {
+        case IDOK:
+            EndDialog (hDlg, wParam);
+        }	
+        break;
+    
+    case MSG_CLOSE:
+        EndDialog (hDlg, 0);
+        return 0;
     }
 
     return DefaultDialogProc (hDlg, message, wParam, lParam);
