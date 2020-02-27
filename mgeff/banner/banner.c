@@ -365,46 +365,47 @@ static void setup_animations(void)
 
 static LRESULT mainWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
-    {
-        case MSG_CREATE:
-            {
-                srand(time(NULL));
-                s_hwnd = hwnd;
+    switch (message) {
+    case MSG_CREATE: {
+        srand(time(NULL));
+        s_hwnd = hwnd;
 
-                gen_letters();
+        gen_letters();
 
-                mGEffInit();
+        mGEffInit();
 
-                setup_animations();
-            }
-            break;
-        case MSG_PAINT:
-            {
-                HDC hdc = BeginPaint(hwnd);
-                paint_all_star(hdc);
-                EndPaint(hwnd, hdc);
-            }
-            break;
-        case MSG_ERASEBKGND:
-            {
-                HDC dc;
-                RECT rcBg;
-                GetClientRect(hwnd, &rcBg);
-                dc = GetClientDC(hwnd);
-                SetBrushColor(dc, RGB2Pixel(dc, 0x2e, 0x1d, 0x01));
-                FillBox(dc, rcBg.left, rcBg.top, RECTW(rcBg), RECTH(rcBg));
-                ReleaseDC(dc);
-            }
-            return 0;
-        case MSG_CLOSE:
-            mGEffDeinit();
-            DestroyMainWindow (hwnd);
-            PostQuitMessage (hwnd);
-            break;
-        default:
-            break;
+        setup_animations();
+        break;
     }
+
+    case MSG_PAINT: {
+        HDC hdc = BeginPaint(hwnd);
+        paint_all_star(hdc);
+        EndPaint(hwnd, hdc);
+        return 0;
+    }
+
+    case MSG_ERASEBKGND: {
+        HDC dc;
+        RECT rcBg;
+        GetClientRect(hwnd, &rcBg);
+        dc = GetClientDC(hwnd);
+        SetBrushColor(dc, RGB2Pixel(dc, 0x2e, 0x1d, 0x01));
+        FillBox(dc, rcBg.left, rcBg.top, RECTW(rcBg), RECTH(rcBg));
+        ReleaseDC(dc);
+        return 0;
+    }
+
+    case MSG_CLOSE:
+        mGEffDeinit();
+        DestroyMainWindow (hwnd);
+        PostQuitMessage (hwnd);
+        break;
+
+    default:
+        break;
+    }
+
     return DefaultMainWinProc(hwnd, message, wParam, lParam);
 }
 
@@ -420,7 +421,7 @@ int MiniGUIMain(int argc, const char *argv[])
 #endif
 
     createInfo.dwStyle = WS_VISIBLE | WS_BORDER | WS_CAPTION;
-    createInfo.dwExStyle = WS_EX_NONE;
+    createInfo.dwExStyle = WS_EX_USEPRIVATECDC;
     createInfo.spCaption = "banner";
     createInfo.hMenu = 0;
     createInfo.hCursor = GetSystemCursor(0);
