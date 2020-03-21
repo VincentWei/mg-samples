@@ -91,7 +91,7 @@ static BOOL get_app_info (void)
 {
     int i;
     APPITEM* item;
-    char section [10];
+    char section [16];
 
     if (GetIntValueFromEtcFile (APP_INFO_FILE, "taskbar", "nr", &app_info.nr_apps) != ETC_OK)
         return FALSE;
