@@ -1,14 +1,14 @@
 # MiniGUI-Samples
 
-This is the mainline release of basic MiniGUI samples for MiniGUI V4.0.x or later.
+This is the mainline release of basic MiniGUI samples for MiniGUI V5.0.x or later.
 
 ## Prerequisites
 
-  * MiniGUI Core v4.0.0 or later
-  * mGUtils v1.2.2 or later
-  * mGPlus v1.4.0 or later
-  * mGEff v1.2.0 or later
-  * mGNCS v1.2.4 or later
+  * MiniGUI Core v5.0.0 or later
+  * mGUtils v1.5.0 or later
+  * mGPlus v1.5.0 or later
+  * mGEff v1.5.0 or later
+  * mGNCS v1.5.0 or later
 
 ## Building
 
@@ -23,7 +23,7 @@ to configure and make the exetables of samples.
 
 ## Copying
 
-Copyright (C) 2008 ~ 2019, Beijing FMSoft Technologies Co., Ltd.
+Copyright (C) 2008 ~ 2020, Beijing FMSoft Technologies Co., Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
