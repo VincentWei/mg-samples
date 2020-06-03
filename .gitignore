@@ -4,6 +4,8 @@
 *.al
 *.a
 *.so
+\#
+am--include-marker
 Makefile
 Makefile.in
 .deps/
