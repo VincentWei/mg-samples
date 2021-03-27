@@ -54,7 +54,7 @@
 #ifndef NCS_MAINWNDS_H
 #define NCS_MAINWNDS_H
 
-#ifdef __cpluspus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
