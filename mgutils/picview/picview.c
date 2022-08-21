@@ -157,6 +157,9 @@ static BOOL IsSupport (const char *filename)
 #ifdef _MGIMAGE_PNG
         !strncmp(extend,"png",3) ||
 #endif
+#ifdef _MGIMAGE_WEBP
+        !strncmp(extend,"webp",4) ||
+#endif
         !strncmp(extend,"bmp",3) )
         return TRUE;
 

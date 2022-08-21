@@ -41,7 +41,7 @@
 #include <minigui/gdi.h>
 #include <minigui/window.h>
 
-char linebuf[4096];
+static char linebuf[4096];
 static FILE *fp = NULL;
 
 RECT arabic_rc = {14, 0, 320, 250};

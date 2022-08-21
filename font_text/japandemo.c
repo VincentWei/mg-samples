@@ -40,7 +40,7 @@
 #include <minigui/gdi.h>
 #include <minigui/window.h>
 
-char linebuf[4096];
+static char linebuf[4096];
 static FILE *fp = NULL;
 
 static RECT drawtext_rc = {10, 10, 600, 400};
