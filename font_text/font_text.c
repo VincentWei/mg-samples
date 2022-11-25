@@ -2084,7 +2084,7 @@ LRESULT FontTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
             break;
 
         case MSG_CLOSE:
-            
+
             if (MessageBox (hWnd, 
                         FT_ST_QUIT, 
                         FT_ST_CAP, 
@@ -2099,13 +2099,15 @@ LRESULT FontTestMainWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                 DestroyBMPFont (dev_font);
 
             DestroyFont();
-            for (i = 0; i < TABLESIZE(FontName); i++)
-                DestroyDynamicDevFont (&devfont[i]);
+            for (i = 0; i < TABLESIZE(FontName); i++) {
+                if (devfont[i])
+                    DestroyDynamicDevFont (&devfont[i]);
+            }
 
             DestroyLogFont (logfont_bmp);
             DestroyMainWindow (hWnd);
             PostQuitMessage (hWnd);
-            
+
             return 0;
     }
 
