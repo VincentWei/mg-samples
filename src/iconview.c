@@ -44,7 +44,7 @@
 #include <minigui/window.h>
 #include <minigui/control.h>
 
-#ifdef _MGCTRL_ICONVIE
+#ifdef _MGCTRL_ICONVIEW
 
 #ifdef _LANG_ZHCN
 #include "iconview_res_cn.h"

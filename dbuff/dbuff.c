@@ -151,22 +151,22 @@ static void show_window_specially (HWND hwnd)
 
     sec_dc = GetSecondaryDC (hwnd);
 
-    StretchBlt (sec_dc, 0, 0, 240, 320, 
-        HDC_SCREEN, 0, 0, 240/4, 320/4, 0);
+    StretchBlt (sec_dc, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 240/4, 320/4, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
-    StretchBlt (sec_dc, 0, 0, 240, 320, 
-        HDC_SCREEN, 0, 0, 240/2, 320/2, 0);
+    StretchBlt (sec_dc, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 240/2, 320/2, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     /* restore to default behavior */
     SetMemDCAlpha (sec_dc, 0, 0);
-    BitBlt (sec_dc, 0, 0, 240, 320, 
-        HDC_SCREEN, 0, 0, 0);
+    BitBlt (sec_dc, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     SetSecondaryDC (hwnd, sec_dc, ON_UPDSECDC_DEFAULT);
 }

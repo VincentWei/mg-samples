@@ -68,6 +68,7 @@ static void
 TellSpeed (HWND hwnd, unsigned int start_tick, unsigned int end_tick, 
         const char* drawing, unsigned int count)
 {
+#if 0
         char buff [1024];
         unsigned int mseconds = (end_tick - start_tick) * 10;
 
@@ -76,6 +77,13 @@ TellSpeed (HWND hwnd, unsigned int start_tick, unsigned int end_tick,
                         (end_tick - start_tick) * 10.0 / count);
 
         MessageBox (hwnd, buff, drawing, MB_OK | MB_ICONINFORMATION);
+#else
+        unsigned int mseconds = (end_tick - start_tick) * 10;
+
+        _MG_PRINTF(GP_ST_TELLSPEED "\n",
+                        count, drawing, mseconds, 
+                        (end_tick - start_tick) * 10.0 / count);
+#endif
 }
 
 static void GDIDemo_NormalLines (HWND hwnd, HDC hdc)
@@ -85,6 +93,21 @@ static void GDIDemo_NormalLines (HWND hwnd, HDC hdc)
     int count;
     unsigned int start_tick, end_tick;
     unsigned int nr_colors = GetGDCapability (hdc, GDCAP_COLORNUM);
+
+    /* Circle */
+    start_tick = GetTickCount ();
+    count = 10000;
+    while (count--) {
+        tox = rand() % DEFAULT_WIDTH;
+        toy = rand() % DEFAULT_WIDTH;
+        SetPenColor (hdc, rand() % nr_colors);
+        int r = rand() % DEFAULT_X;
+        _MG_PRINTF("Circle: (%d, %d, %d)\n", tox, toy, r);
+        Circle (hdc, tox, toy, r);
+    }
+    end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
+    TellSpeed (hwnd, start_tick, end_tick, GP_ST_CIRCLE, 10000);
 
     /* Line */
     start_tick = GetTickCount ();
@@ -98,19 +121,8 @@ static void GDIDemo_NormalLines (HWND hwnd, HDC hdc)
         toy = rand() % DEFAULT_WIDTH;
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_LINE, 100000);
-
-    /* Circle */
-    start_tick = GetTickCount ();
-    count = 10000;
-    while (count--) {
-        tox = rand() % DEFAULT_WIDTH;
-        toy = rand() % DEFAULT_WIDTH;
-        SetPenColor (hdc, rand() % nr_colors);
-        Circle (hdc, tox, toy, rand() % DEFAULT_X);
-    }
-    end_tick = GetTickCount ();
-    TellSpeed (hwnd, start_tick, end_tick, GP_ST_CIRCLE, 10000);
 
     /* Ellipse */
     start_tick = GetTickCount ();
@@ -122,6 +134,7 @@ static void GDIDemo_NormalLines (HWND hwnd, HDC hdc)
         Ellipse (hdc, tox, toy, rand() % DEFAULT_X, rand() % DEFAULT_Y);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_ELLIPSE, 10000);
 
     /* CircleArc */
@@ -134,6 +147,7 @@ static void GDIDemo_NormalLines (HWND hwnd, HDC hdc)
         CircleArc (hdc, tox, toy, rand() % DEFAULT_X, rand() % 360 * 64, (rand() % 360 - 180) * 64);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_CIRCLEARC, 10000);
 }
 
@@ -148,7 +162,7 @@ static void GDIDemo_XoredLines (HWND hwnd, HDC hdc)
     /* XORed Line */
     start_tick = GetTickCount ();
     count = 10000;
-//    SetPenColor (hdc, PIXEL_lightwhite);
+    SetPenColor (hdc, PIXEL_lightwhite);
     SetRasterOperation (hdc, ROP_XOR);
     while (count--) {
         SetPenColor (hdc, rand() % nr_colors);
@@ -158,6 +172,7 @@ static void GDIDemo_XoredLines (HWND hwnd, HDC hdc)
         toy = rand() % DEFAULT_WIDTH;
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_XOR_LINE, 10000);
 
     /* XORed Circle */
@@ -170,6 +185,7 @@ static void GDIDemo_XoredLines (HWND hwnd, HDC hdc)
         Circle (hdc, tox, toy, rand() % DEFAULT_X);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_XOR_CIRCLE, 10000);
 
     /* XORed Ellipse */
@@ -182,6 +198,7 @@ static void GDIDemo_XoredLines (HWND hwnd, HDC hdc)
         Ellipse (hdc, tox, toy, rand() % DEFAULT_X, rand() % DEFAULT_Y);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_XOR_ELLIPSE, 10000);
 }
 
@@ -202,6 +219,7 @@ static void GDIDemo_Filling (HWND hwnd, HDC hdc)
         FillBox (hdc, tox, toy, rand() % DEFAULT_X, rand() % DEFAULT_Y);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_FILLBOX, 1000);
 
     /* Filled Rect with ROP */
@@ -215,6 +233,7 @@ static void GDIDemo_Filling (HWND hwnd, HDC hdc)
         FillBox (hdc, tox, toy, rand() % DEFAULT_X, rand() % DEFAULT_Y);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_FILLROPRECT, 1000);
 
     /* Filled Circle */
@@ -228,6 +247,7 @@ static void GDIDemo_Filling (HWND hwnd, HDC hdc)
         FillCircle (hdc, tox, toy, rand() % DEFAULT_X);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_FILLCIRCLE, 500);
 
     /* Filled Ellipse */
@@ -241,6 +261,7 @@ static void GDIDemo_Filling (HWND hwnd, HDC hdc)
         FillEllipse (hdc, tox, toy, rand() % DEFAULT_X, rand() % DEFAULT_Y);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_FILLELLIPSE, 500);
 }
 
@@ -264,6 +285,7 @@ static void GDIDemo_NormalBitmaps (HWND hwnd, HDC hdc)
         FillBoxWithBitmap (hdc, tox, toy, 0, 0, &bitmap);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_NORBMP, 2000);
 
     /* xored bitmap */
@@ -277,6 +299,7 @@ static void GDIDemo_NormalBitmaps (HWND hwnd, HDC hdc)
         FillBoxWithBitmap (hdc, tox - 100, toy - 100, 0, 0, &bitmap);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_XORBMP, 200);
 
     /* xored transparent bitmap */
@@ -292,6 +315,7 @@ static void GDIDemo_NormalBitmaps (HWND hwnd, HDC hdc)
         FillBoxWithBitmap (hdc, tox - 100, toy - 100, 0, 0, &bitmap);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_XORTRANSBMP, 300);
 
     UnloadBitmap (&bitmap);
@@ -321,6 +345,7 @@ static void GDIDemo_TransparentBitmaps (HWND hwnd, HDC hdc)
         FillBoxWithBitmap (hdc, tox, toy, 0, 0, &bitmap);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_TRANSBMP, 1000);
     UnloadBitmap (&bitmap);
 }
@@ -348,6 +373,7 @@ static void GDIDemo_AlphaBlendedBitmaps (HWND hwnd, HDC hdc)
         FillBoxWithBitmap (hdc, tox, toy, 0, 0, &bitmap);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_ALPHABMP, 1000);
 
     bitmap.bmType = BMP_TYPE_ALPHACHANNEL | BMP_TYPE_COLORKEY;
@@ -364,6 +390,7 @@ static void GDIDemo_AlphaBlendedBitmaps (HWND hwnd, HDC hdc)
         FillBoxWithBitmap (hdc, tox, toy, 0, 0, &bitmap);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_ALPHATRANSBMP, 1000);
 
     UnloadBitmap (&bitmap);
@@ -396,6 +423,7 @@ static void GDIDemo_MemDC (HWND hwnd, HDC hdc)
                         rand () % DEFAULT_WIDTH, rand () % DEFAULT_WIDTH, 0);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_BLIT, 200);
 
     SetBrushColor (mem_dc, 0);
@@ -416,6 +444,7 @@ static void GDIDemo_MemDC (HWND hwnd, HDC hdc)
                         rand () % DEFAULT_WIDTH, rand () % DEFAULT_WIDTH, 0);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_TRANSBLIT, 200);
 
     DeleteCompatibleDC (mem_dc);
@@ -443,6 +472,7 @@ static void GDIDemo_MemDC (HWND hwnd, HDC hdc)
         BitBlt (mem_dc, 0, 0, 400, 100, hdc, rand () % DEFAULT_WIDTH, rand () % DEFAULT_WIDTH, 0);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_PERPIXELALPHA, 200);
     DeleteMemDC (mem_dc);
 
@@ -463,6 +493,7 @@ static void GDIDemo_MemDC (HWND hwnd, HDC hdc)
         BitBlt (mem_dc, 0, 0, 400, 100, hdc, rand () % DEFAULT_WIDTH, rand () % DEFAULT_WIDTH, 0);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_PERSURFALPHA, 200);
 
     FillBox (mem_dc, 0, 0, 400, 100);
@@ -478,6 +509,7 @@ static void GDIDemo_MemDC (HWND hwnd, HDC hdc)
         BitBlt (mem_dc, 0, 0, 400, 100, hdc, rand () % DEFAULT_WIDTH, rand () % DEFAULT_WIDTH, 0);
     }
     end_tick = GetTickCount ();
+    SyncUpdateDC(hdc);
     TellSpeed (hwnd, start_tick, end_tick, GP_ST_ALPHACOLKEYB, 200);
 
     DeleteMemDC (mem_dc);
@@ -1155,9 +1187,12 @@ LRESULT GDIDemoWinProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case 'Q':
                 PostMessage (hWnd, MSG_CLOSE, 0, 0);
                 break;
+
+            case ' ':
+                InvalidateRect (hWnd, NULL, TRUE);
+                break;
             }
             ReleaseDC (hdc);
-            InvalidateRect (hWnd, NULL, TRUE);
         break;
 
         case MSG_PAINT:

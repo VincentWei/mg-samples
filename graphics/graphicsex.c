@@ -53,6 +53,7 @@
 
 static void TellSpeed (HWND hwnd, unsigned int start_tick, unsigned int end_tick, const char* drawing, unsigned int count)
 {
+#if 0
         char buff [1024];
         unsigned int seconds = (end_tick - start_tick)/100;
 
@@ -60,12 +61,23 @@ static void TellSpeed (HWND hwnd, unsigned int start_tick, unsigned int end_tick
                         count, drawing, seconds, (end_tick - start_tick) / (count * 100.0));
 
         MessageBox (hwnd, buff, drawing, MB_OK | MB_ICONINFORMATION);
+#else
+        unsigned int seconds = (end_tick - start_tick)/100;
+
+        _MG_PRINTF(GPEX_ST_TELLSPEED "\n",
+                        count, drawing, seconds, (end_tick - start_tick) / (count * 100.0));
+#endif
 }
 
 static void Information(HWND hwnd)
 {
+#if 0
     MessageBox (hwnd, GPEX_ST_DONE, GPEX_ST_GDI, MB_OK | MB_ICONINFORMATION);
+#else
+    _MG_PRINTF(GPEX_ST_DONE "\n");
+#endif
 }
+
 static void GDIDemo_SplineTo(HWND hwnd,HDC hdc)
 {
     static POINT pts [] ={
@@ -396,16 +408,16 @@ static LRESULT TestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
             case 'c':
             case 'C':
                 GDIDemo_FocusRect(hWnd,hdc);
-                InvalidateRect (hWnd, NULL, TRUE);
+                // InvalidateRect (hWnd, NULL, TRUE);
                 GDIDemo_FillPolygon(hWnd,hdc);
                 break;
 
             case 'd':
             case 'D':
                 GDIDemo_CircleGenerator(hWnd,hdc);
-                InvalidateRect (hWnd, NULL, TRUE);
+                // InvalidateRect (hWnd, NULL, TRUE);
                 GDIDemo_EllipseGenerator(hWnd,hdc);
-                InvalidateRect (hWnd, NULL, TRUE);
+                // InvalidateRect (hWnd, NULL, TRUE);
                 GDIDemo_CircleArcGenerator(hWnd,hdc);  
                 break;
 
@@ -425,9 +437,13 @@ static LRESULT TestWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
             case 'q':
             case 'Q':
                 PostMessage(hWnd,MSG_CLOSE,0,0);
-          }
+                break;
+
+            case ' ':
+                InvalidateRect (hWnd, NULL, TRUE);
+                break;
+            }
             ReleaseDC(hdc);
-            InvalidateRect (hWnd, NULL, TRUE);
             break;
 
         case MSG_CLOSE:

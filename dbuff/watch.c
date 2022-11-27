@@ -157,6 +157,7 @@ static void ue_1_start (HWND hwnd)
 
     SetMemDCAlpha (sec_dc, MEMDC_FLAG_SRCALPHA, 64);
     BitBlt (sec_dc, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     /* the usleep function may be failed cause of interrupted by a signal. */
     if (-1 == usleep (100000)) {
         my_usleep(100000);
@@ -164,12 +165,14 @@ static void ue_1_start (HWND hwnd)
 
     SetMemDCAlpha (sec_dc, MEMDC_FLAG_SRCALPHA, 128);
     BitBlt (sec_dc, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     SetMemDCAlpha (sec_dc, 0, 0);
     BitBlt (sec_dc, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     /* restore to default behavior */
     SetSecondaryDC (hwnd, sec_dc, ON_UPDSECDC_DEFAULT);
@@ -189,18 +192,21 @@ static void ue_1_term (HWND hwnd)
 
     SetMemDCAlpha (sec_dc_hosting, MEMDC_FLAG_SRCALPHA, 64);
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     SetMemDCAlpha (sec_dc_hosting, MEMDC_FLAG_SRCALPHA, 128);
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     SetMemDCAlpha (sec_dc_hosting, 0, 0);
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     /* restore to default behavior */
     SetSecondaryDC (hosting, sec_dc_hosting, ON_UPDSECDC_DEFAULT);
@@ -232,18 +238,23 @@ static void ue_2_start (HWND hwnd)
 
     /* push and poll */
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, -60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 0, 0, 60, 320, HDC_SCREEN, 240-60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, -120, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 0, 0, 120, 320, HDC_SCREEN, 240-120, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_active, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     /* restore to default behavior */
     SetSecondaryDC (hwnd, sec_dc_active, ON_UPDSECDC_DEFAULT);
@@ -264,18 +275,23 @@ static void ue_2_term (HWND hwnd)
 
     /* push and poll */
     BitBlt (sec_dc_hosting, 240-60, 0, 60, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 0, 0, 240-60, 320, HDC_SCREEN, 60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_hosting, 240-120, 0, 120, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 0, 0, 120, 320, HDC_SCREEN, 120, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     /* restore to default behavior */
     SetSecondaryDC (hosting, sec_dc_hosting, ON_UPDSECDC_DEFAULT);
@@ -306,20 +322,27 @@ static void ue_3_start (HWND hwnd)
     }
 
     BitBlt (sec_dc_hosting, 30, 0, 120-30, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_hosting, 120, 0, 120-30, 320, HDC_SCREEN, 120+30, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 120-30, 0, 30+30, 320, HDC_SCREEN, 120-30, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_hosting, 60, 0, 120-60, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_hosting, 120, 0, 120-60, 320, HDC_SCREEN, 120+60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 120-60, 0, 60+60, 320, HDC_SCREEN, 120-60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_active, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     /* restore to default behavior */
     SetSecondaryDC (hwnd, sec_dc_active, ON_UPDSECDC_DEFAULT);
@@ -338,20 +361,27 @@ static void ue_3_term (HWND hwnd)
     SetSecondaryDC (hosting, sec_dc_hosting, ON_UPDSECDC_DONOTHING);
 
     BitBlt (sec_dc_hosting, 60, 0, 120-60, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_hosting, 120, 0, 120-60, 320, HDC_SCREEN, 120+60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 120-60, 0, 60+60, 320, HDC_SCREEN, 120-60, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_hosting, 30, 0, 120-30, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_hosting, 120, 0, 120-30, 320, HDC_SCREEN, 120+30, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     BitBlt (sec_dc_active, 120-30, 0, 30+30, 320, HDC_SCREEN, 120-30, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
     if (-1 == usleep (100000)) {
         my_usleep(100000);
     }
 
     BitBlt (sec_dc_hosting, 0, 0, 240, 320, HDC_SCREEN, 0, 0, 0);
+    SyncUpdateDC (HDC_SCREEN);
 
     /* restore to default behavior */
     SetSecondaryDC (hosting, sec_dc_hosting, ON_UPDSECDC_DEFAULT);
@@ -376,6 +406,7 @@ static LRESULT WatchWinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
         case MSG_PAINT:
             hdc = BeginPaint (hWnd);
             draw_time(hdc);
+            PostMessage(hWnd, MSG_IDLE, 0, 0);
             EndPaint (hWnd, hdc);
             return 0;
 
