@@ -169,8 +169,9 @@ static HMENU create_icon_menu (void)
     return hmnu;
 }
 
-static void* this_init(void)
+static void* this_init(HDC dsk_dc)
 {
+    (void)dsk_dc;
     Context *con = malloc(sizeof(Context));
 
     get_dsp_app ();
